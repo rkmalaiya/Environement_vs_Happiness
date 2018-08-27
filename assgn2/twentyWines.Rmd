@@ -1,0 +1,192 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(data4PCCAR)
+data()
+data('twentyWines')
+```
+
+```{r}
+twentyWines$df.active
+```
+
+
+```{r}
+dim(twentyWines$df.active)
+```
+
+```{r}
+nrow(twentyWines$df.active)
+```
+
+
+```{r}
+ncol(twentyWines$df.active)
+```
+
+
+
+```{r}
+rownames(twentyWines$df.active)
+```
+
+
+```{r}
+colnames(twentyWines$df.active)
+```
+
+
+```{r}
+str(twentyWines$df.active)
+```
+
+
+```{r}
+mean(twentyWines$df.active)
+```
+
+
+```{r}
+mean(as.matrix(twentyWines$df.active))
+```
+
+
+```{r}
+sd(as.matrix(twentyWines$df.active))
+```
+
+```{r}
+colMeans(twentyWines$df.active)
+```
+
+```{r}
+rowMeans(twentyWines$df.active)
+```
+
+```{r}
+colSums(twentyWines$df.active)
+```
+
+```{r}
+sum(twentyWines$df.active)
+```
+
+
+
+```{r}
+summary(twentyWines$df.active)
+```
+
+```{r}
+sumry <- summary(twentyWines$df.active)
+sumry
+```
+
+
+```{r}
+
+ssANDscp <- function(data) {
+  ss.col = colSums(data^2)
+  scp.col = sum(data$Sugar * data$Astringent)
+  return( list(ss = ss.col, scp = scp.col))
+}
+
+ssANDscp(twentyWines$df.active)
+
+```
+
+```{r}
+res <- ssANDscp(twentyWines$df.active)
+
+res$ss
+```
+
+```{r}
+res$scp
+
+```
+
+```{r}
+res[2]
+```
+
+```{r}
+res[[2]]
+```
+
+
+Correlation Matrix
+
+```{r}
+corrplot::corrplot(cor(twentyWines$df.active), method = 'square', addCoef.col = TRUE)
+```
+
+
+```{r}
+corrplot::corrplot(cor(twentyWines$df.active), method = 'ellipse', addCoef.col = TRUE)
+```
+
+
+```{r paged.print=TRUE}
+library("ExPosition")
+epPCA(twentyWines$df.active)
+```
+
+
+```{r}
+epPCA(twentyWines$df.active, DESIGN = twentyWines$df.active$Origin )
+```
+
+
+```{r}
+pca.res = epPCA(twentyWines$df.active, DESIGN = twentyWines$df.active$Origin )
+pca.res$ExPosition.Data
+```
+
+
+
+Pretty Plot
+```{r}
+
+prettyPlot(twentyWines$df.active)
+
+```
+
+
+```{r}
+
+prettyPlot(pca.res$ExPosition.Data$fi, col = pca.res$Plotting.Data$fj.col)
+
+
+```
+
+# The plot should have the colors group wise.
+
+```{r warning=TRUE}
+prettyPlot(pca.res$ExPosition.Data$fi,
+           col = pca.res$Plotting.Data$fi.col,
+           xlab = sprintf("First Component: %. 2f %% of variance",    
+           pca.res$ExPosition.Data$t[1])
+           )
+```
+
+
+```{r}
+library(ggplot2)
+plot.data = as.data.frame(pca.res$ExPosition.Data$fi)
+ggplot(data=plot.data , aes(x = V1, y = V2, 
+                            label = rownames(plot.data),
+                            color = twentyWines$supplementary.variables$Origin)) +
+  geom_point() + geom_text()
+```
+
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
