@@ -1,0 +1,156 @@
+---
+title: "CookbookTemplate"
+author: "Ju-Chi Yu"
+date: "August 31, 2018"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ExPosition)
+library(corrplot)
+```
+
+This file is an example of a recipe card to go into your Cookbook. A recipe should include these 4 sections:
+
+* Method - highlight how each method works and the type(s) of data is can analyze
+
+* Data Set - introduce the data set to be analyzed 
+
+* Results - give a *concise* walk-through and interpretation of the analysis and results. 
+
+* Summary - very briefly tie things together.
+
+This process is like writing an actual book. We don't want to see exactly the steps that you went through to learn about what is going on in a data set. Instead, you should become familar with the data set and the results, and then tell the reader a story that guides them to the important information. 
+
+The "*NOTES*" below are our notes to you. They are important for this template recipe card, but they shouldn't be included in your future recipe cards. 
+
+Now let's get cooking!!
+
+## Method: PCA
+Principal component analysis (PCA) is used to analyze one table of quantitative data. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
+
+PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations. They are interpreted by the distances between them, and their distance from the origin. Loadings describe the column variables. Loadings are interpreted by the angle between them, and their distance from the origin. 
+
+The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
+
+*NOTE: Please study this description of PCA, because this method is the core of RM3. Please ask us questions about it.*
+
+## Data set: state.x77
+State.x77 is a native data set in R. 
+It measures the 50 states (rows) on 8 quantitative variables (columns). 
+Measurements were taken around 1970, but differ slightly across variables. 
+
+*NOTE: We always need to know what information is on the rows, on the columns, and what type of data lives within each cell of the data table (quantitative measures, ratings, nominal labels, frequency, counts, probabilities). Also describe any important features of the data to provide context.*
+
+```{r data_set}
+head(state.x77)
+
+#For more info, 
+#see: "?state.x77"
+#also, type: "state.", and Tab to explore additional info
+```
+
+## Results
+```{r correlation plot, echo = TRUE}
+cor.res <- cor(state.x77)
+corrplot(cor.res)
+```
+
+Because each variable is measured on different units, I choose to center and scale the columns. The rows are color-coded by the DESIGN variable, state.division.
+
+*NOTE: You can add tips about the function to make it easier for your future self.*
+
+* `center = TRUE`: substracts the mean from each column 
+* `scale = TRUE`: after centering (or not), scales each column (see the help for different scaling options)
+* `DESIGN`: colors the observations (rows)
+```{r analyze, echo = TRUE}
+res_pca <- epPCA(state.x77, center = TRUE, scale = TRUE, DESIGN = state.division, graphs = FALSE)
+```
+*NOTE: ExPosition by default provides certain common results. You may want to plot other things as well. Plotting is one of the strengths of R, and so you have many many packages to beautifully visualize your data. We've here provided examples of how to use prettyPlot, a plotting function in ExPosition. You should visit the help and play with the different parameters to learn how it works.*
+
+*NOTE: ExPosition functions (epPCA and prettyPlot) cannot automatically print results into an Rmd. We will have to explicitly plot the results that we want, and we must set `dev.new = FALSE`.*
+
+### Scree Plot
+The scree plot shows the eigenvalues, the amount of information on each component. The number of components (the dimensionality of the factor space) is min(nrow(DATA), ncol(DATA)) minus 1. Here, 8 columns give 7 components. The scree plot is used to determine how many of the components should be interpreted. 
+
+* `plot` draws the line that connects all data points by `type = "l"`
+* The first `points` function draws round purple dots.
+* The second `points` function draws black circles around the dots (just to make it prettier).
+
+```{r scree plot}
+name_the_scree <- plot(res_pca$ExPosition.Data$eigs,
+                       ylab = "Eigenvalues",
+                       xlab = "Compnents",
+                       type = "l",
+                       main = "",
+                       ylim = c(-1, max(res_pca$ExPosition.Data$eigs)))
+points(res_pca$ExPosition.Data$eigs, cex = 2, pch = 19, col = "darkorchid4")
+points(res_pca$ExPosition.Data$eigs, cex = 2, pch = 21, col = "black")
+
+```
+
+### Factor scores
+Factor scores are the coordinates of the 50 states on the components. The distances between them show which states are most similar. Factor scores (states) can be color-coded to help interpret the components.
+
+* `prettyPlot` helps plot the factor scores. In order to print the result in an Rmd, `dev.new` needs to be `FALSE`.
+
+*CHALLENGE: visit the help and play with the different parameters to learn how prettyPlot works. Many of these parameterms are commonly used for plotting, and we'll use them often.*
+
+```{r}
+head(res_pca$ExPosition.Data$fi)
+```
+
+
+```{r factor scores}
+name_the_plot <- prettyPlot(data_matrix = res_pca$ExPosition.Data$fi,  
+                            dev.new=FALSE,
+                            main = "State.x77 Row Factor Scores",
+                            x_axis = 1, y_axis = 2, 
+                            contributionCircles = TRUE, contributions = res_pca$ExPosition.Data$ci, 
+                            display_points = TRUE, pch = 21, cex = 1.2, col = res_pca$Plotting.Data$fi.col, 
+                            display_names = TRUE, 
+                            xlab = paste0("Component 1 Inertia: ", round(res_pca$ExPosition.Data$t[1],3), "%"),
+                            ylab = paste0("Component 2 Inertia: ", round(res_pca$ExPosition.Data$t[2],3), "%")
+                            )
+```
+
+* Component 1: Many regions VS Southeast 
+* Component 2: Alaska & California  
+
+*NOTE: The "division" and the "region" of the states could both be used to color-code the states. We analyzed state.x77 and color-coded by division. Because you are currently learning the methods, you should explore other ways of analyzing. Should you center? scale? analyze just a group of rows, or remove a certain variable?*
+
+### Loadings
+Loadings describe the similarity (angular distance) between the variables. Loadings show how the input variables relate to each other. Loadings also show which variables are important for (which components load on) a certain component.
+
+*NOTE: ExPosition by default provides certain common results. You may want to plot other things as well.*
+*NOTE: Plotting is one of the strengths of R, and so you have many many packages to beautifully visualize your data. We've here provided examples of how to use prettyPlot, a plotting function in ExPosition. You can visit the help and play with the different parameters to learn how it works.*
+
+```{r}
+name_another_plot <- prettyPlot(data_matrix = res_pca$ExPosition.Data$fj,  
+                            dev.new=FALSE,
+                            main = "State.x77 Column Loadings",
+                            x_axis = 1, y_axis = 2, 
+                            contributionCircles = TRUE, contributions = res_pca$ExPosition.Data$cj, 
+                            display_points = TRUE, pch = 21, cex = 1.2, col = res_pca$Plotting.Data$fj.col, 
+                            display_names = TRUE, 
+                            xlab = paste0("Component 1 Inertia: ", round(res_pca$ExPosition.Data$t[1],3), "%"),
+                            ylab = paste0("Component 2 Inertia: ", round(res_pca$ExPosition.Data$t[2],3), "%")
+                            )
+```
+
+* Component 1: Life Exp & HS Grad VS Illiteracy & Murder 
+
+* Component 2: Area  
+
+##Summary
+When we interpret the factor scores and loadings together, the PCA revealed:
+
+* Component 1: Southeastern states were low in education and safety
+
+* Component 2: Alaska & California were big
+
+* Both: Higher population went with lower average income
