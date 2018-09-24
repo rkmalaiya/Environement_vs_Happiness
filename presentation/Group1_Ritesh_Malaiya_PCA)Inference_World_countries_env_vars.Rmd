@@ -1,0 +1,316 @@
+---
+title: "All Countries Environmental Data"
+output:
+  word_document: default
+  html_notebook: default
+---
+
+
+```{r include=FALSE, results='hide'}
+# Installing required packages
+# sudo apt-get install libcairo2-dev
+# sudo apt-get install libxml2-dev
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
+library(corrplot)
+library(ExPosition)
+library(animation)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(PTCA4CATA)
+
+```
+
+
+## Method: PCA
+
+Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
+
+PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
+
+The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
+
+With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
+
+PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+
+
+## Dataset
+
+```{r include=FALSE, results='hide'}
+country_env_df = read.csv('dataset/World_countries_env_vars.csv')
+country_env_df_for_corr = country_env_df[, !names(country_env_lessvars_df) %in% c('Country')]
+
+#country_env_df$Happiness_Rank = as.factor(country_env_df$Happiness_Rank)
+country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
+```
+
+* Data: Measurements of environment conditions in Countries
+* Rows: There are 137 observations, 1 for each country.
+* Columns: Total 29 variables
+ + Qualitative: Country (nominal), Happiness (Ordinal).
+ + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
+
+* Summary of Data
+
+```{r data_summary}
+summary(country_env_df)
+```
+
+
+* Research Question
+
+How do the 137 countries differ on these variables?
+
+```{r echo=FALSE}
+
+country_env_df_for_pca = country_env_df[, !names(country_env_df) %in% c('Country', 'Happiness_Rank')]
+
+rownames(country_env_df_for_corr) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+
+
+head(country_env_df_for_corr, n = 6)
+```
+
+* PCA
+
+```{r pca }
+
+country_env_pca <- epPCA(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
+
+```
+
+## Results
+
+There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
+
+### Correlation Plot
+Visually analyze multicollinearity in the system
+
+```{r}
+corr_result = cor(country_env_df_for_corr)
+corrplot(corr_result,order = 'hclust', addrect = 7)
+```
+
+
+### Scree Plot
+
+Gives amount of information explained by corresponding component.
+
+
+```{r}
+PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs)
+
+```
+
+### Factor Scores
+
+Lets visualize each happiness category "individually" on the Factor Plot to understand the spreed of data over Components 1 and 2.
+
+
+```{r echo=FALSE}
+
+
+list_color <- c('#305ABF' = 'burlywood3', '#84BF30' = 'royalblue1', '#BF30AD' = 'springgreen4')
+
+country_env_pca$Plotting.Data$fi.col[,1] <- recode (country_env_pca$Plotting.Data$fi.col, !!!list_color)
+
+groups_of_data <- vector('list', 3)
+
+col = country_env_pca$Plotting.Data$fi.col
+fi = country_env_pca$ExPosition.Data$fi
+j = 1
+color_filter = col == unique(col)[1]
+groups_of_data[[j]] = color_filter
+j = j + 1
+
+color_filter = col == unique(col)[2]
+groups_of_data[[j]] = color_filter
+j = j + 1
+
+color_filter = col == unique(col)[3]
+groups_of_data[[j]] = color_filter
+j = j + 1
+
+
+```
+
+
+
+
+Since the spreed of the data is not clearly differentiated by both components, let's try to visualize the means of each happiness category.
+
+* Ploting only mean points for each happiness category.
+
+```{r pca_aggregate, collapse=TRUE, results=FALSE}
+
+country_env_pca_mean = aggregate(x=country_env_pca$ExPosition.Data$fi, by = split(col, col(col)), FUN = mean)
+rownames(country_env_pca_mean) <- c('Happy', 'Happier', 'Happiest')
+
+country_env_pca_mean <- country_env_pca_mean[-1]
+country_env_pca_mean
+
+```
+
+
+```{r}
+for(i in c(1,3,5,7, 9)) {
+  axis1 = i
+  axis2 = i+1
+
+  country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fi, title='', 
+                                                 col.points = country_env_pca$Plotting.Data$fi.col,
+                                                 col.labels = country_env_pca$Plotting.Data$fi.col,
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = FALSE)
+
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
+                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = TRUE,
+                                                 cex = 8,alpha.points = 0.8)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
+print(country_map)
+}
+
+#country_map_mean = country_factor_map_mean$zeMap
+#print(country_map_mean)
+```
+
+Component 1 seems to differentiate between Very Happy and Happy Countries whereas Component 2 seems to differentiate between Unhappy and Happy Countries.
+
+
+## Loadings
+
+```{r}
+axis1 = 1
+axis2 = 2
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+col4J = vector('list', nrow(country_env_pca$ExPosition.Data$fj))
+col4J[grep('rain',rownames(country_env_pca$ExPosition.Data$fj))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_pca$ExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = col_palate[3:11]
+
+loadings_2 <- cor(country_env_df_for_pca, country_env_pca$ExPosition.Data$fi)
+
+loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
+                        col.points = col4J, 
+                        col.labels = col4J, 
+                        axis1=axis1,
+                        axis2=axis2,
+                        constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+corr_map <- loadings_map$zeMap_background  +  country_label4Map + PTCA4CATA::addCircleOfCor() +
+            loadings_map$zeMap_text +
+            PTCA4CATA::addArrows(loadings_2, color = col4J) 
+
+print(corr_map)
+```
+
+```{r}
+axis1 = 7
+axis2 = 9
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+col4J = vector('list', nrow(country_env_pca$ExPosition.Data$fj))
+col4J[grep('rain',rownames(country_env_pca$ExPosition.Data$fj))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_pca$ExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = col_palate[3:11]
+
+loadings_2 <- cor(country_env_df_for_pca, country_env_pca$ExPosition.Data$fi)
+
+loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
+                        col.points = col4J, 
+                        col.labels = col4J, 
+                        axis1=axis1,
+                        axis2=axis2,
+                        constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+corr_map <- loadings_map$zeMap_background  +  country_label4Map + PTCA4CATA::addCircleOfCor() +
+            loadings_map$zeMap_text +
+            PTCA4CATA::addArrows(loadings_2, color = col4J) 
+
+print(corr_map)
+```
+
+
+Rain, compared with Temperature, cloudiness and tree coverage seems to be almost orthogonal to each other, hence are *not* correlated.
+
+
+
+
+## Summary
+
+Viewing the Factor and Loading plots together gives an understanding, based on Component 2, that *Unhappiness* is quite related with Temperature. The more the temperature, the more is unhappiness. 
+
+```{r}
+
+create.ctrPlot <- function(res, axis = 1, col = NULL, set = 'J', ...)
+  { if (set == 'I') { 
+    ctr.s <- res$ExPosition.Data$ci[,axis] * sign(res$ExPosition.Data$fi[,axis]) 
+    } else { 
+      ctr.s <- res$ExPosition.Data$cj[,axis] * sign(res$ExPosition.Data$fj[,axis]) 
+      } 
+  zebars <- PrettyBarPlot2(ctr.s, 
+                           threshold = 1 / length(ctr.s), 
+                           color4bar = gplots::col2hex(col), # we need hex code 
+                           main = paste0('Signed Contributions. Dimension ',axis), 
+                           ylab = 'Contributions', 
+                           ylim = c(1.2*min(ctr.s), 1.2*max(ctr.s) ), ...) 
+  return(zebars) 
+  } # end of function create.ctrPlot
+
+
+e1.ctrJ <- create.ctrPlot(country_env_pca, axis = 1, 
+                          font.size = 5, col = col4J, 
+                          horizontal = FALSE) 
+
+print(e1.ctrJ)
+
+
+```
+
+```{r}
+e1.ctrJ <- create.ctrPlot(country_env_pca, axis = 7, 
+                          font.size = 5, col = col4J, 
+                          horizontal = FALSE) 
+
+print(e1.ctrJ)
+```
+
+
+```{r}
+e1.ctrJ <- create.ctrPlot(country_env_pca, axis = 9, 
+                          font.size = 5, col = col4J, 
+                          horizontal = FALSE) 
+
+print(e1.ctrJ)
+```
+
+
+## Inference PCA
+
+```{r}
+
+```
+
+
+

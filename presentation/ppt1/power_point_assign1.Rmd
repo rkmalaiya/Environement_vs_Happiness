@@ -1,16 +1,14 @@
 ---
-title: "Untitled"
+title: "Evaluating Countries based on Environmental Conditions"
 output:
   powerpoint_presentation: default
-  ioslides_presentation: default
-  beamer_presentation: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
+```{r LoadingPackages, echo=FALSE, message=FALSE, include=FALSE}
 # Installing required packages
 
 if(!require('animation')){
@@ -25,19 +23,24 @@ library(corrplot)
 
 # Introduction
 
-## Data
-
-### Read the data csv
-
-```{r}
+```{r ExploringData, include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
-```
-
-### Explore the Data
-
-```{r}
 str(country_env_df)
 ```
+
+* Data: Measurements of environment conditions in Countries
+* Rows: There are `r nrow(country_env_df)` observations, 1 for each country
+* Columns: Total `r nrow(country_env_df)` variables. 
+  + Qualitative: Happiness, measured as Ordinal
+  + Quantitative: Aspect, Slope; Crop Land, Tree Canopy; Wind; Cloud & Multiple variables for Temp, Rain
+
+```{r headrows, results='asis', echo=FALSE}
+head(country_env_df, n = 6)
+```
+
+* Research Question
+How do the 137 countries differ on these variables?
+
 
 ```{r}
 summary(country_env_df)
@@ -99,6 +102,12 @@ head(country_env_df_for_corr, n = 6)
 
 corr_result = cor(country_env_df_for_corr)
 corrplot(corr_result)
+```
+
+
+```{r}
+
+corrplot(corr_result, method='number')
 ```
 
 

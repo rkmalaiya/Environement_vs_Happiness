@@ -3,9 +3,9 @@ title: "CookbookTemplate"
 author: "Ju-Chi Yu"
 date: "August 31, 2018"
 output:
-  word_document: default
   html_document:
     df_print: paged
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -47,6 +47,8 @@ Measurements were taken around 1970, but differ slightly across variables.
 *NOTE: We always need to know what information is on the rows, on the columns, and what type of data lives within each cell of the data table (quantitative measures, ratings, nominal labels, frequency, counts, probabilities). Also describe any important features of the data to provide context.*
 
 ```{r data_set}
+#summary(state.x77[,'Frost'])
+
 head(state.x77)
 
 #For more info, 
@@ -67,6 +69,12 @@ Because each variable is measured on different units, I choose to center and sca
 * `center = TRUE`: substracts the mean from each column 
 * `scale = TRUE`: after centering (or not), scales each column (see the help for different scaling options)
 * `DESIGN`: colors the observations (rows)
+
+```{r}
+state.division
+```
+
+
 ```{r analyze, echo = TRUE}
 res_pca <- epPCA(state.x77, center = TRUE, scale = TRUE, DESIGN = state.division, graphs = FALSE)
 ```
@@ -154,3 +162,11 @@ When we interpret the factor scores and loadings together, the PCA revealed:
 * Component 2: Alaska & California were big
 
 * Both: Higher population went with lower average income
+
+
+```{r}
+dim(res_pca$ExPosition.Data$cj)
+
+
+```
+

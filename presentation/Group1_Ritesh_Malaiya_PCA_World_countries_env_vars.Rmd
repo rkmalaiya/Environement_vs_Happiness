@@ -8,10 +8,18 @@ output:
 
 ```{r include=FALSE, results='hide'}
 # Installing required packages
+# sudo apt-get install libcairo2-dev
+# sudo apt-get install libxml2-dev
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
 library(corrplot)
 library(ExPosition)
 library(animation)
 library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(PTCA4CATA)
 
 ```
 
@@ -46,7 +54,7 @@ country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = 3, ri
 * Summary of Data
 
 ```{r data_summary}
-summary(country_env_df)
+str(country_env_df)
 ```
 
 
@@ -55,6 +63,7 @@ summary(country_env_df)
 How do the 137 countries differ on these variables?
 
 ```{r echo=FALSE}
+
 country_env_lessvars_df = country_env_df[,c('Country',
                                           'accessibility_to_cities',
                                           'elevation',
@@ -96,8 +105,8 @@ There are multiple variables representing rain and Temp. Hence, for analysis pur
 Visually analyze multicollinearity in the system
 
 ```{r}
-corr_result = cor(country_env_df_for_corr)
-corrplot(corr_result)
+corr_result = cor(country_env_df_for_pca)
+corrplot(corr_result,order = 'hclust', addrect = 5)
 ```
 
 
@@ -115,6 +124,10 @@ points(country_env_pca$ExPosition.Data$eigs, cex = 2, pch = 19, col = "darkorchi
 points(country_env_pca$ExPosition.Data$eigs, cex = 2, pch = 21, col = "black")
 ```
 
+```{r}
+PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs)
+
+```
 
 ### Factor Scores
 
@@ -122,6 +135,12 @@ Lets visualize each happiness category "individually" on the Factor Plot to unde
 
 
 ```{r echo=FALSE}
+
+
+list_color <- c('#305ABF' = 'burlywood3', '#84BF30' = 'royalblue1', '#BF30AD' = 'springgreen4')
+
+country_env_pca$Plotting.Data$fi.col[,1] <- recode (country_env_pca$Plotting.Data$fi.col, !!!list_color)
+
 groups_of_data <- vector('list', 3)
 
 col = country_env_pca$Plotting.Data$fi.col
@@ -143,11 +162,12 @@ j = j + 1
 ```
 
 
+
 ```{r each_happ_cat, message=FALSE, warning=FALSE, results=FALSE}
 
 #par(mfrow=c(2,2))
+list_name = c('Unhappy','Happy','Very Happy')
 
-list_name <- c('Unhappy', 'Happy',  'Very Happy')
 i = 1
 for (l in groups_of_data) {
   title = list_name[i]
@@ -214,34 +234,39 @@ country_env_pca_mean
 
 ```
 
-Component 1 and Component 2 seems to clearly differentiate between Very Happy & Happy vs Unhappy countries.
+Component 1 seems to differentiate between Very Happy and Happy Countries whereas Component 2 seems to differentiate between Unhappy and Happy Countries.
 
 
 ## Loadings
 
+```{r}
+
+```
+
 ```{r loading_plot, message=FALSE, warning=FALSE, results=FALSE}
 
 #par(mfrow=c(1,2))
+# [c(1,2,3,4,5,6,11, 21, 26,27),]
 
-prettyPlot(data_matrix = country_env_pca$ExPosition.Data$fj[c(1,2,3,4,5,6,11, 21, 26,27),],  
+prettyPlot(data_matrix = country_env_pca$ExPosition.Data$fj,  
                             dev.new=FALSE,
                             main = "Column Loadings",
                             x_axis = 1, y_axis = 2, 
                             contributionCircles = FALSE, 
                             display_points = TRUE, pch = 21, cex = 1.2, 
-                            col = country_env_pca$Plotting.Data$fj.col[c(1,2,3,4,5,6,11, 21, 26,27),], 
+                            col = country_env_pca$Plotting.Data$fj.col, 
                             display_names = TRUE, 
                             xlab = paste0("Component 1 Inertia: ", round(country_env_pca$ExPosition.Data$t[1],3), "%"),
                             ylab = paste0("Component 2 Inertia: ", round(country_env_pca$ExPosition.Data$t[2],3), "%")
                             )
-correlationPlotter(data_matrix = country_env_df_for_pca[,c(1,2,3,4,5,6,11, 21, 26,27)],
+correlationPlotter(data_matrix = country_env_df_for_pca,
                       factor_scores = country_env_pca$ExPosition.Data$fi[,c(1,2)],  
                             dev.new=FALSE,
                             main = "Correlation Circle",
                             x_axis = 1, y_axis = 2, 
                             
                             pch = 21, 
-                            col = country_env_pca$Plotting.Data$fj.col[c(1,2,3,4,5,6,11, 21, 26,27),], 
+                            col = country_env_pca$Plotting.Data$fj.col, 
                             
                             xlab = paste0("Component 1 Inertia: ", round(country_env_pca$ExPosition.Data$t[1],3), "%"),
                             ylab = paste0("Component 2 Inertia: ", round(country_env_pca$ExPosition.Data$t[2],3), "%")
@@ -271,14 +296,14 @@ prettyPlot(data_matrix = country_env_pca_mean,
                               ylab = paste0("Component 2 Inertia: ", round(country_env_pca$ExPosition.Data$t[2],3), "%")
                               )
 
-correlationPlotter(data_matrix = country_env_df_for_pca[,c(1,2,3,4,5,6,11, 21, 26,27)],
+correlationPlotter(data_matrix = country_env_df_for_pca,
                       factor_scores = country_env_pca$ExPosition.Data$fi[,c(1,2)],  
                             dev.new=FALSE,
                             main = "Column Loadings",
                             x_axis = 1, y_axis = 2, 
                             
                             pch = 21, 
-                            col = country_env_pca$Plotting.Data$fj.col[c(1,2,3,4,5,6,11, 21, 26,27),], 
+                            col = country_env_pca$Plotting.Data$fj.col, 
                             
                             xlab = paste0("Component 1 Inertia: ", round(country_env_pca$ExPosition.Data$t[1],3), "%"),
                             ylab = paste0("Component 2 Inertia: ", round(country_env_pca$ExPosition.Data$t[2],3), "%")
@@ -287,3 +312,123 @@ correlationPlotter(data_matrix = country_env_df_for_pca[,c(1,2,3,4,5,6,11, 21, 2
 ```
 
 Viewing the Factor and Loading plots together gives an understanding, based on Component 2, that *Unhappiness* is quite related with Temperature. The more the temperature, the more is unhappiness. 
+
+
+
+```{r}
+
+country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fi, title='', 
+                                                 col.points = country_env_pca$Plotting.Data$fi.col,
+                                                 col.labels = country_env_pca$Plotting.Data$fi.col,
+                                                 display.labels = FALSE)
+
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
+                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 display.labels = TRUE,
+                                                 cex = 8,alpha.points = 0.8)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
+print(country_map)
+
+#country_map_mean = country_factor_map_mean$zeMap
+#print(country_map_mean)
+```
+
+
+
+
+
+
+
+```{r}
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+col4J = vector('list', nrow(country_env_pca$ExPosition.Data$fj))
+col4J[grep('rain',rownames(country_env_pca$ExPosition.Data$fj))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_pca$ExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = col_palate[3:11]
+
+loadings_2 <- cor(country_env_df_for_pca, country_env_pca$ExPosition.Data$fi)
+
+loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
+                        col.points = col4J, 
+                        col.labels = col4J, 
+                        constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
+
+corr_map <- loadings_map$zeMap_background  +  PTCA4CATA::addCircleOfCor() +
+            loadings_map$zeMap_text +
+            PTCA4CATA::addArrows(loadings_2, color = col4J) 
+
+print(corr_map)
+```
+
+
+
+```{r}
+
+col4I = country_env_pca$Plotting.Data$fi.col
+ctr.I <- country_env_pca$ExPosition.Data$ci[,1] 
+ctrI <- PTCA4CATA::PrettyBarPlot2(ctr.I, 
+                       threshold = 1 / NROW(ctr.I), 
+                       font.size = 4, 
+                       color4bar = gplots::col2hex(col4I), 
+                       color4ns = 'grey', 
+                       main = 'Observations: Contributions (Unsigned)', 
+                       ylab = 'Contributions', ylim = c(-.2, 1.2*max(ctr.I)), 
+                       horizontal = FALSE ) 
+print(ctrI)
+ctr.I.signed <- ctr.I * sign(country_env_pca$ExPosition.Data$fi[,1]) 
+
+ctrI.s <- PrettyBarPlot2(ctr.I.signed, 
+                         threshold = 1 / NROW(ctr.I), font.size = 3, 
+                         color4bar = gplots::col2hex(col4I), # we need hex code 
+                         main = 'Observations: Contributions (Signed)', 
+                         ylab = 'Contributions', ylim = c(1.2*min(ctr.I.signed),
+                        1.2*max(ctr.I.signed) ), horizontal = FALSE ) 
+
+print(ctrI.s)
+
+
+
+
+```
+
+
+
+```{r}
+
+create.ctrPlot <- function(res, axis = 1, col = NULL, set = 'J', ...)
+  { if (set == 'I') { 
+    ctr.s <- res$ExPosition.Data$ci[,axis] * sign(res$ExPosition.Data$fi[,axis]) 
+    } else { 
+      ctr.s <- res$ExPosition.Data$cj[,axis] * sign(res$ExPosition.Data$fj[,axis]) 
+      } 
+  zebars <- PrettyBarPlot2(ctr.s, 
+                           threshold = 1 / length(ctr.s), 
+                           color4bar = gplots::col2hex(col), # we need hex code 
+                           main = paste0('Signed Contributions. Dimension ',axis), 
+                           ylab = 'Contributions', 
+                           ylim = c(1.2*min(ctr.s), 1.2*max(ctr.s) ), ...) 
+  return(zebars) 
+  } # end of function create.ctrPlot
+
+
+e1.ctrJ <- create.ctrPlot(country_env_pca, axis = 1, 
+                          font.size = 5, col = col4J, 
+                          horizontal = FALSE) 
+
+print(e1.ctrJ)
+
+
+```
+
+
+
+
+
