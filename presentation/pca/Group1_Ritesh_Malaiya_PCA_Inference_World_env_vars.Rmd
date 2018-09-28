@@ -1,8 +1,9 @@
 ---
 title: "All Countries Environmental Data"
 output:
-  html_notebook: default
   word_document: default
+  html_notebook: default
+  pdf_document: default
 ---
 
 
@@ -64,7 +65,7 @@ str(country_env_df)
 
 How do the 137 countries differ on these variables?
 
-## Analysis
+## Analysis 
 
 There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
 
@@ -88,12 +89,12 @@ corrplot(corr_result,order = 'hclust', addrect = 7)
 
 ### Identify Latent Components
 
-#### PCA
+#### PCA (with Inference)
 
 ```{r pca }
 
 country_env_pca <- epPCA(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
-
+country_env_pca_inf <- InPosition::epPCA.inference.battery(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
 ```
 
 Now we have Factor scores and Loadings. 
@@ -111,7 +112,12 @@ P.S. The most contribution component may not always be most useful for a given r
 
 
 ```{r}
-PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs)
+
+PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs,
+                      p.ev =  country_env_pca_inf$Inference.Data$components$p.vals,
+                      title = 'SCREE Plot',
+                      plotKaiser = TRUE
+)
 
 ```
 
@@ -153,7 +159,7 @@ country_env_pca_mean <- country_env_pca_mean[-1]
 ```
 
 
-```{r}
+```{r echo=FALSE}
 for(i in c(1,3,5,7, 9)) {
   axis1 = i
   axis2 = i+1
@@ -200,11 +206,18 @@ rownames(component_vs_happylevels) <- c('Component 1', 'Component 2', 'Component
 component_vs_happylevels
 ```
 
-Looking at the table, it seems component 1, 2, 7, 9 may be able to best represent all 3 happiness levels. Hence, let's plot components 1 vs 2 and 7 vs 9. Similarily, we will also plot Loading plots for these componenets.
+Looking at the table, it seems component 1, 2, 7, 9 may be able to best represent all 3 happiness levels. Although, SCREE Plot suggests that $3^{rd}$ and $4^{th}$ components might be useful, from our above analysis we know otherwise. Also, SCREE plot suggests that component $6^{th}$ and onwards might not be useful which is contradicting our findings above. Hence, let's plot components 1 vs 2 and 7 vs 9. Similarily, we will also plot Loading plots for these componenets.
+
+* With Confidence Interval
 
 ```{r echo=FALSE}
 
 loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
+
+BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, 
+                                    design = country_env_df$Happiness_Rank,
+                                    niter = 100,
+                                    suppressProgressBar = TRUE)
 
 for (i in 1:2){
   axis1 = loop[i,1]
@@ -230,15 +243,79 @@ country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_
 
 
 country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
+
+
+GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
+                                       names.of.factors = c(paste("Dimension",axis1), paste("Dimension",axis2)),
+                                       col = unique(country_env_pca$Plotting.Data$fi.col),
+                                       p.level = .95
+)
+
+country_map = country_map + GraphElli
+
 print(country_map)
+
 
 }
 
 ```
 
+* With Tolerance Interval
+
+```{r echo=FALSE}
+
+loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
+
+for (i in 1:2){
+  axis1 = loop[i,1]
+  axis2 = loop[i,2]
+
+country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fi, title='', 
+                                                 col.points = country_env_pca$Plotting.Data$fi.col,
+                                                 col.labels = country_env_pca$Plotting.Data$fi.col,
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = FALSE)
+
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
+                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = TRUE,
+                                                 cex = 8,alpha.points = 0.8)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
+
+
+GraphTI.Hull <- PTCA4CATA::MakeToleranceIntervals(country_env_pca$ExPosition.Data$fi[,c(axis1, axis2)],
+                                                  design = country_env_df$Happiness_Rank,
+                                                  # line below is needed
+                                                  names.of.factors =  c("Dim1","Dim2"), # needed 
+                                                  col = unique(country_env_pca$Plotting.Data$fi.col),
+                                                  line.size = .50, 
+                                                  line.type = 3,
+                                                  alpha.ellipse = .2,
+                                                  alpha.line    = .4,
+                                                  p.level       = .75)
+
+country_map = country_map + GraphTI.Hull
+
+print(country_map)
+
+
+}
+
+```
+
+
 #### Loadings
 
-```{r}
+```{r echo=FALSE}
 for (i in 1:2){
   
   axis1 = loop[i,1]
@@ -271,62 +348,47 @@ for (i in 1:2){
 ```
 
 
+* Component 1: 
+  + Rows: Normal & Happy
+  + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation
+  + Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.
 
-Rain, compared with Temperature, cloudiness and tree coverage seems to be almost orthogonal to each other, hence are *not* correlated.
+* Component 7: 
+  + Rows: Happy & Unhappy
+  + Columns: Temp and Rain vs Accessibility and Cropland
+  + Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.
+
+* Component 9: 
+  + Rows: Happy & Very Happy
+  + Columns: Temp vs Rain
+  + Interpret: Rain and Temp seems to be main reason for Happiness. *This contradicts with Component 7 and 1*.
+
+
 
 #### Most Contributing Variables
 
 Let's plot variable contributions against each chosen components i.e. 1, 7, 9.
 
+* With Bootstrap Ratio
 
-```{r echo=FALSE}
+```{r}
 
-  create.ctrPlot <- function(res, axis = 1, col = NULL, set = 'J', ...)
-    { if (set == 'I') { 
-      ctr.s <- res$ExPosition.Data$ci[,axis] * sign(res$ExPosition.Data$fi[,axis]) 
-      } else { 
-        ctr.s <- res$ExPosition.Data$cj[,axis] * sign(res$ExPosition.Data$fj[,axis]) 
-        } 
-    zebars <- PrettyBarPlot2(ctr.s, 
-                             threshold = 1 / length(ctr.s), 
-                             color4bar = gplots::col2hex(col), # we need hex code 
-                             main = paste0('Signed Contributions. Component ',axis), 
-                             ylab = 'Contributions', 
-                             ylim = c(1.2*min(ctr.s), 1.2*max(ctr.s) ), ...) 
-    return(zebars) 
-    } # end of function create.ctrPlot
-  
+BR <- country_env_pca_inf$Inference.Data$fj.boots$tests$boot.ratios
+
 for (i in c(1, 2, 7, 9)) {
-  
-  e1.ctrJ <- create.ctrPlot(country_env_pca, axis = i, 
-                            font.size = 5, col = col4J, 
-                            horizontal = FALSE) 
-  
-  print(e1.ctrJ)
+  laDim = i
+  ba001.BR1 <- PrettyBarPlot2(BR[,laDim],
+                              threshold = 2,
+                              font.size = 5,
+                              color4bar = gplots::col2hex(col4J), # we need hex code
+                              main = paste0('Bootstrap ratio ',laDim),
+                              ylab = 'Bootstrap ratios'
+                              #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
+  )
+  print(ba001.BR1)
 }
-
 ```
 
-
-
-### Inference PCA
-
-```{r echo=FALSE }
-country_env_pca_inf <- InPosition::epPCA.inference.battery(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
-```
-
-#### Scree Plot (with Inference)
-
-```{r scree_inf }
-
-PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs,
-                      p.ev =  country_env_pca_inf$Inference.Data$components$p.vals,
-                      title = 'Eigenvalues Inference',
-                      plotKaiser = TRUE
-)
-```
-
-Although, this plot suggests that $3^{rd}$ and $4^{th}$ components might be useful, from our above analysis we know that otherwise. Also, this plot suggests that component $6^{th}$ and onwards might not be useful which is contradicting our findings above.
 
 #### Permutation Test
 
@@ -388,132 +450,4 @@ for (i in c(1, 2, 7, 9)) {
                     cutoffs = c(0.025, 0.975))
 }
 ```
-
-#### Bootstrap Ratios
-
-
-```{r}
-
-BR <- country_env_pca_inf$Inference.Data$fj.boots$tests$boot.ratios
-
-for (i in c(1, 2, 7, 9)) {
-  laDim = i
-  ba001.BR1 <- PrettyBarPlot2(BR[,laDim],
-                              threshold = 2,
-                              font.size = 5,
-                              color4bar = gplots::col2hex(col4J), # we need hex code
-                              main = paste0(
-                                'PCA on the Iris Set: Bootstrap ratio ',laDim),
-                              ylab = 'Bootstrap ratios'
-                              #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
-  )
-  print(ba001.BR1)
-}
-```
-
-#### Confidence Interval Plot
-
-```{r}
-
-loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
-
-BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, 
-                                    design = country_env_df$Happiness_Rank,
-                                    niter = 100,
-                                    suppressProgressBar = TRUE)
-
-for (i in 1:2){
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
-
-  country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fi, title='', 
-                                                 col.points = country_env_pca$Plotting.Data$fi.col,
-                                                 col.labels = country_env_pca$Plotting.Data$fi.col,
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = FALSE)
-
-country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
-                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
-                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = TRUE,
-                                                 cex = 8,alpha.points = 0.8)
-
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
-
-
-
-country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
-
-
-GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
-                                       names.of.factors = c(paste("Dimension",axis1), paste("Dimension",axis2)),
-                                       col = col4Means,
-                                       p.level = .95
-)
-
-country_map = country_map + GraphElli
-
-print(country_map)
-
-
-}
-
-```
-
-
-#### Tolerance Interval Plot
-
-```{r}
-
-loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
-
-for (i in 1:2){
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
-
-country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fi, title='', 
-                                                 col.points = country_env_pca$Plotting.Data$fi.col,
-                                                 col.labels = country_env_pca$Plotting.Data$fi.col,
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = FALSE)
-
-country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
-                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
-                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = TRUE,
-                                                 cex = 8,alpha.points = 0.8)
-
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
-
-
-
-country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
-
-
-GraphTI.Hull <- PTCA4CATA::MakeToleranceIntervals(country_env_pca$ExPosition.Data$fi[,c(axis1, axis2)],
-                                                  design = country_env_df$Happiness_Rank,
-                                                  # line below is needed
-                                                  names.of.factors =  c("Dim1","Dim2"), # needed 
-                                                  col = unique(country_env_pca$Plotting.Data$fi.col),
-                                                  line.size = .50, 
-                                                  line.type = 3,
-                                                  alpha.ellipse = .2,
-                                                  alpha.line    = .4,
-                                                  p.level       = .75)
-
-country_map = country_map + GraphTI.Hull
-
-print(country_map)
-
-
-}
-
-```
-
 
