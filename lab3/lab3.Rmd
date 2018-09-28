@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r clean_start}
+rm(list = ls())
+library(data4PCCAR)
+library(ExPosition)
+```
+
+
+```{r installing_data}
+
+devtools::install_github('HerveAbdi/data4PCCAR')
+```
+
+
+```{r load_data}
+data("twentyWines")
+twentyWines
+```
+
+```{r}
+df = twentyWines$df.active
+
+df_pca_result = epPCA(df, scale = FALSE)
+
+
+```
+
+
+```{r}
+df = twentyWines$df.active
+
+df_pca_result = epPCA(df, scale = FALSE, DESIGN = twentyWines$supplementary.variables$Origin)
+
+
+```
+
+```{r}
+# 
+df_pca_result$ExPosition.Data$t
+```
+
+```{r}
+df_pca_result$ExPosition.Data$eigs
+
+```
+
+```{r}
+df_pca_result$ExPosition.Data$pdq
+
+```
+
+
+```{r}
+loadings.1 = cor(df_pca_result$ExPosition.Data$fi, df)
+loadings.1
+```
+
+```{r}
+loadings.2 = t(df_pca_result$ExPosition.Data$pdq$q)
+loadings.2
+```
+
+```{r}
+loadings.3 = df_pca_result$ExPosition.Data$fj
+loadings.3
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
