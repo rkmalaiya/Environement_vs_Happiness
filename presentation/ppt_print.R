@@ -1,6 +1,0 @@
-print(corr_map)
-corrplot(corr_result,order = 'hclust', addrect = 5)
-print(country_map)
-PTCA4CATA::PlotScree(ev = country_env_pca$ExPosition.Data$eigs)
-print(ctrI.s)
-print(e1.ctrJ)

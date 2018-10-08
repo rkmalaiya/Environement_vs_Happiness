@@ -1,0 +1,175 @@
+---
+title: "R Notebook"
+output:
+  word_document: default
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library(ExPosition)
+library(InPosition)
+# use the last version of PTCA
+devtools::install_github('HerveAbdi/PTCA4CATA')
+library(PTCA4CATA)
+library(corrplot)
+library(ggplot2)
+# install.packages('gplots')
+# also install data4PCCAR
+devtools::install_github('HerveAbdi/data4PCCAR')
+library(data4PCCAR)
+library(corrplot)
+```
+
+
+```{r}
+WE <- read.csv('WeeklyEarningsbyRace.csv', row.names=1)
+head(WE)
+```
+
+
+```{r}
+
+
+WE_data <- t(WE[-6,])
+colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
+head(WE_data)
+```
+
+```{r}
+
+WE_DESIGN_gender <- rep(c("Men", "Women"),4)
+WE_DESIGN_race <- rep(c("White", "Black", "Asian", "Hispanic"), each=2)
+
+```
+
+
+```{r}
+library("gplots")
+heatmap.2(WE_data, Colv=FALSE, Rowv = FALSE, col = rev(heat.colors(16)))
+
+```
+
+```{r}
+WeeklyEarning <- WE_data
+resCA.sym  <- epCA(WeeklyEarning, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = TRUE)
+```
+
+```{r}
+
+# to run a plain CA but asymetric
+resCA.asym <- epCA(WeeklyEarning, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = FALSE)
+
+```
+
+
+
+```{r}
+Fj.a <- resCA.asym$ExPosition.Data$fj
+Fi   <- resCA.sym$ExPosition.Data$fi
+Fj   <- resCA.sym$ExPosition.Data$fj
+constraints.sym <- minmaxHelper(mat1 = Fi, mat2  = Fj)
+constraints.asym <- minmaxHelper(mat1 = Fi, mat2  = Fj.a)
+
+```
+
+```{r}
+# Get some colors ----
+color4Authors <-prettyGraphsColorSelection(n.colors = nrow(Fi))
+# baseMaps ----
+baseMap.i <- createFactorMap(Fi, constraints = constraints.sym,
+                             col.points = color4Authors,
+                             col.labels = color4Authors)
+```
+
+```{r}
+print(baseMap.i$zeMap)
+
+```
+
+```{r}
+baseMap.j <- createFactorMap(Fj, constraints = constraints.sym,
+                             color.points = 'darkorchid4')
+print(baseMap.i$zeMap + baseMap.j$zeMap_dots + baseMap.j$zeMap_text)
+
+
+```
+
+```{r}
+symMap  <- createFactorMapIJ(Fi,Fj,
+                             col.points.i = color4Authors,
+                             col.labels.i = color4Authors)
+
+asymMap  <- createFactorMapIJ(Fi,Fj.a,
+                              col.points.i = color4Authors,
+                              col.labels.i = color4Authors)
+
+labels4CA <- createxyLabels(resCA = resCA.sym)
+
+# draw the maps ----
+map.IJ.sym <- symMap$baseMap + symMap$I_labels + symMap$I_points +
+  symMap$J_labels + symMap$J_points + labels4CA
+print(map.IJ.sym)
+```
+
+```{r}
+map.IJ.asym <- asymMap$baseMap + asymMap$I_labels + 
+  asymMap$I_points + asymMap$J_labels + 
+  asymMap$J_points + labels4CA
+print(map.IJ.asym)
+
+```
+
+
+
+```{r}
+we_data_inf <- epCA.inference.battery(WE_data, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE)
+
+```
+```{r}
+library(RColorBrewer)
+BR <- we_data_inf$Inference.Data$fj.boots$tests$boot.ratios
+col4J = brewer.pal(n = 5, name='Set1')
+
+laDim = 1
+wedata.BR1 <- PrettyBarPlot2(BR[,laDim],
+                          threshold = 2,
+                          font.size = 5,
+                          color4bar = gplots::col2hex(col4J), # we need hex code
+                          main = paste0('Bootstrap ratio ',laDim),
+                          ylab = 'Bootstrap ratios'
+                          #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
+)
+print(wedata.BR1)
+```
+
+
+```{r}
+we_data_inf <- epCA.inference.battery(t(WE_data), DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE)
+
+BR <- we_data_inf$Inference.Data$fj.boots$tests$boot.ratios
+col4J = brewer.pal(n = 8, name='Set1')
+
+laDim = 1
+wedata.BR1 <- PrettyBarPlot2(BR[,laDim],
+                          threshold = 2,
+                          font.size = 5,
+                          color4bar = gplots::col2hex(col4J), # we need hex code
+                          main = paste0('Bootstrap ratio ',laDim),
+                          ylab = 'Bootstrap ratios'
+                          #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
+)
+print(wedata.BR1)
+```
+
+
+```{r}
+PTCA4CATA::PlotScree(ev = resCA.sym$ExPosition.Data$eigs,
+                      p.ev =  we_data_inf$Inference.Data$components$p.vals,
+                      title = 'SCREE Plot',
+                      plotKaiser = TRUE
+)
+```
