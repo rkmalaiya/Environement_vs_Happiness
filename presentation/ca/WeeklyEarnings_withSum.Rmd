@@ -1,12 +1,25 @@
 ---
-title: "R Notebook"
+title: "All Countries Environmental Data"
 output:
-  word_document: default
   html_notebook: default
+  word_document: default
+  pdf_document: default
 ---
 
+## Method: PCA
 
-```{r}
+Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
+
+PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
+
+The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
+
+With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
+
+PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+
+
+```{r echo=FALSE, results='hide'}
 library(ExPosition)
 library(InPosition)
 # use the last version of PTCA
@@ -14,99 +27,117 @@ devtools::install_github('HerveAbdi/PTCA4CATA')
 library(PTCA4CATA)
 library(corrplot)
 library(ggplot2)
-# install.packages('gplots')
-# also install data4PCCAR
 devtools::install_github('HerveAbdi/data4PCCAR')
 library(data4PCCAR)
 library(corrplot)
 library(RColorBrewer)
+library("gplots")
+
 ```
 
+## Dataset
 
-```{r}
+* Data: Measurements of Weekly Earnings per Race
+* Rows: There are 6 observations representing Asian/White/Black, Men/Woman.
+* Columns: Total 6 variables grouping people based on Decile and Quartile ranges of their weekly income.
+
+
+```{r echo=FALSE}
 WE <- read.csv('WeeklyEarningsbyRace.csv', row.names=1)
 head(WE)
 ```
 
+However, here we can see that it may not be advisable to include Quartile and Decile intervals in the same analysis. Hence, we go ahead with Quartile Ranges only.
 
-```{r}
+```{r echo=FALSE}
 
 
-WE_data <- t(WE[-6,])
+WE_data <- t(WE[c(2,3,4,6),])
 
 WE_data_withsum = WE_data
 
-#WE_data_withsum[,2] = WE_data[,2] - WE_data[,1]
+WE_data_withsum[,2] = WE_data[,2] - WE_data[,1]
 WE_data_withsum[,3] = WE_data[,3] - WE_data[,2]
 WE_data_withsum[,4] = WE_data[,4] - WE_data[,3]
-WE_data_withsum[,5] = WE_data[,5] - WE_data[,4]
+#WE_data_withsum[,5] = WE_data[,5] - WE_data[,1]
 
 WE_data = WE_data_withsum
 
-colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
+#colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
+colnames(WE_data) <- c('1stQ', '2ndQ', '3rdQ', 'Total')
 
 head(WE_data)
 
 ```
+* Research Question
 
+How do the 137 countries differ on these variables?
 
-```{r}
+## Analysis 
+
+There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
+
+```{r echo=FALSE, results='hide'}
 
 WE_DESIGN_gender <- rep(c("Men", "Women"),4)
 WE_DESIGN_race <- rep(c("White", "Black", "Asian", "Hispanic"), each=2)
 
 ```
 
+### Heatmap 
+Visually analyze multicollinearity in the system. Analyze the 
 
-```{r}
-library("gplots")
-
+```{r echo=FALSE}
 heatmap.2(WE_data, Colv=FALSE, Rowv = FALSE, col = rev(heat.colors(16))) #brewer.pal(n = 5, name='Set1'))
 ```
 
-```{r}
+```{r echo=FALSE, results='hide'}
 Weekly_Earnings <- WE_data
-resCA.sym  <- epCA(Weekly_Earnings, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = TRUE)
-```
-
-```{r}
+resCA.sym  <- epCA(Weekly_Earnings, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = TRUE, graphs = FALSE)
 
 # to run a plain CA but asymetric
-resCA.asym <- epCA(Weekly_Earnings, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = FALSE)
+resCA.asym <- epCA(Weekly_Earnings, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, symmetric = FALSE, graphs = FALSE)
+
+we_data_inf <- epCA.inference.battery(WE_data, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, graphs = FALSE)
+we_data_inf_t <- epCA.inference.battery(t(WE_data), DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE, graphs = FALSE)
 
 ```
 
 
+#### Scree Plot
+Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
+
+P.S. The most contribution component may not always be most useful for a given research question. 
 
 ```{r}
+PTCA4CATA::PlotScree(ev = resCA.sym$ExPosition.Data$eigs,
+                      p.ev =  we_data_inf$Inference.Data$components$p.vals,
+                      title = 'SCREE Plot',
+                      plotKaiser = TRUE
+)
+```
+
+#### Factor Scores 
+
+Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
+
+
+```{r echo=FALSE, results='hide'}
 Fj.a <- resCA.asym$ExPosition.Data$fj
+cj.a <- resCA.asym$ExPosition.Data$cj
+ci.a <- resCA.asym$ExPosition.Data$ci
+
 Fi   <- resCA.sym$ExPosition.Data$fi
 Fj   <- resCA.sym$ExPosition.Data$fj
 constraints.sym <- minmaxHelper(mat1 = Fi, mat2  = Fj)
 constraints.asym <- minmaxHelper(mat1 = Fi, mat2  = Fj.a)
 
+color4Authors <-prettyGraphsColorSelection(n.colors = nrow(ci.a))
 ```
 
-```{r}
-# Get some colors ----
-color4Authors <-prettyGraphsColorSelection(n.colors = nrow(Fi))
-# baseMaps ----
-baseMap.i <- createFactorMap(Fi, constraints = constraints.sym,
-                             col.points = color4Authors,
-                             col.labels = color4Authors)
-print(baseMap.i$zeMap)
+#### Symmetric Plot
 
-```
-
-```{r}
-baseMap.j <- createFactorMap(Fj, constraints = constraints.sym,
-                             color.points = 'darkorchid4')
-print(baseMap.i$zeMap + baseMap.j$zeMap_dots + baseMap.j$zeMap_text)
-
-
-```
-
-```{r}
+```{r echo=FALSE, results='hide'}
 symMap  <- createFactorMapIJ(Fi,Fj,
                              col.points.i = color4Authors,
                              col.labels.i = color4Authors)
@@ -117,11 +148,15 @@ asymMap  <- createFactorMapIJ(Fi,Fj.a,
 
 labels4CA <- createxyLabels(resCA = resCA.sym)
 
-# draw the maps ----
+```
+
+```{r}
 map.IJ.sym <- symMap$baseMap + symMap$I_labels + symMap$I_points +
   symMap$J_labels + symMap$J_points + labels4CA
 print(map.IJ.sym)
 ```
+
+#### Asymmetric Plot
 
 ```{r}
 map.IJ.asym <- asymMap$baseMap + asymMap$I_labels + 
@@ -131,19 +166,59 @@ print(map.IJ.asym)
 
 ```
 
+#### Most Contributing Variables
 
-
-```{r}
-we_data_inf <- epCA.inference.battery(WE_data, DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE)
-
+```{r echo=FALSE, results='hide'}
+color4I <- brewer.pal(n = nrow(ci.a), name='Set3')
+# baseMaps ----
+ctr.I <- ci.a * sign(Fi[,1]) 
 ```
 
 ```{r}
 
-BR <- we_data_inf$Inference.Data$fj.boots$tests$boot.ratios
-col4J = brewer.pal(n = 5, name='Set1')
+PTCA4CATA::PrettyBarPlot2(ctr.I[,1], 
+                       threshold = 1 / NROW(ctr.I), 
+                       font.size = 4, 
+                       color4bar = gplots::col2hex(color4I), 
+                       color4ns = 'grey', 
+                       main = 'Observations: Contributions (Signed)', 
+                       ylab = 'Contributions', ylim = c(1.2*min(ctr.I),
+                        1.2*max(ctr.I) ), 
+                       horizontal = FALSE ) 
 
+```
+
+```{r echo=FALSE, results='hide'}
+# Get some colors ----
+#color4Authors <-prettyGraphsColorSelection(n.colors = nrow(ci.a))
+color4J <- brewer.pal(n = nrow(cj.a), name='Set1')
+# baseMaps ----
+ctr.J <- cj.a * sign(Fj[,1]) 
+```
+
+```{r}
+PTCA4CATA::PrettyBarPlot2(ctr.J[,1], 
+                       threshold = 1 / NROW(ctr.J), 
+                       font.size = 4, 
+                       color4bar = color4J, 
+                       color4ns = 'grey', 
+                       main = 'Observations: Contributions (Signed)', 
+                       ylab = 'Contributions', ylim = c(1.2*min(ctr.J),
+                        1.2*max(ctr.J) ), 
+                       horizontal = FALSE ) 
+
+```
+
+#### Inference CA
+
+```{r echo=FALSE, results='hide'}
+BR <- we_data_inf$Inference.Data$ fj.boots$tests$boot.ratios
+col4J = brewer.pal(n = 4, name='Set1')
 laDim = 1
+
+```
+
+```{r}
 ba001.BR1 <- PrettyBarPlot2(BR[,laDim],
                           threshold = 2,
                           font.size = 5,
@@ -156,13 +231,14 @@ print(ba001.BR1)
 
 ```
 
-```{r}
-we_data_inf <- epCA.inference.battery(t(WE_data), DESIGN = WE_DESIGN_gender, make_design_nominal = TRUE)
 
-BR <- we_data_inf$Inference.Data$fj.boots$tests$boot.ratios
+```{r echo=FALSE, results='hide'}
+BR <- we_data_inf_t$Inference.Data$fj.boots$tests$boot.ratios
 col4J = brewer.pal(n = 8, name='Set1')
-
 laDim = 1
+```
+
+```{r}
 wedata.BR1 <- PrettyBarPlot2(BR[,laDim],
                           threshold = 2,
                           font.size = 5,
@@ -174,11 +250,3 @@ wedata.BR1 <- PrettyBarPlot2(BR[,laDim],
 print(wedata.BR1)
 ```
 
-
-```{r}
-PTCA4CATA::PlotScree(ev = resCA.sym$ExPosition.Data$eigs,
-                      p.ev =  we_data_inf$Inference.Data$components$p.vals,
-                      title = 'SCREE Plot',
-                      plotKaiser = TRUE
-)
-```
