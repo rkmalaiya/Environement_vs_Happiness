@@ -80,7 +80,7 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 
 
 ### Correlation Plot
-Visually analyze multicollinearity in the system. Analyze the 
+Visually analyze multicollinearity in the system.  
 
 ```{r}
 corr_result = cor(country_env_df_for_corr)
