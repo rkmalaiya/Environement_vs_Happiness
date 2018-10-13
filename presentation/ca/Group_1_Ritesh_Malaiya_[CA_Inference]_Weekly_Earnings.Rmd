@@ -1,33 +1,43 @@
 ---
 title: "All Countries Environmental Data"
 output:
-  html_notebook: default
   word_document: default
+  html_notebook: default
   pdf_document: default
 ---
 
-## Method: PCA
+## Method: CA
 
-Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
+Correspondence Analysis (CA) is a multivariate graphical technique designed to explore relationships among categorical variables. The outcome from correspondence analysis is a graphical display of the rows and columns of a contingency table that is designed to permit visualization of the salient relationships among the variable responses in a low-dimensional space. Such a representation reveals a more global picture of the relationships among row-column pairs which would otherwise not be detected through a pairwise analysis.
 
-PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
+**Calculate CA:**
 
-The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
+* Step 1: Compute row and column averages
+* Step 2: Compute the expected values
+* Step 3: Compute the residuals
+* Step 4: Plotting labels with similar residuals close together
+* Step 5: Interpreting the relationship between row and column labels
 
-With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
+**How to Interpret Correspondence Analysis Plots**
 
-PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+Correspondence analysis does not show us which rows have the highest numbers, nor which columns have the highest numbers. It instead shows us the relativities. 
+
+* The further things are from the origin, the more discriminating they are.
+* Look at the length of the line connecting the row label to the origin. Longer lines indicate that the row label is highly associated with some of the column labels (i.e., it has at least one high residual).
+* Look at the length of the label connecting the column label to the origin. Longer lines again indicate a high association between the column label and one or more row labels.
+* Look at the angle formed between these two lines. Really small angles indicate association. 90 degree angles indicate no relationship. Angles near 180 degrees indicate negative associations.
 
 
-```{r echo=FALSE, results='hide'}
+
+```{r echo=FALSE, results='hide', message=FALSE}
 library(ExPosition)
 library(InPosition)
 # use the last version of PTCA
-devtools::install_github('HerveAbdi/PTCA4CATA')
+#devtools::install_github('HerveAbdi/PTCA4CATA')
 library(PTCA4CATA)
 library(corrplot)
 library(ggplot2)
-devtools::install_github('HerveAbdi/data4PCCAR')
+#devtools::install_github('HerveAbdi/data4PCCAR')
 library(data4PCCAR)
 library(corrplot)
 library(RColorBrewer)
@@ -71,11 +81,11 @@ head(WE_data)
 ```
 * Research Question
 
-How do the 137 countries differ on these variables?
+  + Does total earning of different races differ.
+  + Which race get less than median salary (2nd Quartile)
 
 ## Analysis 
 
-There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
 
 ```{r echo=FALSE, results='hide'}
 
@@ -85,9 +95,8 @@ WE_DESIGN_race <- rep(c("White", "Black", "Asian", "Hispanic"), each=2)
 ```
 
 ### Heatmap 
-Visually analyze multicollinearity in the system. Analyze the 
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 heatmap.2(WE_data, Colv=FALSE, Rowv = FALSE, col = rev(heat.colors(16))) #brewer.pal(n = 5, name='Set1'))
 ```
 
@@ -104,7 +113,7 @@ we_data_inf_t <- epCA.inference.battery(t(WE_data), DESIGN = WE_DESIGN_gender, m
 ```
 
 
-#### Scree Plot
+### Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
@@ -117,9 +126,7 @@ PTCA4CATA::PlotScree(ev = resCA.sym$ExPosition.Data$eigs,
 )
 ```
 
-#### Factor Scores 
-
-Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
+### Factor Scores 
 
 
 ```{r echo=FALSE, results='hide'}
@@ -209,7 +216,7 @@ PTCA4CATA::PrettyBarPlot2(ctr.J[,1],
 
 ```
 
-#### Inference CA
+### Inference CA
 
 ```{r echo=FALSE, results='hide'}
 BR <- we_data_inf$Inference.Data$ fj.boots$tests$boot.ratios
