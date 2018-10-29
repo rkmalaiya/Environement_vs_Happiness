@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+
+rm(list = ls())
+graphics.off()
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
+library(corrplot)
+library(ExPosition)
+library(InPosition)
+library(animation)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(PTCA4CATA)
+library(purrr)
+library(tidyr)
+
+```
+
+```{r}
+data("iris")
+summary(iris)
+
+
+
+```
+
+
+```{r}
+
+mesIris <- iris[,1:4]
+grIris <- iris[,5]
+
+resPCA <- epPCA(DATA = mesIris, scale = 'SS1', DESIGN = grIris, graphs = FALSE)
+
+```
+
+
+
+```{r}
+
+
+
+```
