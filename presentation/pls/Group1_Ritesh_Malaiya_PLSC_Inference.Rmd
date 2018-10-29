@@ -1,0 +1,347 @@
+---
+title: "All Countries Environmental Data"
+output:
+  word_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+
+```{r include=FALSE, results='hide'}
+# Installing required packages
+# sudo apt-get install libcairo2-dev
+# sudo apt-get install libxml2-dev
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
+library(corrplot)
+library(ExPosition)
+library(InPosition)
+library(animation)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(PTCA4CATA)
+library(reshape2)
+
+# Source the function file:
+file4PLSCfunctions <- paste0(getwd(),'/inferences4PLSC.R')
+source(file4PLSCfunctions)
+#
+install.packages('TExPosition')
+library(TExPosition)
+
+
+```
+
+
+## Method: PCA
+
+Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
+
+PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
+
+The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
+
+With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
+
+PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+
+
+## Dataset
+
+```{r include=FALSE, results='hide'}
+country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
+country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
+
+country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
+```
+
+* Data: Measurements of environment conditions in Countries
+* Rows: There are 137 observations, 1 for each country.
+* Columns: Total 29 variables
+ + Qualitative: Country (nominal), Happiness (Ordinal).
+ + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
+
+* Structure of Data
+
+```{r data_summary}
+str(country_env_df)
+```
+
+
+* Research Question
+
+How do the 137 countries differ on these variables?
+
+## Analysis 
+
+There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
+
+```{r echo=FALSE}
+
+country_env_df_for_pca = country_env_df[, !names(country_env_df) %in% c('Country', 'Happiness_Rank')]
+
+rownames(country_env_df_for_corr) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+
+```
+
+
+### Correlation Plot
+Visually analyze multicollinearity in the system.  
+
+```{r}
+rain = country_env_df_for_pca[,grep('rain',colnames(country_env_df_for_pca))]
+temp = country_env_df_for_pca[,grep('temp',colnames(country_env_df_for_pca))]
+
+corr_result = cor(rain, temp)
+corrplot(corr_result,order = 'hclust', addrect = 3)
+```
+
+### Identify Latent Components
+
+#### PCA (with Inference)
+
+```{r pca }
+
+
+
+
+resPLSC <- tepPLS(rain,temp,DESIGN = country_env_df$Happiness_Rank,graphs = FALSE)
+
+
+
+```
+
+Now we have Factor scores and Loadings. 
+* Factor Scores are the new Data points w.r.t. new Components achieved with help of SVD.
+* Loadings represent correlation between variables w.r.t the choosen Components. Can be interpreted in 3 ways
+  + As slices of inertia of the contribution data table w.r.t. the choosen Components
+  + As correlation between columns (features) of Original Data and Factor scores of each Components (latent features).
+  + As coefficients of optimal linear combination i.e. Right Sigular Vectors (Q matrix of SVD)
+#### Scree Plot
+
+#### Scree Plot
+Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
+
+P.S. The most contribution component may not always be most useful for a given research question. 
+
+
+```{r}
+
+PTCA4CATA::PlotScree(ev = resPLSC$TExPosition.Data$eigs,
+                      title = 'SCREE Plot',
+                      plotKaiser = TRUE
+)
+
+```
+
+#### Latent Variables 
+
+Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
+
+
+```{r}
+
+comp1 = data.frame(lx1 = resPLSC$TExPosition.Data$lx[,1], ly1 = resPLSC$TExPosition.Data$ly[,1])
+mean_comp1 = comp1
+mean_comp1$Happiness_Rank = country_env_df$Happiness_Rank
+
+list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
+
+lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
+
+country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
+rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
+
+country_env_mean_df <- country_env_mean_df[,2:3]
+
+ country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
+                                                 col.points = lx_col,
+                                                 #col.labels = country_env_df$Happiness_Rank,
+                                                 
+                                                 display.labels = FALSE)
+
+country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title='', 
+                                                 col.points = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 col.labels = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 cex = 8,alpha.points = 0.8,
+                                                 display.labels = TRUE)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs, tau = resPLSC$TExPosition.Data$t) 
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text
+
+print(country_map)
+
+```
+
+#### Salience for Rain
+
+##### Components 1
+
+```{r echo=FALSE}
+
+PrettyBarPlot2(resPLSC$TExPosition.Data$fi[,1],
+              threshold = 0,
+              font.size = 5,
+              main = 'Salience for Rain',
+              horizontal = TRUE,
+              angle.text = 90,
+              ylim=c(-3,3)
+              )
+
+```
+
+##### Component 2
+
+```{r echo=FALSE}
+
+PrettyBarPlot2(resPLSC$TExPosition.Data$fi[,2],
+              threshold = 0,
+              font.size = 5,
+              main = 'Salience for Rain',
+              horizontal = TRUE,
+              angle.text = 90,
+              ylim=c(-3,3)
+              )
+
+```
+
+
+#### Salience for Temperature
+
+
+##### Component 1
+```{r echo=FALSE}
+
+PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,1],
+              threshold = 0,
+              font.size = 4,
+              main = 'Salience for Temperature, Component 1',
+              horizontal = TRUE,
+              angle.text = 90
+              )
+
+```
+
+##### Component 2
+```{r echo=FALSE}
+
+PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,2],
+              threshold = 0,
+              font.size = 4,
+              main = 'Salience for Temperature',
+              horizontal = TRUE,
+              angle.text = 90
+              )
+
+```
+
+
+#### Most Contributing Variables
+
+
+```{r echo=FALSE, include='hide'}
+
+resBoot4PLSC <- Boot4PLSC(rain, # First Data matrix 
+                          temp, # Second Data matrix
+                          nIter = 1000, # How many iterations
+                      Fi = resPLSC$TExPosition.Data$fi,
+                      Fj = resPLSC$TExPosition.Data$fj,
+                      nf2keep = 3,
+                      critical.value = 2,
+                      # To be implemented later
+                      # has no effect currently
+                      alphaLevel = .05)
+#
+# to see what results we have
+print(resBoot4PLSC)
+
+```
+
+
+* Bootstrap Test 
+
+##### Rain - Component 1
+
+```{r}
+
+BR = resBoot4PLSC$bootRatios.i
+
+PrettyBarPlot2(BR[,1],
+              threshold = 2,
+              font.size = 5,
+              main = 'Bootstrap ratio For Rain ',
+              ylab = 'Bootstrap ratios',
+              horizontal = TRUE,
+              ylim = c(-10,12)
+              )
+
+```
+
+
+##### Rain - Component 2
+
+```{r}
+
+BR = resBoot4PLSC$bootRatios.i
+
+PrettyBarPlot2(BR[,2],
+              threshold = 2,
+              font.size = 5,
+              #color4bar = gplots::col2hex(col4J), # we need hex code
+              main = 'Bootstrap ratio For Rain ',
+              ylab = 'Bootstrap ratios',
+              horizontal = TRUE,
+              ylim = c(-10,12)
+              )
+
+```
+
+
+##### Temperature - Component 1
+
+```{r}
+
+BR = resBoot4PLSC$bootRatios.j
+
+PrettyBarPlot2(BR[,1],
+              threshold = 2,
+              font.size = 4,
+              #color4bar = gplots::col2hex(col4J), # we need hex code
+              main = 'Bootstrap ratio For Temperature ',
+              ylab = 'Bootstrap ratios',
+              horizontal = TRUE,
+              ylim = c(-20,15)
+              )
+
+```
+
+
+
+
+##### Temperature - Component 2
+
+```{r}
+
+BR = resBoot4PLSC$bootRatios.j
+
+PrettyBarPlot2(BR[,2],
+              threshold = 2,
+              font.size = 4,
+              #color4bar = gplots::col2hex(col4J), # we need hex code
+              main = 'Bootstrap ratio For Temperature ',
+              ylab = 'Bootstrap ratios',
+              horizontal = TRUE,
+              ylim = c(-20,15)
+              )
+
+```
+
+### Conclusion
+
+
+
