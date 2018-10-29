@@ -62,19 +62,19 @@ However, here we can see that it may not be advisable to include Quartile and De
 ```{r echo=FALSE}
 
 
-WE_data <- t(WE[c(2,3,4,6),])
+WE_data <- t(WE[c(2,3,4),])
 
 WE_data_withsum = WE_data
 
 WE_data_withsum[,2] = WE_data[,2] - WE_data[,1]
 WE_data_withsum[,3] = WE_data[,3] - WE_data[,2]
-WE_data_withsum[,4] = WE_data[,4] - WE_data[,3]
+#WE_data_withsum[,4] = WE_data[,4] - WE_data[,3]
 #WE_data_withsum[,5] = WE_data[,5] - WE_data[,1]
 
 WE_data = WE_data_withsum
 
 #colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
-colnames(WE_data) <- c('1stQ', '2ndQ', '3rdQ', 'Total')
+colnames(WE_data) <- c('1stQ', '2ndQ', '3rdQ') #, 'Total')
 
 head(WE_data)
 
@@ -220,7 +220,7 @@ PTCA4CATA::PrettyBarPlot2(ctr.J[,1],
 
 ```{r echo=FALSE, results='hide'}
 BR <- we_data_inf$Inference.Data$ fj.boots$tests$boot.ratios
-col4J = brewer.pal(n = 4, name='Set1')
+col4J = brewer.pal(n = 3, name='Set1')
 laDim = 1
 
 ```
