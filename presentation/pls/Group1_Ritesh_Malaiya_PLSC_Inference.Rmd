@@ -2,8 +2,10 @@
 title: "All Countries Environmental Data"
 output:
   word_document: default
-  html_notebook: default
+  html_document:
+    df_print: paged
   pdf_document: default
+  html_notebook: default
 ---
 
 
@@ -35,17 +37,9 @@ library(TExPosition)
 ```
 
 
-## Method: PCA
+## Method: PLS-C
 
-Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
-
-PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
-
-The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
-
-With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
-
-PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+PLS is used to find the fundamental relations between two matrices (X and Y), i.e. a latent variable approach to modeling the covariance structures in these two spaces. A PLS model will try to find the multidimensional direction in the X space that explains the maximum multidimensional variance direction in the Y space. PLS regression is particularly suited when the matrix of predictors has more variables than observations, and when there is multicollinearity among X values. PLS bears some relation to principal components regression; instead of finding hyperplanes of maximum variance between the response and independent variables, it finds a linear regression model by projecting the predicted variables and the observable variables to a new space. Because both the X and Y data are projected to new spaces, the PLS family of methods are known as bilinear factor models.
 
 
 ## Dataset
@@ -59,9 +53,7 @@ country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 
 
 * Data: Measurements of environment conditions in Countries
 * Rows: There are 137 observations, 1 for each country.
-* Columns: Total 29 variables
- + Qualitative: Country (nominal), Happiness (Ordinal).
- + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
+* Columns: Columns: Total 2 Tables – All Rain and All Temp
 
 * Structure of Data
 
@@ -72,11 +64,9 @@ str(country_env_df)
 
 * Research Question
 
-How do the 137 countries differ on these variables?
+Which variables in Rain and Temperature contribute most towards happiness
 
 ## Analysis 
-
-There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
 
 ```{r echo=FALSE}
 
@@ -89,7 +79,7 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 
 
 ### Correlation Plot
-Visually analyze multicollinearity in the system.  
+Visually analyze multicollinearity between all varaibles in Rain and Temperature tables.  
 
 ```{r}
 rain = country_env_df_for_pca[,grep('rain',colnames(country_env_df_for_pca))]
@@ -101,26 +91,24 @@ corrplot(corr_result,order = 'hclust', addrect = 3)
 
 ### Identify Latent Components
 
-#### PCA (with Inference)
+#### PLS-C 
 
-```{r pca }
-
-
-
+```{r pca, echo=FALSE, results='hide'}
 
 resPLSC <- tepPLS(rain,temp,DESIGN = country_env_df$Happiness_Rank,graphs = FALSE)
-
+resPerm4PLSC <- perm4PLSC(rain, # First Data matrix 
+                          temp, # Second Data matrix
+                          nIter = 1000 # How mny iterations
+                          )
+# to see what results we have
+print(resPerm4PLSC)
 
 
 ```
 
-Now we have Factor scores and Loadings. 
-* Factor Scores are the new Data points w.r.t. new Components achieved with help of SVD.
-* Loadings represent correlation between variables w.r.t the choosen Components. Can be interpreted in 3 ways
-  + As slices of inertia of the contribution data table w.r.t. the choosen Components
-  + As correlation between columns (features) of Original Data and Factor scores of each Components (latent features).
-  + As coefficients of optimal linear combination i.e. Right Sigular Vectors (Q matrix of SVD)
-#### Scree Plot
+Now we have Latent Variables and Saliences. 
+* Latent Variables are the new Data points w.r.t. correlation between both the tables. Latent Variables exists for each table.
+* Saliences represent correlation between variables of each table. 
 
 #### Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
@@ -130,8 +118,10 @@ P.S. The most contribution component may not always be most useful for a given r
 
 ```{r}
 
+
 PTCA4CATA::PlotScree(ev = resPLSC$TExPosition.Data$eigs,
                       title = 'SCREE Plot',
+                      p.ev = resPerm4PLSC$pEigenvalues,
                       plotKaiser = TRUE
 )
 
@@ -139,12 +129,49 @@ PTCA4CATA::PlotScree(ev = resPLSC$TExPosition.Data$eigs,
 
 #### Latent Variables 
 
-Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
+Lets visualize happiness categories for Components 1 of each table
 
-
-```{r}
+##### Component 1 for both Tables: Rain and Temperature
+```{r echo=FALSE}
 
 comp1 = data.frame(lx1 = resPLSC$TExPosition.Data$lx[,1], ly1 = resPLSC$TExPosition.Data$ly[,1])
+mean_comp1 = comp1
+mean_comp1$Happiness_Rank = country_env_df$Happiness_Rank
+
+list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
+
+lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
+
+country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
+rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
+
+country_env_mean_df <- country_env_mean_df[,2:3]
+
+country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
+                                                 col.points = lx_col,
+                                                 #col.labels = country_env_df$Happiness_Rank,
+                                                 
+                                                 display.labels = FALSE)
+
+country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title='', 
+                                                 col.points = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 col.labels = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 cex = 8,alpha.points = 0.8,
+                                                 display.labels = TRUE)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs,  tau = resPLSC$TExPosition.Data$t,axisName = "Table") 
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1')
+
+print(country_map)
+
+```
+
+##### Component 2 for both Tables: Rain and Temperature
+```{r echo=FALSE}
+
+comp1 = data.frame(lx1 = resPLSC$TExPosition.Data$lx[,2], ly1 = resPLSC$TExPosition.Data$ly[,2])
 mean_comp1 = comp1
 mean_comp1$Happiness_Rank = country_env_df$Happiness_Rank
 
@@ -169,14 +196,16 @@ country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title
                                                  cex = 8,alpha.points = 0.8,
                                                  display.labels = TRUE)
 
-country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs, tau = resPLSC$TExPosition.Data$t) 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs, tau = resPLSC$TExPosition.Data$t, axisName = 'Table') 
 
 
-country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 2')
 
 print(country_map)
 
 ```
+
+
 
 #### Salience for Rain
 
@@ -241,10 +270,10 @@ PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,2],
 ```
 
 
-#### Most Contributing Variables
+#### Most Contributing Variables - PLS-C (with Inference)
 
 
-```{r echo=FALSE, include='hide'}
+```{r echo=FALSE, results='hide'}
 
 resBoot4PLSC <- Boot4PLSC(rain, # First Data matrix 
                           temp, # Second Data matrix
@@ -343,5 +372,12 @@ PrettyBarPlot2(BR[,2],
 
 ### Conclusion
 
+Here Component 2 seems to best seperate Happiness levels. Let's compare Component 2 for both tables.
 
+* Table 1 & 2 Component 2
+  + Latent Variables: Very Happy vs Unhappy (for Rain and Temperature both)
+  + Salience:
+    * Rain: It seems dryness and wetness at a montly scale have more effect than coldness or yearly patterns.
+    * Temperature: All temperature variations at a monthly and yearly scale seems to impact happiness.
+  
 

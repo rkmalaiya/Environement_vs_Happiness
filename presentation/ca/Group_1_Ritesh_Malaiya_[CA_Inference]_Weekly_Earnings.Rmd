@@ -76,7 +76,7 @@ WE_data = WE_data_withsum
 #colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
 colnames(WE_data) <- c('1stQ', '2ndQ', '3rdQ') #, 'Total')
 
-head(WE_data)
+WE_data
 
 ```
 * Research Question
@@ -91,7 +91,8 @@ head(WE_data)
 
 WE_DESIGN_gender <- rep(c("Men", "Women"),4)
 WE_DESIGN_race <- rep(c("White", "Black", "Asian", "Hispanic"), each=2)
-
+typeof(WE_DESIGN_gender)
+WE_DESIGN_gender
 ```
 
 ### Heatmap 

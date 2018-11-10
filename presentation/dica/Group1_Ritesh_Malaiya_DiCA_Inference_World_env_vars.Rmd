@@ -27,6 +27,9 @@ library(tidyr)
 library(ExPosition)
 library(InPosition)
 library(dummies)
+suppressMessages(library(flextable))
+suppressMessages(library(rvg))
+suppressMessages(library(ExPosition))
 # use the last version of PTCA
 
 # also install data4PCCAR last version
@@ -149,7 +152,7 @@ Structure of Data after binning based on above observation.
 
 cut_r <- function(x, b = 4 ) {
   c <- cut(x,breaks = b, include.lowest = TRUE, labels = FALSE)
-  return (factor(c))
+  return (c) #(factor(c))
 }
 
 country_env_df_for_mca = mapply(function(col, col_name) cut_r(col, c(min(col), cut_points[[col_name]], max(col))) , country_env_df_for_pca, colnames(country_env_df_for_pca)  )
@@ -174,12 +177,26 @@ ggplot(data=cor_p, aes(x=rownames(cor_p), y=cor_p$cor_spear)) +
 
 ```
 
+
+
+```{r pca, echo=FALSE, results='hide', message=FALSE}
+
+happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
+
+country_env_mca <- tepDICA(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE,symmetric = TRUE)
+
+country_env_mca_inf <- tepDICA.inference.battery(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE, test.iters=50, make_design_nominal=FALSE)
+
+```
+
+
+
 ### Correlation Plot
 Visually analyze multicollinearity in the system of the original data
 
 ```{r}
-corr_result = cor(country_env_df_for_corr)
-corrplot(corr_result,order = 'hclust', addrect = 7)
+corr_result = cor(t(happiness_dummies) %*% as.matrix(country_env_df_for_mca))
+corrplot(corr_result)#,order = 'hclust', addrect = 7)
 ```
 
 ### Heatmap
@@ -200,25 +217,6 @@ a0001a.corMat.phi2 <- recordPlot()
 ## Identify Latent Components - MCA (With Inference)
 
 
-```{r pca, echo=FALSE, results='hide', message=FALSE}
-
-country_env_mca <- epMCA(DATA = country_env_df_for_mca, DESIGN = country_env_df$Happiness_Rank, graphs = FALSE,symmetric = TRUE)
-country_env_mca_a <- epMCA(DATA = country_env_df_for_mca, DESIGN = country_env_df$Happiness_Rank, graphs = FALSE, symmetric = FALSE)
-
-country_env_mca_inf <- InPosition::epMCA.inference.battery(DATA = country_env_df_for_mca, DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
-
-
-col_palate = brewer.pal(n = 12, name='Set3')
-  
-col4J = vector('list', nrow(country_env_mca$ExPosition.Data$fj))
-col4J[grep('rain',rownames(country_env_mca$ExPosition.Data$fj))] = col_palate[1]
-col4J[grep('temp',rownames(country_env_mca$ExPosition.Data$fj))] = 'red' #col_palate[2]
-col4J[sapply(col4J, 'is.null')] = rep( col_palate[c(-1)], length.out = 28)
-
-#length(col4J)
-#col4J[sapply(col4J, 'is.null')]
-```
-
 ### Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
@@ -227,7 +225,7 @@ P.S. The most contribution component may not always be most useful for a given r
 
 ```{r}
 
-PTCA4CATA::PlotScree(ev = country_env_mca$ExPosition.Data$eigs,
+PTCA4CATA::PlotScree(ev = country_env_mca$TExPosition.Data$eigs,
                       p.ev =  country_env_mca_inf$Inference.Data$components$p.vals,
                       title = 'SCREE Plot',
                       plotKaiser = TRUE
@@ -242,34 +240,41 @@ Lets visualize happiness categories for components 1-10, to make a decision (vis
 
 ```{r echo=FALSE}
 
-loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
 
-list_color <- c('#305ABF' = 'burlywood3', '#84BF30' = 'royalblue1', '#BF30AD' = 'springgreen4')
-happy_levels <- c('Happy', 'Happier', 'Happiest')
+comp1 = data.frame(lx1 = country_env_mca$TExPosition.Data$lx[,1], 
+                   ly1 = country_env_mca$TExPosition.Data$ly[,1])
+mean_comp1 = comp1
+mean_comp1$Happiness_Rank = country_env_df$Happiness_Rank
 
-country_env_mca$Plotting.Data$fi.col[,1] <- recode (country_env_mca$Plotting.Data$fi.col, !!!list_color)
+list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
 
-groups_of_data <- vector('list', 3)
+lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
 
-col = country_env_mca$Plotting.Data$fi.col
-fi = country_env_mca$ExPosition.Data$fi
-j = 1
-color_filter = col == unique(col)[1]
-groups_of_data[[j]] = color_filter
-j = j + 1
+country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
+rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
 
-color_filter = col == unique(col)[2]
-groups_of_data[[j]] = color_filter
-j = j + 1
+country_env_mean_df <- country_env_mean_df[,2:3]
 
-color_filter = col == unique(col)[3]
-groups_of_data[[j]] = color_filter
-j = j + 1
+country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
+                                                 col.points = lx_col,
+                                                 #col.labels = country_env_df$Happiness_Rank,
+                                                 
+                                                 display.labels = FALSE)
 
-country_env_mca_mean = aggregate(x=country_env_mca$ExPosition.Data$fi, by = split(col, col(col)), FUN = mean)
-rownames(country_env_mca_mean) <- happy_levels
+country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title='', 
+                                                 col.points = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 col.labels = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 cex = 8,alpha.points = 0.8,
+                                                 display.labels = TRUE)
 
-country_env_mca_mean <- country_env_mca_mean[-1]
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs,  tau = resPLSC$TExPosition.Data$t,axisName = "Table") 
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1')
+
+print(country_map)
+
+
 
 ```
 
