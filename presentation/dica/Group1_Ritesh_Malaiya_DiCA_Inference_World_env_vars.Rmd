@@ -237,55 +237,6 @@ PTCA4CATA::PlotScree(ev = country_env_mca$TExPosition.Data$eigs,
 
 ### Factor Scores 
 
-Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
-
-
-```{r echo=FALSE}
-
-
-BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$TExPosition.Data$fii, 
-                                    design = country_env_df$Happiness_Rank,
-                                    niter = 1000,
-                                    suppressProgressBar = TRUE)
-axis1 = 1
-axis2 = 2
-
-country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fii, title='', 
-                                             col.points = country_env_mca$Plotting.Data$fii.col,
-                                             col.labels = country_env_mca$Plotting.Data$fii.col,
-                                             axis1 = axis1,
-                                             axis2 = axis2,
-                                             display.labels = FALSE)
-
-country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fi,
-                                                 col.points = unique(country_env_mca$Plotting.Data$fi.col),
-                                                 col.labels = unique(country_env_mca$Plotting.Data$fi.col),
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = TRUE,
-                                                 cex = 8,alpha.points = 0.8)
-
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
-
-
-
-country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
-
-
-GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
-                                       names.of.factors = c(paste("Dimension",axis1), paste("Dimension",axis2)),
-                                       col = unique(country_env_mca$Plotting.Data$fi.col),
-                                       p.level = .95
-)
-
-
-print(country_map + GraphElli)
-
-
-
-
-```
-
 **With Confidence Interval**
 ```{r echo=FALSE}
 BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$TExPosition.Data$fii, 
@@ -499,7 +450,8 @@ zeDim = i
 pH1 <- prettyHist(
   distribution = country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim], 
   observed = country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim], 
-  xlim = c(country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim] - 2, country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim]+2), # needs to be set by hand
+  #xlim = c(country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim] - 2, country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim]+2), # needs to be set by hand
+  xlim = c(-0.001, 0.01),
   breaks = 20,
   border = "black", 
   main = paste0("BADA: Permutation Test for Eigenvalue ",zeDim),
