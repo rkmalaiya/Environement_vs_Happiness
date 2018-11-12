@@ -24,12 +24,11 @@ library(gplots)
 library(PTCA4CATA)
 library(purrr)
 library(tidyr)
-library(ExPosition)
-library(InPosition)
+library(TExPosition)
+library(TInPosition)
 library(dummies)
 suppressMessages(library(flextable))
 suppressMessages(library(rvg))
-suppressMessages(library(ExPosition))
 # use the last version of PTCA
 
 # also install data4PCCAR last version
@@ -182,8 +181,10 @@ ggplot(data=cor_p, aes(x=rownames(cor_p), y=cor_p$cor_spear)) +
 ```{r pca, echo=FALSE, results='hide', message=FALSE}
 
 happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
+colnames(happiness_dummies) <- c('Happiest', 'Happier', 'Happy' )
 
-country_env_mca <- tepDICA(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE,symmetric = TRUE)
+
+country_env_mca <- tepDICA(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE, make_data_nominal = TRUE)
 
 country_env_mca_inf <- tepDICA.inference.battery(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE, test.iters=50, make_design_nominal=FALSE)
 
@@ -195,8 +196,9 @@ country_env_mca_inf <- tepDICA.inference.battery(DATA = as.matrix(country_env_df
 Visually analyze multicollinearity in the system of the original data
 
 ```{r}
-corr_result = cor(t(happiness_dummies) %*% as.matrix(country_env_df_for_mca))
-corrplot(corr_result)#,order = 'hclust', addrect = 7)
+
+heatmap.2(t(happiness_dummies) %*% as.matrix(country_env_df_for_mca), col = rev(heat.colors(16)), dendrogram = 'none', trace = 'none', margins = c(8, 16)) #tracecol=NA)
+
 ```
 
 ### Heatmap
@@ -241,62 +243,21 @@ Lets visualize happiness categories for components 1-10, to make a decision (vis
 ```{r echo=FALSE}
 
 
-comp1 = data.frame(lx1 = country_env_mca$TExPosition.Data$lx[,1], 
-                   ly1 = country_env_mca$TExPosition.Data$ly[,1])
-mean_comp1 = comp1
-mean_comp1$Happiness_Rank = country_env_df$Happiness_Rank
-
-list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
-
-lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
-
-country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
-rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
-
-country_env_mean_df <- country_env_mean_df[,2:3]
-
-country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
-                                                 col.points = lx_col,
-                                                 #col.labels = country_env_df$Happiness_Rank,
-                                                 
-                                                 display.labels = FALSE)
-
-country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title='', 
-                                                 col.points = c('springgreen4', 'royalblue1', 'burlywood3'),
-                                                 col.labels = c('springgreen4', 'royalblue1', 'burlywood3'),
-                                                 cex = 8,alpha.points = 0.8,
-                                                 display.labels = TRUE)
-
-#country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs,  tau = resPLSC$TExPosition.Data$t,axisName = "Table") 
-
-
-country_map = country_factor_map$zeMap + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1') #+ country_label4Map
-
-print(country_map)
-
-
-
-```
-
-**With Confidence Interval**
-```{r echo=FALSE}
-BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$ExPosition.Data$fi, 
+BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$TExPosition.Data$fii, 
                                     design = country_env_df$Happiness_Rank,
                                     niter = 1000,
                                     suppressProgressBar = TRUE)
-for (i in 1:2){
-  
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
+axis1 = 1
+axis2 = 2
 
-  country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$ExPosition.Data$fi, title='', 
-                                                 col.points = country_env_mca$Plotting.Data$fi.col,
-                                                 col.labels = country_env_mca$Plotting.Data$fi.col,
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = FALSE)
+country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fii, title='', 
+                                             col.points = country_env_mca$Plotting.Data$fii.col,
+                                             col.labels = country_env_mca$Plotting.Data$fii.col,
+                                             axis1 = axis1,
+                                             axis2 = axis2,
+                                             display.labels = FALSE)
 
-country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca_mean,
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fi,
                                                  col.points = unique(country_env_mca$Plotting.Data$fi.col),
                                                  col.labels = unique(country_env_mca$Plotting.Data$fi.col),
                                                  axis1 = axis1,
@@ -304,7 +265,7 @@ country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca_mean,
                                                  display.labels = TRUE,
                                                  cex = 8,alpha.points = 0.8)
 
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
 
 
 
@@ -317,10 +278,56 @@ GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
                                        p.level = .95
 )
 
-country_map = country_map + GraphElli
 
-print(country_map)
-}
+print(country_map + GraphElli)
+
+
+
+
+```
+
+**With Confidence Interval**
+```{r echo=FALSE}
+BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$TExPosition.Data$fii, 
+                                    design = country_env_df$Happiness_Rank,
+                                    niter = 1000,
+                                    suppressProgressBar = TRUE)
+
+  
+axis1 = 1
+axis2 = 2
+
+  country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fii, title='', 
+                                                 col.points = country_env_mca$Plotting.Data$fii.col,
+                                                 col.labels = country_env_mca$Plotting.Data$fii.col,
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = FALSE)
+
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fi,
+                                                 col.points = unique(country_env_mca$Plotting.Data$fi.col),
+                                                 col.labels = unique(country_env_mca$Plotting.Data$fi.col),
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = TRUE,
+                                                 cex = 8,alpha.points = 0.8)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
+
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
+
+
+GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
+                                       names.of.factors = c(paste("Dimension",axis1), paste("Dimension",axis2)),
+                                       col = unique(country_env_mca$Plotting.Data$fi.col),
+                                       p.level = .95
+)
+
+
+print(country_map + GraphElli)
+
 
 ```
 
@@ -329,19 +336,19 @@ print(country_map)
 
 ```{r echo=FALSE}
 
-for (i in 1:2){
-  
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
 
-country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$ExPosition.Data$fi, title='', 
-                                                 col.points = country_env_mca$Plotting.Data$fi.col,
-                                                 col.labels = country_env_mca$Plotting.Data$fi.col,
+  
+axis1 = 1
+axis2 = 2
+
+country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fii, title='', 
+                                                 col.points = country_env_mca$Plotting.Data$fii.col,
+                                                 col.labels = country_env_mca$Plotting.Data$fii.col,
                                                  axis1 = axis1,
                                                  axis2 = axis2,
                                                  display.labels = FALSE)
 
-country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca_mean,
+country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fi,
                                                  col.points = unique(country_env_mca$Plotting.Data$fi.col),
                                                  col.labels = unique(country_env_mca$Plotting.Data$fi.col),
                                                  axis1 = axis1,
@@ -349,30 +356,29 @@ country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_mca_mean,
                                                  display.labels = TRUE,
                                                  cex = 8,alpha.points = 0.8)
 
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
 
 
 
 country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
 
 
-GraphTI.Hull <- PTCA4CATA::MakeToleranceIntervals(country_env_mca$ExPosition.Data$fi[,c(axis1, axis2)],
+GraphTI.Hull <- PTCA4CATA::MakeToleranceIntervals(country_env_mca$TExPosition.Data$fii[,c(axis1, axis2)],
                                                   design = country_env_df$Happiness_Rank,
                                                   # line below is needed
                                                   names.of.factors =  c("Dim1","Dim2"), # needed 
-                                                  col = unique(country_env_mca$Plotting.Data$fi.col),
+                                                  col = unique(country_env_mca$Plotting.Data$fii.col),
                                                   line.size = .50, 
                                                   line.type = 3,
                                                   alpha.ellipse = .2,
                                                   alpha.line    = .4,
                                                   p.level       = .75)
 
-country_map = country_map + GraphTI.Hull
 
-print(country_map)
+print(country_map + GraphTI.Hull)
 
 
-}
+
 
 ```
 
@@ -383,7 +389,6 @@ loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
 color4Authors <- country_env_mca$Plotting.Data$fi.col
 Fi <- country_env_mca$ExPosition.Data$fi
 Fj <- country_env_mca$ExPosition.Data$fj
-Fj.a <- country_env_mca_a$ExPosition.Data$fj
 ```
 
 #### Loadings
@@ -392,38 +397,35 @@ Fj.a <- country_env_mca_a$ExPosition.Data$fj
 
 col_palate = brewer.pal(n = 12, name='Set3')
 
-col4J = vector('list', nrow(country_env_mca$ExPosition.Data$fj))
-col4J[grep('rain',rownames(country_env_mca$ExPosition.Data$fj))] = col_palate[1]
-col4J[grep('temp',rownames(country_env_mca$ExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J = vector('list', nrow(country_env_mca$TExPosition.Data$fj))
+col4J[grep('rain',rownames(country_env_mca$TExPosition.Data$fj))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_mca$TExPosition.Data$fj))] = 'red' #col_palate[2]
 col4J[sapply(col4J, 'is.null')] = rep(col_palate[3:11], length.out = sum(sapply(col4J, 'is.null')))
 
-
-for (i in 1:2){
   
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
+  axis1 = 1
+  axis2 = 2
 
-  country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$ExPosition.Data$fj, title='', 
+  country_factor_map <- PTCA4CATA::createFactorMap(country_env_mca$TExPosition.Data$fj, title='', 
                                                  col.points = col4J,
                                                  col.labels = col4J,
                                                  axis1 = axis1,
                                                  axis2 = axis2,
-                                                 display.labels = FALSE)
-
-country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
-
-
-country_factor_mean_map <- PTCA4CATA::createFactorMap(axis_mean, title='', 
-                                                 col.points = col_mean,
-                                                 col.labels = col_mean,
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
                                                  display.labels = TRUE)
 
-country_map = country_factor_map$zeMap + country_label4Map 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
 
-print(country_map)
-}
+
+#country_factor_mean_map <- PTCA4CATA::createFactorMap(axis_mean, title='', 
+#                                                 col.points = col_mean,
+#                                                 col.labels = col_mean,
+#                                                 axis1 = axis1,
+#                                                 axis2 = axis2,
+#                                                 display.labels = TRUE)
+
+
+print(country_factor_map$zeMap + country_label4Map)
+
 
 ```
 
@@ -432,22 +434,19 @@ print(country_map)
 
 country_env_df_for_mca_int <- dummy.data.frame(country_env_df_for_mca)  #data.frame(lapply(country_env_df_for_mca, as.integer)) # get dummy
 
-loadings_2 <- cor(country_env_df_for_mca_int, country_env_mca$ExPosition.Data$fi)
+loadings_2 <- cor(country_env_df_for_mca_int, country_env_mca$TExPosition.Data$fii)
 
 col_palate = brewer.pal(n = 12, name='Set3')
 
 col4J = vector('list', nrow(loadings_2))
-col4J[grep('rain',rownames(country_env_mca$ExPosition.Data$fj))] = col_palate[1]
-col4J[grep('temp',rownames(country_env_mca$ExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J[grep('rain',rownames(country_env_mca$TExPosition.Data$fj))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_mca$TExPosition.Data$fj))] = 'red' #col_palate[2]
 col4J[sapply(col4J, 'is.null')] = rep(col_palate[3:11], length.out = sum(sapply(col4J, 'is.null')))
 
   
-
-for (i in 1:2){
   
-  axis1 = loop[i,1]
-  axis2 = loop[i,2]
-
+axis1 = 1
+axis2 = 2
     
   
   loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
@@ -457,13 +456,13 @@ for (i in 1:2){
                           axis2=2,
                           constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
   
-  country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
+  country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$TExPosition.Data$eigs, tau = country_env_mca$TExPosition.Data$t) 
   
   corr_map <- loadings_map$zeMap_background  +  country_label4Map + PTCA4CATA::addCircleOfCor() +
               loadings_map$zeMap_text + PTCA4CATA::addArrows(loadings_2)#, color = col4J) 
   
   print(corr_map)
-}
+
 ```
 
 
@@ -475,9 +474,9 @@ Let's plot variable contributions against each chosen components i.e. 1, 2, 7, 9
 
 ```{r }
 
-BR <- country_env_mca_inf$Inference.Data$fj.boots$tests$boot.ratios
+BR <- country_env_mca_inf$Inference.Data$boot.data$fj.boot.data$tests$boot.ratios
 
-for (i in c(1, 2, 7, 9)) {
+for (i in c(1, 2)) {
   laDim = i
   ba001.BR1 <- PrettyBarPlot2(BR[,laDim],
                               threshold = 2,
@@ -491,6 +490,69 @@ for (i in c(1, 2, 7, 9)) {
 }
 
 ```
+
+#### Permutation Test
+
+```{r}
+for (i in c(1, 2)) {
+zeDim = i
+pH1 <- prettyHist(
+  distribution = country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim], 
+  observed = country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim], 
+  xlim = c(country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim] - 2, country_env_mca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim]+2), # needs to be set by hand
+  breaks = 20,
+  border = "black", 
+  main = paste0("BADA: Permutation Test for Eigenvalue ",zeDim),
+  xlab = paste0("Eigenvalue ",zeDim), 
+  ylab = "", 
+  counts = FALSE, 
+  cutoffs = c(0.025, 0.975))
+}
+```
+
+#### Parallet Test
+
+```{r}
+country_env_mca_mc <- data4PCCAR::monteCarlo.eigen(X = country_env_df_for_mca, nIter = 1000)
+for (i in c(1, 2)) {
+  zeDim = i
+  pH1.p <- prettyHist(country_env_mca_mc$rand.eigs[,zeDim], 
+                    observed = country_env_mca_mc$fixed.eigs[zeDim], 
+                    xlim = c(0, country_env_mca_mc$fixed.eigs[zeDim]+2), # needs to set by hand
+                    breaks = 20,
+                    border = "black", 
+                    main = paste0("Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
+                    xlab = paste0("Eigenvalue ",zeDim), 
+                    ylab = "", 
+                    counts = FALSE, 
+                    cutoffs = c(0.025,0.975))
+}
+
+```
+
+#### Bootstrap Test
+
+```{r}
+
+#country_env_pca_br <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, design = country_env_df$Happiness_Rank, niter=100, suppressProgressBar = FALSE)
+country_env_mca_bs <- data4PCCAR::boot.eigen(X = country_env_df_for_mca, nIter = 1000)
+
+for (i in c(1, 2)) {
+  zeDim = i
+  prettyHist(country_env_mca_bs$boot.eigs[,zeDim], 
+                    observed = country_env_mca_bs$fixed.eigs[zeDim], 
+                    xlim = c(0, country_env_mca_bs$fixed.eigs[zeDim]+2), # needs to set by hand
+                    breaks = 20,
+                    border = "black", 
+                    main = paste0("Bootstrapped distribution for Eigenvalue ",zeDim),
+                    xlab = paste0("Eigenvalue ",zeDim), 
+                    ylab = "", 
+                    counts = FALSE, 
+                    cutoffs = c(0.025, 0.975))
+}
+```
+
+
 
 ### Conclusion
 * Component 1: 
