@@ -25,6 +25,8 @@ library(PTCA4CATA)
 library(flextable)
 library(TInPosition)
 library(rvg)
+library(dummies)
+
 
 
 ```
@@ -81,6 +83,18 @@ Visually analyze multicollinearity in the system.
 ```{r}
 corr_result = cor(country_env_df_for_corr)
 corrplot(corr_result,order = 'hclust', addrect = 7)
+```
+
+```{r}
+
+happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
+colnames(happiness_dummies) <- c('Happiest', 'Happier', 'Happy' )
+
+heatmap(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca))
+```
+
+```{r}
+heatmap.2(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca), col = rev(heat.colors(16)), dendrogram = 'none', trace = 'none', margins = c(8, 16)) #tracecol=NA)
 ```
 
 ### Identify Latent Components
@@ -166,8 +180,8 @@ country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$TExPosition.Dat
                                                  display.labels = FALSE)
 
 country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca$TExPosition.Data$fi,
-                                                 col.points = unique(country_env_pca$Plotting.Data$fii.col),
-                                                 col.labels = unique(country_env_pca$Plotting.Data$fii.col),
+                                                 col.points = c('burlywood3', 'royalblue1', 'springgreen4'),
+                                                 col.labels = c('burlywood3', 'royalblue1', 'springgreen4'),
                                                  axis1 = axis1,
                                                  axis2 = axis2,
                                                  display.labels = TRUE,
@@ -306,11 +320,11 @@ pH1 <- prettyHist(
   xlim = c(0, country_env_pca_inf$Fixed.Data$TExPosition.Data$eigs[zeDim]+2), # needs to be set by hand
   breaks = 20,
   border = "black", 
-  main = paste0("Permutation Test for Eigenvalue ",zeDim),
+  main = paste0("BADA: Permutation Test for Eigenvalue ",zeDim),
   xlab = paste0("Eigenvalue ",zeDim), 
   ylab = "", 
   counts = FALSE, 
-  cutoffs = c( 0.975))
+  cutoffs = c(0.025, 0.975))
 }
 ```
 
@@ -329,7 +343,7 @@ for (i in c(1, 2)) {
                     xlab = paste0("Eigenvalue ",zeDim), 
                     ylab = "", 
                     counts = FALSE, 
-                    cutoffs = c( 0.975))
+                    cutoffs = c(0.025,0.975))
 }
 
 ```
