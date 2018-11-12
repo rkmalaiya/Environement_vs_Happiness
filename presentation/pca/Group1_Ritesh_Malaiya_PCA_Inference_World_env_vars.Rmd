@@ -231,8 +231,8 @@ for (i in 1:2){
                                                  display.labels = FALSE)
 
 country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca_mean,
-                                                 col.points = unique(country_env_pca$Plotting.Data$fi.col),
-                                                 col.labels = unique(country_env_pca$Plotting.Data$fi.col),
+                                                 col.points = c('burlywood3', 'royalblue1', 'springgreen4'),
+                                                 col.labels = c('burlywood3', 'royalblue1', 'springgreen4'),
                                                  axis1 = axis1,
                                                  axis2 = axis2,
                                                  display.labels = TRUE,
@@ -247,7 +247,7 @@ country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_
 
 GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
                                        names.of.factors = c(paste("Dimension",axis1), paste("Dimension",axis2)),
-                                       col = unique(country_env_pca$Plotting.Data$fi.col),
+                                       col = c('springgreen4', 'royalblue1', 'burlywood3'),
                                        p.level = .95
 )
 
@@ -401,7 +401,7 @@ pH1 <- prettyHist(
   xlim = c(0, country_env_pca_inf$Fixed.Data$ExPosition.Data$eigs[zeDim]+2), # needs to be set by hand
   breaks = 20,
   border = "black", 
-  main = paste0("Permutation Test for Eigenvalue ",zeDim),
+  main = paste0("PCA: Permutation Test for Eigenvalue ",zeDim),
   xlab = paste0("Eigenvalue ",zeDim), 
   ylab = "", 
   counts = FALSE, 
@@ -420,7 +420,7 @@ for (i in c(1, 2, 7, 9)) {
                     xlim = c(0, country_env_pca_mc$fixed.eigs[zeDim]+2), # needs to set by hand
                     breaks = 20,
                     border = "black", 
-                    main = paste0("Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
+                    main = paste0("PCA: Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
                     xlab = paste0("Eigenvalue ",zeDim), 
                     ylab = "", 
                     counts = FALSE, 
