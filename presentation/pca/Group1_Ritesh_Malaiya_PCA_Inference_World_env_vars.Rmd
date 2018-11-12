@@ -443,7 +443,7 @@ for (i in c(1, 2, 7, 9)) {
                     xlim = c(0, country_env_pca_bs$fixed.eigs[zeDim]+2), # needs to set by hand
                     breaks = 20,
                     border = "black", 
-                    main = paste0("Bootstrapped distribution for Eigenvalue ",zeDim),
+                    main = paste0("PCA: Bootstrapped distribution for Eigenvalue ",zeDim),
                     xlab = paste0("Eigenvalue ",zeDim), 
                     ylab = "", 
                     counts = FALSE, 
