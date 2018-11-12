@@ -267,10 +267,10 @@ country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title
                                                  cex = 8,alpha.points = 0.8,
                                                  display.labels = TRUE)
 
-country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs,  tau = resPLSC$TExPosition.Data$t,axisName = "Table") 
+#country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosition.Data$eigs,  tau = resPLSC$TExPosition.Data$t,axisName = "Table") 
 
 
-country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1')
+country_map = country_factor_map$zeMap + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1') #+ country_label4Map
 
 print(country_map)
 

@@ -30,17 +30,9 @@ library(rvg)
 ```
 
 
-## Method: PCA
+## Method: BADA
 
-Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for *high dimensional data* and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia. 
-
-PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are *interpreted differently*. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them. 
-
-The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores. 
-
-With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.
-
-PCA also helps in *dimensionality reduction*. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.
+<Will update after class>
 
 
 ## Dataset
@@ -127,8 +119,6 @@ PTCA4CATA::PlotScree(ev = country_env_pca$TExPosition.Data$eigs,
 
 #### Factor Scores 
 
-Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
-
 
 ```{r echo=FALSE}
 
@@ -183,11 +173,11 @@ country_factor_map_mean <- PTCA4CATA::createFactorMap(country_env_pca$TExPositio
                                                  display.labels = TRUE,
                                                  cex = 8,alpha.points = 0.8)
 
-#country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$TExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$TExPosition.Data$eigs, tau = country_env_pca$TExPosition.Data$t) 
 
 
 
-country_map = country_factor_map$zeMap + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text #+country_label4Map
+country_map = country_factor_map$zeMap + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text +country_label4Map
 
 
 BootCube <- country_env_pca_inf$Inference.Data$boot.data$fi.boot.data$boots
@@ -199,7 +189,7 @@ GraphElli <- MakeCIEllipses(BootCube[,1:2,],
                   col = unique(country_env_pca$Plotting.Data$fii.col),
                   p.level = .95
 )
-country_map = country_map + GraphElli
+#country_map = country_map + GraphElli
 
 print(country_map + GraphElli)
 
@@ -254,11 +244,11 @@ loadings_map <- PTCA4CATA::createFactorMap(loadings_2,
                       axis2=axis2,
                       constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
 
-#country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$TExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$TExPosition.Data$eigs, tau = country_env_pca$TExPosition.Data$t) 
 
 corr_map <- loadings_map$zeMap_background + PTCA4CATA::addCircleOfCor() +
           loadings_map$zeMap_text +
-          PTCA4CATA::addArrows(loadings_2, color = col4J) #+ country_label4Map
+          PTCA4CATA::addArrows(loadings_2, color = col4J) + country_label4Map
 
 print(corr_map)
 
@@ -283,8 +273,6 @@ print(corr_map)
 
 
 #### Most Contributing Variables
-
-Let's plot variable contributions against each chosen components i.e. 1, 7, 9.
 
 * With Bootstrap Ratio
 
