@@ -39,17 +39,8 @@ library(cowplot)
 ```
 
 
-## Method: MCA
+## Method: DiCA
 
-Multiple correspondence analysis (MCA) is an extension of correspondence analysis(CA) which allows one to analyze the pattern of relationships of several categorical dependent variables. As such, it can also be seen as a generalization of principal component analysis when the variables to be analyzed are categorical instead of quantitative. Because MCA has been (re)discovered many times, equivalent methods are known under several different names such as optimal scaling, optimal or appropriate scoring, dual scaling, homogeneity analysis,scalogram analysis, and quantiﬁcation method.
-
-**Interpreting MCA**
-Multiple correspondence analysis locates all the categories in a Euclidean space.
-
-* The first two dimensions of this space are plotted to examine the associations among the categories. 
-* The top-right quadrant of the plot shows the categories.
-* The bottom-left quadrant shows the association.
-* This interpretation is based on points found in approximately the same direction from the origin and in approximately the same region of the space. Distances between points do not have a straightforward interpretation.
 
 
 ## Dataset
@@ -390,8 +381,8 @@ loadings_2 <- cor(country_env_df_for_mca_int, country_env_mca$TExPosition.Data$f
 col_palate = brewer.pal(n = 12, name='Set3')
 
 col4J = vector('list', nrow(loadings_2))
-col4J[grep('rain',rownames(country_env_mca$TExPosition.Data$fj))] = col_palate[1]
-col4J[grep('temp',rownames(country_env_mca$TExPosition.Data$fj))] = 'red' #col_palate[2]
+col4J[grep('rain',rownames(country_env_mca$TExPosition.Data$fii))] = col_palate[1]
+col4J[grep('temp',rownames(country_env_mca$TExPosition.Data$fii))] = 'red' #col_palate[2]
 col4J[sapply(col4J, 'is.null')] = rep(col_palate[3:11], length.out = sum(sapply(col4J, 'is.null')))
 
   
@@ -419,7 +410,7 @@ axis2 = 2
 
 #### Most Contributing Variables (Inference)
 
-Let's plot variable contributions against each chosen components i.e. 1, 2, 7, 9.
+Let's plot variable contributions against each chosen components i.e. 1, 2.
 
 * With Bootstrap Ratio
 
@@ -433,7 +424,7 @@ for (i in c(1, 2)) {
                               threshold = 2,
                               font.size = 5,
                               color4bar = gplots::col2hex(col4J), # we need hex code
-                              main = paste0('Bootstrap ratio ',laDim),
+                              main = paste0('DiCA: Bootstrap ratio ',laDim),
                               ylab = 'Bootstrap ratios',horizontal = FALSE
                               #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
   )
@@ -444,7 +435,7 @@ for (i in c(1, 2)) {
 
 #### Permutation Test
 
-```{r}
+```{r echo=FALSE}
 for (i in c(1, 2)) {
 zeDim = i
 pH1 <- prettyHist(
@@ -454,7 +445,7 @@ pH1 <- prettyHist(
   xlim = c(-0.001, 0.01),
   breaks = 20,
   border = "black", 
-  main = paste0("BADA: Permutation Test for Eigenvalue ",zeDim),
+  main = paste0("DiCA: Permutation Test for Eigenvalue ",zeDim),
   xlab = paste0("Eigenvalue ",zeDim), 
   ylab = "", 
   counts = FALSE, 
@@ -464,7 +455,7 @@ pH1 <- prettyHist(
 
 #### Parallet Test
 
-```{r}
+```{r echo=FALSE}
 country_env_mca_mc <- data4PCCAR::monteCarlo.eigen(X = country_env_df_for_mca, nIter = 1000)
 for (i in c(1, 2)) {
   zeDim = i
@@ -473,7 +464,7 @@ for (i in c(1, 2)) {
                     xlim = c(0, country_env_mca_mc$fixed.eigs[zeDim]+2), # needs to set by hand
                     breaks = 20,
                     border = "black", 
-                    main = paste0("Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
+                    main = paste0("DiCA - Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
                     xlab = paste0("Eigenvalue ",zeDim), 
                     ylab = "", 
                     counts = FALSE, 
@@ -507,18 +498,5 @@ for (i in c(1, 2)) {
 
 
 ### Conclusion
-* Component 1: 
-  + Rows: Normal & Happy
-  + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation
-  + Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.
-
-* Component 7: 
-  + Rows: Happy & Unhappy
-  + Columns: Temp and Rain vs Accessibility and Cropland
-  + Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.
-
-* Component 9: 
-  + Rows: Happy & Very Happy
-  + Columns: Temp vs Rain
-  + Interpret: Rain and Temp seems to be main reason for Happiness. *This contradicts with Component 7 and 1*.
+Among PCA, MCA, BADA and DiCA, DiCA is able to best seperate the data based on levels of happiness. It seems increase in temperature is correlated with increase in happiness and increase in rain decreases happiness.
 
