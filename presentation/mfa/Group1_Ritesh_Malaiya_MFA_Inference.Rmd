@@ -1,0 +1,236 @@
+---
+title: "All Countries Environmental Data"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+
+```{r include=FALSE, results='hide'}
+# Installing required packages
+# sudo apt-get install libcairo2-dev
+# sudo apt-get install libxml2-dev
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
+library(corrplot)
+library(ExPosition)
+library(InPosition)
+library(animation)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(PTCA4CATA)
+library(reshape2)
+
+# Source the function file:
+#
+# install.packages('TExPosition')
+# install.packages('MExPosition')
+library(MExPosition)
+
+```
+
+
+## Method: MFA
+
+
+## Dataset
+
+```{r include=FALSE, results='hide'}
+country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
+country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
+
+country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
+```
+
+* Data: Measurements of environment conditions in Countries
+* Rows: There are 137 observations, 1 for each country.
+* Columns: Columns: Total 2 Tables – All Rain and All Temp
+
+* Structure of Data
+
+```{r data_summary}
+str(country_env_df)
+```
+
+
+* Research Question
+
+Which variables in Rain and Temperature contribute most towards happiness
+
+## Analysis 
+
+```{r echo=FALSE}
+
+country_env_df_for_mfa = country_env_df[, !names(country_env_df) %in% c('Country', 'Happiness_Rank')]
+
+rownames(country_env_df_for_corr) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+rownames(country_env_df_for_mfa) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+
+```
+
+
+### Correlation Plot
+Visually analyze multicollinearity between all varaibles in Rain and Temperature tables.  
+
+```{r}
+column.design = rep(1, length.out = ncol(country_env_df_for_mfa) )
+
+column.design[ grep('rain',colnames(country_env_df_for_mfa)) ] = 2
+column.design[ grep('temp',colnames(country_env_df_for_mfa)) ] = 3
+column.design = t(as.matrix(column.design))
+colnames(column.design) = colnames(country_env_df_for_mfa)
+```
+
+### Identify Latent Components
+
+#### MFA 
+
+```{r pca, echo=FALSE, results='hide'}
+
+resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = country_env_df$Happiness_Rank,graphs = FALSE, make.columndesign.nominal = TRUE, make.design.nominal = TRUE)
+
+
+
+#resPerm4PLSC <- mpM (rain, # First Data matrix 
+#                          temp, # Second Data matrix
+#                          nIter = 1000 # How mny iterations
+#                          )
+# to see what results we have
+
+```
+
+Now we have Latent Variables and Saliences. 
+* Latent Variables are the new Data points w.r.t. correlation between both the tables. Latent Variables exists for each table.
+* Saliences represent correlation between variables of each table. 
+
+#### Scree Plot
+Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
+
+P.S. The most contribution component may not always be most useful for a given research question. 
+
+
+```{r}
+
+
+PTCA4CATA::PlotScree(ev = resMFA$mexPosition.Data$Table$eigs,
+                      title = 'SCREE Plot',
+                      #p.ev = resPerm4PLSC$pEigenvalues,
+                      plotKaiser = TRUE
+)
+
+```
+
+#### Latent Variables 
+
+Lets visualize happiness categories for Components 1 of each table
+
+##### Factor Scores
+```{r echo=FALSE}
+
+comp1 = resMFA$mexPosition.Data$Table$fi
+
+list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
+
+lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
+
+country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
+rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
+
+country_env_mean_df <- country_env_mean_df[,2:3]
+
+country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
+                                                 col.points = lx_col,
+                                                 #col.labels = country_env_df$Happiness_Rank,
+                                                 
+                                                 display.labels = FALSE)
+
+country_factor_mean_map <- PTCA4CATA::createFactorMap(country_env_mean_df, title='', 
+                                                 col.points = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 col.labels = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                 cex = 8,alpha.points = 0.8,
+                                                 display.labels = TRUE)
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resMFA$mexPosition.Data$Table$eigs,  tau = resMFA$mexPosition.Data$Table$t ,axisName = "Table") 
+
+
+country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 1')
+
+print(country_map)
+
+```
+
+#### Loadings
+
+##### Per Component Plot
+```{r echo=FALSE}
+
+PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,1],
+              threshold = 0,
+              font.size = 5,
+              main = 'Salience for Rain',
+              horizontal = TRUE,
+              angle.text = 90,
+              ylim=c(-3,3)
+              )
+
+```
+
+```{r echo=FALSE}
+
+PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,2],
+              threshold = 0,
+              font.size = 5,
+              main = 'Salience for Rain',
+              horizontal = TRUE,
+              angle.text = 90,
+              ylim=c(-3,3)
+              )
+
+```
+
+#### Correlation Circle
+
+```{r}
+
+loadings_2 = cor(country_env_df_for_mfa, resMFA$mexPosition.Data$Table$fi)
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+col4J = vector('list', nrow(loadings_2))
+col4J[grep('rain',rownames(loadings_2))] = col_palate[1]
+col4J[grep('temp',rownames(loadings_2))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
+
+
+loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
+                          col.points = col4J, 
+                          col.labels = col4J, 
+                          axis1=1,
+                          axis2=2,
+                          constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
+  
+  country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resMFA$mexPosition.Data$Table$eigs, tau = resMFA$mexPosition.Data$Table$t) 
+  
+  corr_map <- loadings_map$zeMap_background  +  country_label4Map + PTCA4CATA::addCircleOfCor() +
+              loadings_map$zeMap_text + PTCA4CATA::addArrows(loadings_2, color = col4J) 
+  
+  print(corr_map)
+
+```
+
+### Conclusion
+
+Here Component 2 seems to best seperate Happiness levels. Let's compare Component 2 for both tables.
+
+* Table 1 & 2 Component 2
+  + Latent Variables: Very Happy vs Unhappy (for Rain and Temperature both)
+  + Salience:
+    * Rain: It seems dryness and wetness at a montly scale have more effect than coldness or yearly patterns.
+    * Temperature: All temperature variations at a monthly and yearly scale seems to impact happiness.
+  
+
