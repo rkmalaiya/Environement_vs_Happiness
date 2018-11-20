@@ -1,0 +1,227 @@
+---
+title: "Ritesh_Malaiya_Group_1_DiSTATIS"
+output: html_document
+---
+
+
+```{r cars}
+
+rm(list = ls())
+
+devtools::install_github('HerveAbdi/PTCA4CATA')
+suppressMessages(library(PTCA4CATA))
+# PTCA4CATA should first to avoid conflict with TInPosition
+suppressMessages(library(ExPosition))
+#suppressMessages(library(InPosition))
+#suppressMessages(library(TInPosition))
+suppressMessages(library(ggplot2))
+suppressMessages(library(dplyr))
+suppressMessages(library(officer))
+suppressMessages(library(flextable))
+suppressMessages(library(rvg))
+suppressMessages(library(useful))
+suppressMessages(library(DistatisR))
+library(RColorBrewer)
+
+
+# Source the function file:
+#
+# install.packages('TExPosition')
+# install.packages('MExPosition')
+library(MExPosition)
+
+```
+
+# Dataset
+```{r }
+Raw_Data <- read.csv('../dataset/natural36_constrained_forR.csv', row.names = 1)
+
+
+
+Sorting_Data <- Raw_Data[-37,]
+Design_Data <- Raw_Data[37,]
+
+Design_cat <- cut(t(Design_Data[1,]), breaks = c(0,1,4,15), include.lowest=TRUE, right = TRUE, labels = c('Non-Musician', 'Moderate', 'Musician'))
+
+head(Raw_Data)
+```
+
+# DiSTATIS
+```{r echo=FALSE}
+DistanceCube <- DistatisR::DistanceFromSort(Sorting_Data)
+testDistatis <- DistatisR::distatis(DistanceCube)
+BootF <- BootFactorScores(testDistatis$res4Splus$PartialF)
+```
+
+## SCREE Plot
+
+```{r}
+ev4C <- testDistatis$res4Cmat$eigValues
+Scree.1 <-  PlotScree(ev = ev4C,
+          p.ev = NULL, max.ev = NULL, alpha = 0.05,
+          col.ns = "#006D2C", col.sig = "#54278F", plotKaiser = TRUE,
+          title = "RV-mat: Explained Variance per Dimension")
+
+```
+
+## Plotting Assessor Matrix
+
+```{r}
+
+G <- testDistatis$res4Cmat$G
+# Create a color scheme for the judges
+col4B <- 'turquoise3'
+col4G <- 'thistle3'
+col <- brewer.pal(n = 3, name='Set1')
+
+
+col4Musicians <- dplyr::recode(Design_cat, `Non-Musician` = col[1], `Moderate` = col[2], `Musician` = col[3])
+
+baseMap.j <- PTCA4CATA::createFactorMap(G,
+                                        title = 'The Rv map',
+                                        col.points   = col4Musicians,
+                                        alpha.points =  .3,
+                                        col.labels = col4Musicians)
+# A graph for the J-set
+aggMap.j <- baseMap.j$zeMap_background + # background layer
+           baseMap.j$zeMap_dots + baseMap.j$zeMap_text # dots & labels
+# We print this Map with the following code
+print(aggMap.j)
+
+```
+
+
+
+## ConvexHull
+
+```{r}
+
+GraphTJ.Hull.100 <- MakeToleranceIntervals(G,
+                                  as.factor(Design_cat),
+                                  names.of.factors = c("Dim1","Dim2"),
+                                  col = unique(col4Musicians),
+                                          line.size = .5,
+                                          line.type = 3,
+                                          alpha.ellipse = .1,
+                                          alpha.line = .4,
+                                          p.level = 1, # full Hulls
+                                          type = 'hull' #
+                                          # use 'hull' for convex hull
+)
+
+aggMap.j.withHull <- baseMap.j$zeMap_background + # background layer
+                           baseMap.j$zeMap_dots + GraphTJ.Hull.100
+
+JudgesMeans.tmp <- aggregate(G, list(Design_cat), mean) # compute the means
+JudgesMeans <- JudgesMeans.tmp[,2:ncol(JudgesMeans.tmp )] # drop var 1
+
+rownames(JudgesMeans) <- JudgesMeans.tmp[,1] # use var 1 to name the groups
+
+
+col4Means <- unique(col4Musicians)
+
+MapGroup    <- PTCA4CATA::createFactorMap(JudgesMeans,
+                                  axis1 = 1, axis2 = 2,
+                                  constraints = baseMap.j$constraints,
+                                          title = NULL,
+                                          col.points = col4Means,
+                                          display.points = TRUE,
+                                          pch = 19, cex = 5,
+                                          display.labels = TRUE,
+                                          col.labels = col4Means,
+                                          text.cex = 4,
+                                          font.face = "bold",
+                                          font.family = "sans",
+                                          col.axes = "darkorchid",
+                                          alpha.axes = 0.2,
+                                          width.axes = 1.1,
+                          col.background = adjustcolor("lavender",
+                                             alpha.f = 0.2),
+                                          force = 1, segment.size = 0)
+
+aggMap.j.withMeans <- aggMap.j.withHull +
+                    MapGroup$zeMap_dots + MapGroup$zeMap_text
+
+print(aggMap.j.withMeans)
+
+```
+
+
+
+```{r}
+
+ev4S <- eigen(testDistatis$res4Splus$Splus,
+                symmetric = TRUE, only.values = TRUE)$values
+# A scree for the compromise
+Scree.S <-  PlotScree(ev = ev4S,
+                   p.ev = NULL, max.ev = NULL, alpha = 0.05,
+                   col.ns = "#006D2C", col.sig = "#54278F",plotKaiser = TRUE,
+                   title = "S-mat: Explained Variance per Dimension")
+
+```
+
+## I Set
+
+```{r}
+
+
+
+testDistatis$res4Splus$PartialF
+
+
+Fi <- testDistatis$res4Splus$F
+col <- brewer.pal(n = 3, name='Set2')
+
+col4Composer <- vector('list',length = nrow(Fi))
+col4Composer[grep('Moza', rownames(Fi))] = col[1]
+col4Composer[grep('Beet', rownames(Fi))] = col[2]
+col4Composer[grep('Bach', rownames(Fi))] = col[3]
+
+
+#col4Composer <- prettyGraphsColorSelection(nrow(Fi))
+#  Use colors from prettyGraphs
+#---------------------------------------------------------------------
+# Graphs for the I set
+#---------------------------------------------------------------------
+# Create the base map
+constraints4Fi <- lapply(minmaxHelper(Fi),'*',1.2)
+baseMap.i <- PTCA4CATA::createFactorMap(Fi,
+                                        col.points = col4Composer,
+                                        col.labels = col4Composer,
+                        constraints = constraints4Fi,
+                                        alpha.points =  .4)
+#---------------------------------------------------------------------
+# We are  interested about the labels here
+# so we will use dots and labels
+#---------------------------------------------------------------------
+# Plain map with color for the I-set
+aggMap.i <- baseMap.i$zeMap_background + baseMap.i$zeMap_dots +
+                                         baseMap.i$zeMap_text
+#---------------------------------------------------------------------
+# print this Map
+print(aggMap.i)
+
+```
+
+
+```{r echo=FALSE}
+
+constraints4Fi <- lapply(minmaxHelper(Fi),'*',1.2)
+GraphElli <- MakeCIEllipses(BootF[,1:2,],
+                      names.of.factors = c("Factor 1","Factor 2"),
+                      alpha.line = .5,
+                      alpha.ellipse = .3,
+                      line.size = .5,
+                      line.type = 3,
+                      col = unlist(col4Composer),
+                      p.level = .95 )
+#---------------------------------------------------------------------
+# create the I-map with Observations and their confidence intervals
+#
+aggMap.i.withCI <-  aggMap.i +  GraphElli + MapGroup$zeMap_text
+#---------------------------------------------------------------------
+# plot it!
+print(aggMap.i.withCI)
+
+
+```
