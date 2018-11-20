@@ -1,0 +1,14 @@
+---
+title: "CountryEnvVsHappiness"
+author: "Ritesh Malaiya"
+date: "11/20/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+
+install.packages('bookdown')
+
+
+```
+

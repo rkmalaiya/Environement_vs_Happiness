@@ -1,0 +1,7 @@
+book_filename: "Country's Environment conditions corelated with Happiness"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+    
+rmd_files: ["../presentation/index.Rmd", "abstract.Rmd", "intro.Rmd"]
