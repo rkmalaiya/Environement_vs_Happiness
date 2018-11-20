@@ -78,12 +78,13 @@ rownames(country_env_df_for_mfa) <- paste0(country_env_df[,'Country'], '(' ,coun
 Visually analyze multicollinearity between all varaibles in Rain and Temperature tables.  
 
 ```{r}
-column.design = rep(1, length.out = ncol(country_env_df_for_mfa) )
+column.design = rep('Others', length.out = ncol(country_env_df_for_mfa) )
 
-column.design[ grep('rain',colnames(country_env_df_for_mfa)) ] = 2
-column.design[ grep('temp',colnames(country_env_df_for_mfa)) ] = 3
+column.design[ grep('rain',colnames(country_env_df_for_mfa)) ] = 'Rain'
+column.design[ grep('temp',colnames(country_env_df_for_mfa)) ] = 'Temp'
 column.design = t(as.matrix(column.design))
 colnames(column.design) = colnames(country_env_df_for_mfa)
+rownames(column.design) = 'Type'
 ```
 
 ### Identify Latent Components
@@ -92,15 +93,14 @@ colnames(column.design) = colnames(country_env_df_for_mfa)
 
 ```{r pca, echo=FALSE, results='hide'}
 
-resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = country_env_df$Happiness_Rank,graphs = FALSE, make.columndesign.nominal = TRUE, make.design.nominal = TRUE)
-
-
+resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = country_env_df$Happiness_Rank,graphs = TRUE, make.columndesign.nominal = TRUE, make.design.nominal = TRUE)
 
 #resPerm4PLSC <- mpM (rain, # First Data matrix 
 #                          temp, # Second Data matrix
 #                          nIter = 1000 # How mny iterations
 #                          )
 # to see what results we have
+
 
 ```
 
@@ -136,7 +136,7 @@ comp1 = resMFA$mexPosition.Data$Table$fi
 
 list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
 
-lx_col <- recode (country_env_df$Happiness_Rank, !!!list_color)
+lx_col <- recode (country_env_df$Happiness_Rank, `U` = 'burlywood3', `H` = 'royalblue1', `VH` = 'springgreen4')
 
 country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
 rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
