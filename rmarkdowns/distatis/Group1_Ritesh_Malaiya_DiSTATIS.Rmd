@@ -29,11 +29,13 @@ library(RColorBrewer)
 # install.packages('TExPosition')
 # install.packages('MExPosition')
 library(MExPosition)
-
+rm(list = ls())
 ```
 
-# Dataset
-```{r }
+## DiSTATIS
+
+### Dataset
+```{r echo=FALSE}
 Raw_Data <- read.csv('../dataset/natural36_constrained_forR.csv', row.names = 1)
 
 
@@ -43,19 +45,25 @@ Design_Data <- Raw_Data[37,]
 
 Design_cat <- cut(t(Design_Data[1,]), breaks = c(0,1,4,15), include.lowest=TRUE, right = TRUE, labels = c('Non-Musician', 'Moderate', 'Musician'))
 
-head(Raw_Data)
 ```
 
-# DiSTATIS
+```{r nice-tab-distatis, tidy=FALSE, echo=FALSE}
+knitr::kable(
+  head(Raw_Data, 20), caption = '4 Pianist for each of 3 Composers',
+  booktabs = TRUE
+)
+```
+```
+
 ```{r echo=FALSE}
 DistanceCube <- DistatisR::DistanceFromSort(Sorting_Data)
 testDistatis <- DistatisR::distatis(DistanceCube)
 BootF <- BootFactorScores(testDistatis$res4Splus$PartialF)
 ```
 
-## SCREE Plot
+### SCREE Plot
 
-```{r}
+```{r echo=FALSE}
 ev4C <- testDistatis$res4Cmat$eigValues
 Scree.1 <-  PlotScree(ev = ev4C,
           p.ev = NULL, max.ev = NULL, alpha = 0.05,
@@ -64,9 +72,9 @@ Scree.1 <-  PlotScree(ev = ev4C,
 
 ```
 
-## Plotting Assessor Matrix
+### Plotting Assessor Matrix
 
-```{r}
+```{r echo=FALSE}
 
 G <- testDistatis$res4Cmat$G
 # Create a color scheme for the judges
@@ -92,9 +100,9 @@ print(aggMap.j)
 
 
 
-## ConvexHull
+### ConvexHull
 
-```{r}
+```{r echo=FALSE}
 
 GraphTJ.Hull.100 <- MakeToleranceIntervals(G,
                                   as.factor(Design_cat),
@@ -148,7 +156,7 @@ print(aggMap.j.withMeans)
 
 
 
-```{r}
+```{r echo=FALSE}
 
 ev4S <- eigen(testDistatis$res4Splus$Splus,
                 symmetric = TRUE, only.values = TRUE)$values
@@ -160,13 +168,9 @@ Scree.S <-  PlotScree(ev = ev4S,
 
 ```
 
-## I Set
+### I Set
 
-```{r}
-
-
-
-testDistatis$res4Splus$PartialF
+```{r echo=FALSE}
 
 
 Fi <- testDistatis$res4Splus$F

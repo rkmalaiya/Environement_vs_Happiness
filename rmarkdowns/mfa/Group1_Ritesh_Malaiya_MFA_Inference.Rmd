@@ -31,38 +31,25 @@ library(reshape2)
 # install.packages('TExPosition')
 # install.packages('MExPosition')
 library(MExPosition)
+rm(list = ls())
 
 ```
 
+# Multiple Factor Analyis
 
 ## Method: MFA
 
-
-## Dataset
+<To be filled>
 
 ```{r include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
 country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
 
 country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
-```
 
-* Data: Measurements of environment conditions in Countries
-* Rows: There are 137 observations, 1 for each country.
-* Columns: Columns: Total 2 Tables – All Rain and All Temp
-
-* Structure of Data
-
-```{r data_summary}
 str(country_env_df)
 ```
 
-
-* Research Question
-
-Which variables in Rain and Temperature contribute most towards happiness
-
-## Analysis 
 
 ```{r echo=FALSE}
 
@@ -71,13 +58,6 @@ country_env_df_for_mfa = country_env_df[, !names(country_env_df) %in% c('Country
 rownames(country_env_df_for_corr) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
 rownames(country_env_df_for_mfa) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
 
-```
-
-
-### Correlation Plot
-Visually analyze multicollinearity between all varaibles in Rain and Temperature tables.  
-
-```{r}
 column.design = rep('Others', length.out = ncol(country_env_df_for_mfa) )
 
 column.design[ grep('rain',colnames(country_env_df_for_mfa)) ] = 'Rain'
@@ -87,13 +67,12 @@ colnames(column.design) = colnames(country_env_df_for_mfa)
 rownames(column.design) = 'Type'
 ```
 
-### Identify Latent Components
+## MFA 
+We have divided the data into 3 tables, separate tables for rain and temperature related columns and 3rd table for rest of the columns.
 
-#### MFA 
+```{r mfa, echo=FALSE}
 
-```{r pca, echo=FALSE, results='hide'}
-
-resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = country_env_df$Happiness_Rank,graphs = TRUE, make.columndesign.nominal = TRUE, make.design.nominal = TRUE)
+resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = country_env_df$Happiness_Rank,graphs = FALSE, make.columndesign.nominal = TRUE, make.design.nominal = TRUE)
 
 #resPerm4PLSC <- mpM (rain, # First Data matrix 
 #                          temp, # Second Data matrix
@@ -104,17 +83,14 @@ resMFA <- mpMFA(country_env_df_for_mfa,  as.matrix(column.design), DESIGN = coun
 
 ```
 
-Now we have Latent Variables and Saliences. 
-* Latent Variables are the new Data points w.r.t. correlation between both the tables. Latent Variables exists for each table.
-* Saliences represent correlation between variables of each table. 
 
-#### Scree Plot
+## Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
 
 
-```{r}
+```{r echo=FALSE}
 
 
 PTCA4CATA::PlotScree(ev = resMFA$mexPosition.Data$Table$eigs,
@@ -125,11 +101,8 @@ PTCA4CATA::PlotScree(ev = resMFA$mexPosition.Data$Table$eigs,
 
 ```
 
-#### Latent Variables 
 
-Lets visualize happiness categories for Components 1 of each table
-
-##### Factor Scores
+## Factor Scores
 ```{r echo=FALSE}
 
 comp1 = resMFA$mexPosition.Data$Table$fi
@@ -139,7 +112,7 @@ list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
 lx_col <- recode (country_env_df$Happiness_Rank, `U` = 'burlywood3', `H` = 'royalblue1', `VH` = 'springgreen4')
 
 country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
-rownames(country_env_mean_df) <- c('Very Happy', 'Happy', 'Unhappy')
+rownames(country_env_mean_df) <- c('VeryHappy', 'Happy', 'Unhappy')
 
 country_env_mean_df <- country_env_mean_df[,2:3]
 
@@ -164,15 +137,14 @@ print(country_map)
 
 ```
 
-#### Loadings
+## Loadings
 
-##### Per Component Plot
 ```{r echo=FALSE}
 
 PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,1],
               threshold = 0,
               font.size = 5,
-              main = 'Salience for Rain',
+              main = 'Salience for Component 1',
               horizontal = TRUE,
               angle.text = 90,
               ylim=c(-3,3)
@@ -185,7 +157,7 @@ PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,1],
 PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,2],
               threshold = 0,
               font.size = 5,
-              main = 'Salience for Rain',
+              main = 'Salience for Component 2',
               horizontal = TRUE,
               angle.text = 90,
               ylim=c(-3,3)
@@ -193,9 +165,9 @@ PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,2],
 
 ```
 
-#### Correlation Circle
+## Correlation Circle
 
-```{r}
+```{r echo=FALSE}
 
 loadings_2 = cor(country_env_df_for_mfa, resMFA$mexPosition.Data$Table$fi)
 
@@ -204,7 +176,7 @@ col_palate = brewer.pal(n = 12, name='Set3')
 col4J = vector('list', nrow(loadings_2))
 col4J[grep('rain',rownames(loadings_2))] = col_palate[1]
 col4J[grep('temp',rownames(loadings_2))] = 'red' #col_palate[2]
-col4J[sapply(col4J, 'is.null')] = rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
+col4J[sapply(col4J, 'is.null')] = col_palate[2] #rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
 
 
 loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
@@ -223,7 +195,7 @@ loadings_map <- PTCA4CATA::createFactorMap(loadings_2,
 
 ```
 
-### Conclusion
+## Conclusion
 
 Here Component 2 seems to best seperate Happiness levels. Let's compare Component 2 for both tables.
 

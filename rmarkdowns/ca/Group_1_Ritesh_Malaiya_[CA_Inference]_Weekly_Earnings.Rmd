@@ -6,6 +6,8 @@ output:
   pdf_document: default
 ---
 
+# Other Methods
+
 ## Method: CA
 
 Correspondence Analysis (CA) is a multivariate graphical technique designed to explore relationships among categorical variables. The outcome from correspondence analysis is a graphical display of the rows and columns of a contingency table that is designed to permit visualization of the salient relationships among the variable responses in a low-dimensional space. Such a representation reveals a more global picture of the relationships among row-column pairs which would otherwise not be detected through a pairwise analysis.
@@ -42,10 +44,10 @@ library(data4PCCAR)
 library(corrplot)
 library(RColorBrewer)
 library("gplots")
-
+rm(list = ls())
 ```
 
-## Dataset
+### Dataset
 
 * Data: Measurements of Weekly Earnings per Race
 * Rows: There are 6 observations representing Asian/White/Black, Men/Woman.
@@ -53,7 +55,7 @@ library("gplots")
 
 
 ```{r echo=FALSE}
-WE <- read.csv('WeeklyEarningsbyRace.csv', row.names=1)
+WE <- read.csv('../dataset/WeeklyEarningsbyRace.csv', row.names=1)
 head(WE)
 ```
 
@@ -76,15 +78,19 @@ WE_data = WE_data_withsum
 #colnames(WE_data) <- c('1stD','1stQ', '2ndQ', '3rdQ', '9thD')
 colnames(WE_data) <- c('1stQ', '2ndQ', '3rdQ') #, 'Total')
 
-WE_data
-
 ```
+
+```{r nice-tab-ca, tidy=FALSE, echo=FALSE}
+knitr::kable(
+  head(WE_data, 20), caption = '4 Pianist for each of 3 Composers',
+  booktabs = TRUE
+)
+```
+
 * Research Question
 
   + Does total earning of different races differ.
   + Which race get less than median salary (2nd Quartile)
-
-## Analysis 
 
 
 ```{r echo=FALSE, results='hide'}
@@ -174,7 +180,7 @@ print(map.IJ.asym)
 
 ```
 
-#### Most Contributing Variables
+### Most Contributing Variables
 
 ```{r echo=FALSE, results='hide'}
 color4I <- brewer.pal(n = nrow(ci.a), name='Set3')
