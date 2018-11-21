@@ -4,4 +4,8 @@ language:
   ui:
     chapter_name: "Chapter "
     
-rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", "../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd", "../rmarkdowns/pls/Group1_Ritesh_Malaiya_PLSC_Inference.Rmd"]
+rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", 
+"../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd", 
+"../rmarkdowns/pls/Group1_Ritesh_Malaiya_PLSC_Inference.Rmd",
+"../rmarkdowns/bada/Group1_Ritesh_Malaiya_BADA_Inference_World_env_vars.Rmd",
+"../rmarkdowns/dica/Group1_Ritesh_Malaiya_DiCA_Inference_World_env_vars.Rmd"]

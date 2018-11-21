@@ -35,43 +35,28 @@ suppressMessages(library(rvg))
 devtools::install_github('HerveAbdi/data4PCCAR')
 library(data4PCCAR)
 library(cowplot)
-
+rm(list = ls())
 ```
+
+# Discriminant Correspondence Analysis
 
 
 ## Method: DiCA
+<To be filled>
 
 
-
-## Dataset
 
 ```{r include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
 country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
 
 country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
-```
 
-* Data: Measurements of environment conditions in Countries
-* Rows: There are 137 observations, 1 for each country.
-* Columns: Total 29 variables
- + Qualitative: Country (nominal), Happiness (Ordinal).
- + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
-
-* Structure of Data
-
-```{r data_summary}
 str(country_env_df)
 ```
 
 
-* Research Question
 
-How do the 137 countries differ on these variables?
-
-## Analysis 
-
-Let's observe the distribution of each variables to get an intuition of how we can bin these variables. It's important to have nearly equal number of observations in the each bin and to try to cut the variables in a way to so that each new binned distribution is nearly Gaussian. We can also verify that our binning is appropiate by calculating Spearman Correlation for each of original variable and binned variable, the correlation coefficient should be close to 1.
 
 ```{r echo=FALSE}
 
@@ -82,7 +67,9 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 
 ```
 
-### Density plot
+## Density plot
+Let's observe the distribution of each variables to get an intuition of how we can bin these variables. It's important to have nearly equal number of observations in the each bin and to try to cut the variables in a way to so that each new binned distribution is nearly Gaussian. We can also verify that our binning is appropiate by calculating Spearman Correlation for each of original variable and binned variable, the correlation coefficient should be close to 1.
+
 ```{r echo=FALSE}
 
 cut_points = list()
@@ -117,7 +104,7 @@ cut_points$wind <- c(2,3,4)
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 plot_bins <- function(df, col) {
   plot_col <- ggplot(df) + aes(df[,col]) +  geom_density() + 
@@ -134,7 +121,7 @@ plot_grid(plotlist=bin_hist_list)
 ```
 
 
-### Binning
+## Binning
 
 Structure of Data after binning based on above observation.
 
@@ -150,7 +137,7 @@ country_env_df_for_mca <- as.data.frame(country_env_df_for_mca)
 str(country_env_df_for_mca)
 ```
 
-### Spearman Correlation
+## Spearman Correlation
 
 Let's observe correlation between original data and binned data to make sure that neither the correlation ceofficient is too low or perfect.
 ```{r}
@@ -169,10 +156,10 @@ ggplot(data=cor_p, aes(x=rownames(cor_p), y=cor_p$cor_spear)) +
 
 
 
-```{r pca, echo=FALSE, results='hide', message=FALSE}
+```{r dica, echo=FALSE, results='hide', message=FALSE}
 
 happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
-colnames(happiness_dummies) <- c('Happiest', 'Happier', 'Happy' )
+colnames(happiness_dummies) <- c('VeryHappy', 'Normal', 'Unhappy' )
 
 
 country_env_mca <- tepDICA(DATA = as.matrix(country_env_df_for_mca), DESIGN = happiness_dummies, graphs = FALSE, make_data_nominal = TRUE)
@@ -183,20 +170,19 @@ country_env_mca_inf <- tepDICA.inference.battery(DATA = as.matrix(country_env_df
 
 
 
-### Correlation Plot
+## Heatmap
+* For binned data
+
 Visually analyze multicollinearity in the system of the original data
 
-```{r}
+```{r include=FALSE}
 
 heatmap.2(t(happiness_dummies) %*% as.matrix(country_env_df_for_mca), col = rev(heat.colors(16)), dendrogram = 'none', trace = 'none', margins = c(8, 16)) #tracecol=NA)
 
 ```
 
-### Heatmap
 
-For binned data.
-
-```{r}
+```{r echo=FALSE}
 
 corrMatBurt.list <- phi2Mat4BurtTable(country_env_df_for_mca)
 corr4MCA <- corrplot.mixed(as.matrix(corrMatBurt.list$phi2.mat,
@@ -206,17 +192,13 @@ a0001a.corMat.phi2 <- recordPlot()
 ```
 
 
-
-## Identify Latent Components - MCA (With Inference)
-
-
-### Scree Plot
+## Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
 
 
-```{r}
+```{r echo=FALSE}
 
 PTCA4CATA::PlotScree(ev = country_env_mca$TExPosition.Data$eigs,
                       p.ev =  country_env_mca_inf$Inference.Data$components$p.vals,
@@ -226,9 +208,9 @@ PTCA4CATA::PlotScree(ev = country_env_mca$TExPosition.Data$eigs,
 
 ```
 
-### Factor Scores 
+## Factor Scores 
 
-**With Confidence Interval**
+* With Confidence Interval
 ```{r echo=FALSE}
 BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$TExPosition.Data$fii, 
                                     design = country_env_df$Happiness_Rank,
@@ -274,7 +256,7 @@ print(country_map + GraphElli)
 ```
 
 
-**With Tolerance Interval**
+* With Tolerance Interval
 
 ```{r echo=FALSE}
 
@@ -333,7 +315,7 @@ Fi <- country_env_mca$ExPosition.Data$fi
 Fj <- country_env_mca$ExPosition.Data$fj
 ```
 
-#### Loadings
+## Loadings
 
 ```{r echo=FALSE}
 
@@ -371,7 +353,7 @@ print(country_factor_map$zeMap + country_label4Map)
 
 ```
 
-#### Loadings (correlation plot)
+## Loadings (correlation plot)
 ```{r echo=FALSE}
 
 country_env_df_for_mca_int <- dummy.data.frame(country_env_df_for_mca)  #data.frame(lapply(country_env_df_for_mca, as.integer)) # get dummy
@@ -408,13 +390,13 @@ axis2 = 2
 ```
 
 
-#### Most Contributing Variables (Inference)
+## Most Contributing Variables (Inference)
 
 Let's plot variable contributions against each chosen components i.e. 1, 2.
 
 * With Bootstrap Ratio
 
-```{r }
+```{r echo=FALSE}
 
 BR <- country_env_mca_inf$Inference.Data$boot.data$fj.boot.data$tests$boot.ratios
 
@@ -433,7 +415,7 @@ for (i in c(1, 2)) {
 
 ```
 
-#### Permutation Test
+## Permutation Test
 
 ```{r echo=FALSE}
 for (i in c(1, 2)) {
@@ -453,7 +435,7 @@ pH1 <- prettyHist(
 }
 ```
 
-#### Parallet Test
+## Parallet Test
 
 ```{r echo=FALSE}
 country_env_mca_mc <- data4PCCAR::monteCarlo.eigen(X = country_env_df_for_mca, nIter = 1000)
@@ -473,9 +455,9 @@ for (i in c(1, 2)) {
 
 ```
 
-#### Bootstrap Test
+## Bootstrap Test
 
-```{r}
+```{r echo=FALSE}
 
 #country_env_pca_br <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, design = country_env_df$Happiness_Rank, niter=100, suppressProgressBar = FALSE)
 country_env_mca_bs <- data4PCCAR::boot.eigen(X = country_env_df_for_mca, nIter = 1000)
@@ -497,6 +479,6 @@ for (i in c(1, 2)) {
 
 
 
-### Conclusion
+## Conclusion
 Among PCA, MCA, BADA and DiCA, DiCA is able to best seperate the data based on levels of happiness. It seems increase in temperature is correlated with increase in happiness and increase in rain decreases happiness.
 

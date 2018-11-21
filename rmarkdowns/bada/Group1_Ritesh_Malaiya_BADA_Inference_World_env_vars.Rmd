@@ -28,44 +28,24 @@ library(rvg)
 library(dummies)
 library(TExPosition)
 library(TInPosition)
-
+rm(list = ls())
 ```
 
+# Barycentric Discriminant Analysis
 
 ## Method: BADA
 
 <Will update after class>
 
 
-## Dataset
-
 ```{r include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
 country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
 
 country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
-```
 
-* Data: Measurements of environment conditions in Countries
-* Rows: There are 137 observations, 1 for each country.
-* Columns: Total 29 variables
- + Qualitative: Country (nominal), Happiness (Ordinal).
- + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
-
-* Structure of Data
-
-```{r data_summary}
 str(country_env_df)
 ```
-
-
-* Research Question
-
-How do the 137 countries differ on these variables?
-
-## Analysis 
-
-There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.
 
 ```{r echo=FALSE}
 
@@ -77,10 +57,10 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 ```
 
 
-### Correlation Plot
+## Heatmap
 Visually analyze multicollinearity in the system.  
 
-```{r}
+```{r include=FALSE}
 corr_result = cor(country_env_df_for_corr)
 corrplot(corr_result,order = 'hclust', addrect = 7)
 ```
@@ -90,38 +70,27 @@ corrplot(corr_result,order = 'hclust', addrect = 7)
 happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
 colnames(happiness_dummies) <- c('Happiest', 'Happier', 'Happy' )
 
-heatmap(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca))
+#heatmap(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca))
 ```
 
 ```{r}
 heatmap.2(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca), col = rev(heat.colors(16)), dendrogram = 'none', trace = 'none', margins = c(8, 16)) #tracecol=NA)
 ```
 
-### Identify Latent Components
 
-#### PCA (with Inference)
-
-```{r pca }
+```{r bada, include=FALSE}
 
 country_env_pca <- tepBADA(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
 country_env_pca_inf <- tepBADA.inference.battery(DATA = country_env_df_for_pca, center = TRUE, scale = 'SS1', DESIGN = country_env_df$Happiness_Rank, graphs = FALSE)
 ```
 
-Now we have Factor scores and Loadings. 
-* Factor Scores are the new Data points w.r.t. new Components achieved with help of SVD.
-* Loadings represent correlation between variables w.r.t the choosen Components. Can be interpreted in 3 ways
-  + As slices of inertia of the contribution data table w.r.t. the choosen Components
-  + As correlation between columns (features) of Original Data and Factor scores of each Components (latent features).
-  + As coefficients of optimal linear combination i.e. Right Sigular Vectors (Q matrix of SVD)
-#### Scree Plot
-
-#### Scree Plot
+## Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
 
 
-```{r}
+```{r echo=FALSE}
 
 PTCA4CATA::PlotScree(ev = country_env_pca$TExPosition.Data$eigs,
                       #p.ev =  country_env_pca_inf$Inference.Data$components$p.vals,
@@ -131,7 +100,7 @@ PTCA4CATA::PlotScree(ev = country_env_pca$TExPosition.Data$eigs,
 
 ```
 
-#### Factor Scores 
+## Factor Scores 
 
 
 ```{r echo=FALSE}
@@ -234,7 +203,7 @@ print(country_map + GraphTI.Hull)
 ```
 
 
-#### Loadings
+## Loadings
 
 ```{r echo=FALSE}
 
@@ -269,28 +238,11 @@ print(corr_map)
 ```
 
 
-* Component 1: 
-  + Rows: Normal & Happy
-  + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation
-  + Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.
-
-* Component 7: 
-  + Rows: Happy & Unhappy
-  + Columns: Temp and Rain vs Accessibility and Cropland
-  + Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.
-
-* Component 9: 
-  + Rows: Happy & Very Happy
-  + Columns: Temp vs Rain
-  + Interpret: Rain and Temp seems to be main reason for Happiness. *This contradicts with Component 7 and 1*.
-
-
-
-#### Most Contributing Variables
+## Most Contributing Variables
 
 * With Bootstrap Ratio
 
-```{r}
+```{r echo=FALSE}
 
 BR <- country_env_pca_inf$Inference.Data$boot.data$fj.boot.data$tests$boot.ratios
 
@@ -309,9 +261,9 @@ for (i in c(1, 2)) {
 ```
 
 
-#### Permutation Test
+## Permutation Test
 
-```{r}
+```{r echo=FALSE}
 for (i in c(1, 2)) {
 zeDim = i
 pH1 <- prettyHist(
@@ -328,9 +280,9 @@ pH1 <- prettyHist(
 }
 ```
 
-#### Parallet Test
+## Parallet Test
 
-```{r}
+```{r echo=FALSE}
 country_env_pca_mc <- data4PCCAR::monteCarlo.eigen(X = country_env_df_for_pca, nIter = 1000)
 for (i in c(1, 2)) {
   zeDim = i
@@ -348,9 +300,9 @@ for (i in c(1, 2)) {
 
 ```
 
-#### Bootstrap Test
+## Bootstrap Test
 
-```{r}
+```{r echo=FALSE}
 
 #country_env_pca_br <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, design = country_env_df$Happiness_Rank, niter=100, suppressProgressBar = FALSE)
 country_env_pca_bs <- data4PCCAR::boot.eigen(X = country_env_df_for_pca, nIter = 1000)
@@ -369,4 +321,23 @@ for (i in c(1, 2)) {
                     cutoffs = c(0.025, 0.975))
 }
 ```
+
+## Conclusion
+
+* Component 1: 
+  + Rows: Normal & Happy
+  + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation
+  + Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.
+
+* Component 7: 
+  + Rows: Happy & Unhappy
+  + Columns: Temp and Rain vs Accessibility and Cropland
+  + Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.
+
+* Component 9: 
+  + Rows: Happy & Very Happy
+  + Columns: Temp vs Rain
+  + Interpret: Rain and Temp seems to be main reason for Happiness. *This contradicts with Component 7 and 1*.
+
+
 
