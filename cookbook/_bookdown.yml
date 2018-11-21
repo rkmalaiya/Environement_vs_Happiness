@@ -4,4 +4,4 @@ language:
   ui:
     chapter_name: "Chapter "
     
-rmd_files: ["../presentation/index.Rmd", "abstract.Rmd", "intro.Rmd"]
+rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", "../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd"]

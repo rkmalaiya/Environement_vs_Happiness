@@ -33,11 +33,13 @@ library(dummies)
 devtools::install_github('HerveAbdi/data4PCCAR')
 library(data4PCCAR)
 library(cowplot)
+rm(list = ls())
 
 ```
 
+# Multiple Component Analysis
 
-## Method: MCA
+## Description
 
 Multiple correspondence analysis (MCA) is an extension of correspondence analysis(CA) which allows one to analyze the pattern of relationships of several categorical dependent variables. As such, it can also be seen as a generalization of principal component analysis when the variables to be analyzed are categorical instead of quantitative. Because MCA has been (re)discovered many times, equivalent methods are known under several different names such as optimal scaling, optimal or appropriate scoring, dual scaling, homogeneity analysis,scalogram analysis, and quantiﬁcation method.
 
@@ -50,34 +52,14 @@ Multiple correspondence analysis locates all the categories in a Euclidean space
 * This interpretation is based on points found in approximately the same direction from the origin and in approximately the same region of the space. Distances between points do not have a straightforward interpretation.
 
 
-## Dataset
-
-```{r include=FALSE, results='hide'}
+```{r echo=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
 country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
 
 country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
 ```
 
-* Data: Measurements of environment conditions in Countries
-* Rows: There are 137 observations, 1 for each country.
-* Columns: Total 29 variables
- + Qualitative: Country (nominal), Happiness (Ordinal).
- + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
-
-* Structure of Data
-
-```{r data_summary}
-str(country_env_df)
-```
-
-
-* Research Question
-
-How do the 137 countries differ on these variables?
-
-## Analysis 
-
+## Density Plot
 Let's observe the distribution of each variables to get an intuition of how we can bin these variables. It's important to have nearly equal number of observations in the each bin and to try to cut the variables in a way to so that each new binned distribution is nearly Gaussian. We can also verify that our binning is appropiate by calculating Spearman Correlation for each of original variable and binned variable, the correlation coefficient should be close to 1.
 
 ```{r echo=FALSE}
@@ -89,7 +71,7 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 
 ```
 
-### Density plot
+
 ```{r echo=FALSE}
 
 cut_points = list()
@@ -124,7 +106,7 @@ cut_points$wind <- c(2,3,4)
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 plot_bins <- function(df, col) {
   plot_col <- ggplot(df) + aes(df[,col]) +  geom_density() + 
@@ -141,7 +123,7 @@ plot_grid(plotlist=bin_hist_list)
 ```
 
 
-### Binning
+## Binning
 
 Structure of Data after binning based on above observation.
 
@@ -154,13 +136,14 @@ cut_r <- function(x, b = 4 ) {
 
 country_env_df_for_mca = mapply(function(col, col_name) cut_r(col, c(min(col), cut_points[[col_name]], max(col))) , country_env_df_for_pca, colnames(country_env_df_for_pca)  )
 country_env_df_for_mca <- as.data.frame(country_env_df_for_mca)
+
 str(country_env_df_for_mca)
 ```
 
-### Spearman Correlation
+## Spearman Correlation
 
 Let's observe correlation between original data and binned data to make sure that neither the correlation ceofficient is too low or perfect.
-```{r}
+```{r echo=FALSE}
 
 cor_spear <- mapply(function(x,y) cor(x, as.integer(y),method = "spearman"), country_env_df_for_pca, country_env_df_for_mca)
 #columns = colnames(country_env_df_for_pca)
@@ -174,19 +157,19 @@ ggplot(data=cor_p, aes(x=rownames(cor_p), y=cor_p$cor_spear)) +
 
 ```
 
-### Correlation Plot
+## Correlation Plot
 Visually analyze multicollinearity in the system of the original data
 
-```{r}
+```{r echo=FALSE}
 corr_result = cor(country_env_df_for_corr)
 corrplot(corr_result,order = 'hclust', addrect = 7)
 ```
 
-### Heatmap
+## Heatmap
 
 For binned data.
 
-```{r}
+```{r echo=FALSE}
 
 corrMatBurt.list <- phi2Mat4BurtTable(country_env_df_for_mca)
 corr4MCA <- corrplot.mixed(as.matrix(corrMatBurt.list$phi2.mat,
@@ -196,11 +179,7 @@ a0001a.corMat.phi2 <- recordPlot()
 ```
 
 
-
-## Identify Latent Components - MCA (With Inference)
-
-
-```{r pca, echo=FALSE, results='hide', message=FALSE}
+```{r mca, echo=FALSE, results='hide', message=FALSE}
 
 country_env_mca <- epMCA(DATA = country_env_df_for_mca, DESIGN = country_env_df$Happiness_Rank, graphs = FALSE,symmetric = TRUE)
 country_env_mca_a <- epMCA(DATA = country_env_df_for_mca, DESIGN = country_env_df$Happiness_Rank, graphs = FALSE, symmetric = FALSE)
@@ -219,13 +198,13 @@ col4J[sapply(col4J, 'is.null')] = rep( col_palate[c(-1)], length.out = 28)
 #col4J[sapply(col4J, 'is.null')]
 ```
 
-### Scree Plot
+## Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
 
 
-```{r}
+```{r echo=FALSE}
 
 PTCA4CATA::PlotScree(ev = country_env_mca$ExPosition.Data$eigs,
                       p.ev =  country_env_mca_inf$Inference.Data$components$p.vals,
@@ -235,7 +214,7 @@ PTCA4CATA::PlotScree(ev = country_env_mca$ExPosition.Data$eigs,
 
 ```
 
-### Factor Scores 
+## Factor Scores 
 
 Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.
 
@@ -381,7 +360,7 @@ Fj <- country_env_mca$ExPosition.Data$fj
 Fj.a <- country_env_mca_a$ExPosition.Data$fj
 ```
 
-#### Loadings
+## Loadings
 
 ```{r echo=FALSE}
 
@@ -390,8 +369,12 @@ col_palate = brewer.pal(n = 12, name='Set3')
 col4J = vector('list', nrow(country_env_mca$ExPosition.Data$fj))
 col4J[grep('rain',rownames(country_env_mca$ExPosition.Data$fj))] = col_palate[1]
 col4J[grep('temp',rownames(country_env_mca$ExPosition.Data$fj))] = 'red' #col_palate[2]
-col4J[sapply(col4J, 'is.null')] = rep(col_palate[3:11], length.out = sum(sapply(col4J, 'is.null')))
+col4J[sapply(col4J, 'is.null')] = col_palate[3] #rep(col_palate[3:11], length.out = sum(sapply(col4J, 'is.null')))
 
+#axis_mean = aggregate(country_env_mca$ExPosition.Data$fj, list(unlist(col4J)), mean)
+#col4mean = axis_mean[,1]
+#rownames(axis_mean) = c('Others', 'Rain', 'Temp')
+#axis_mean = axis_mean[,2:ncol(axis_mean)]
 
 for (i in 1:2){
   
@@ -403,26 +386,27 @@ for (i in 1:2){
                                                  col.labels = col4J,
                                                  axis1 = axis1,
                                                  axis2 = axis2,
-                                                 display.labels = FALSE)
+                                                 display.labels = TRUE,alpha.labels = 0.4, 
+                                                 text.cex = 2.2)
 
 country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
 
-
-country_factor_mean_map <- PTCA4CATA::createFactorMap(axis_mean, title='', 
-                                                 col.points = col_mean,
-                                                 col.labels = col_mean,
-                                                 axis1 = axis1,
-                                                 axis2 = axis2,
-                                                 display.labels = TRUE)
+#country_factor_mean_map <- PTCA4CATA::createFactorMap(axis_mean, title='', 
+#                                                 col.points = col4mean,
+#                                                 col.labels = col4mean,
+#                                                 axis1 = axis1,
+#                                                 axis2 = axis2,
+#                                                 display.labels = TRUE,cex = 4)
 
 country_map = country_factor_map$zeMap + country_label4Map 
+#+ country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text
 
 print(country_map)
 }
 
 ```
 
-#### Loadings (correlation plot)
+## Loadings (correlation plot)
 ```{r echo=FALSE}
 
 country_env_df_for_mca_int <- dummy.data.frame(country_env_df_for_mca)  #data.frame(lapply(country_env_df_for_mca, as.integer)) # get dummy
@@ -449,26 +433,27 @@ for (i in 1:2){
                           col.points = col4J, 
                           col.labels = col4J, 
                           axis1=1,
-                          axis2=2,
+                          axis2=2,alpha.labels = 0.4, 
+                          text.cex = 2.2,
                           constraints = list(minx = -1, miny = -1, maxx = 1 , maxy = 1)) 
   
   country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_mca$ExPosition.Data$eigs, tau = country_env_mca$ExPosition.Data$t) 
   
   corr_map <- loadings_map$zeMap_background  +  country_label4Map + PTCA4CATA::addCircleOfCor() +
-              loadings_map$zeMap_text + PTCA4CATA::addArrows(loadings_2)#, color = col4J) 
+              loadings_map$zeMap_text + PTCA4CATA::addArrows(loadings_2, color = col4J) 
   
   print(corr_map)
 }
 ```
 
 
-#### Most Contributing Variables (Inference)
+## Most Contributing Variables (Inference)
 
 Let's plot variable contributions against each chosen components i.e. 1, 2, 7, 9.
 
 * With Bootstrap Ratio
 
-```{r }
+```{r echo=FALSE}
 
 BR <- country_env_mca_inf$Inference.Data$fj.boots$tests$boot.ratios
 
@@ -487,7 +472,75 @@ for (i in c(1, 2, 7, 9)) {
 
 ```
 
-### Conclusion
+## Permutation Test
+
+```{r echo=FALSE}
+for (i in c(1, 2, 7, 9)) {
+zeDim = i
+xmin = min(country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim] - mean(country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim]))
+xmax = max(country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim] + mean(country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim]))
+pH1 <- prettyHist(
+  distribution = country_env_mca_inf$Inference.Data$components$eigs.perm[,zeDim], 
+  observed = country_env_mca_inf$Fixed.Data$ExPosition.Data$eigs[zeDim], 
+  xlim = c(-xmin, xmax), # needs to be set by hand
+  breaks = 20,
+  border = "black", 
+  main = paste0("MCA: Permutation Test for Eigenvalue ",zeDim),
+  xlab = paste0("Eigenvalue ",zeDim), 
+  ylab = "", 
+  counts = FALSE, 
+  cutoffs = c( 0.975))
+}
+```
+
+## Parallet Test
+
+```{r echo=FALSE}
+
+country_env_df_for_mca_int <- lapply(country_env_df_for_mca, function(x) as.numeric(as.character(x)))
+
+country_env_df_for_mca_int = as.data.frame(country_env_df_for_mca_int)
+
+country_env_mca_mc <- data4PCCAR::monteCarlo.eigen(X = country_env_df_for_mca_int, nIter = 1000)
+for (i in c(1, 2, 7, 9)) {
+  zeDim = i
+  pH1.p <- prettyHist(country_env_mca_mc$rand.eigs[,zeDim], 
+                    observed = country_env_mca_mc$fixed.eigs[zeDim], 
+                    xlim = c(0, country_env_mca_mc$fixed.eigs[zeDim]+2), # needs to set by hand
+                    breaks = 20,
+                    border = "black", 
+                    main = paste0("MCA: Monte Carlo (Parallel) Test for Eigenvalue ",zeDim),
+                    xlab = paste0("Eigenvalue ",zeDim), 
+                    ylab = "", 
+                    counts = FALSE, 
+                    cutoffs = c( 0.975))
+}
+
+```
+
+## Bootstrap Test
+
+```{r echo=FALSE}
+
+#country_env_pca_br <- PTCA4CATA::Boot4Mean(country_env_pca$ExPosition.Data$fi, design = country_env_df$Happiness_Rank, niter=100, suppressProgressBar = FALSE)
+country_env_mca_bs <- data4PCCAR::boot.eigen(X = country_env_df_for_mca_int, nIter = 1000)
+
+for (i in c(1, 2, 7, 9)) {
+  zeDim = i
+  prettyHist(country_env_mca_bs$boot.eigs[,zeDim], 
+                    observed = country_env_mca_bs$fixed.eigs[zeDim], 
+                    xlim = c(0, country_env_mca_bs$fixed.eigs[zeDim]+2), # needs to set by hand
+                    breaks = 20,
+                    border = "black", 
+                    main = paste0("MCA: Bootstrapped distribution for Eigenvalue ",zeDim),
+                    xlab = paste0("Eigenvalue ",zeDim), 
+                    ylab = "", 
+                    counts = FALSE, 
+                    cutoffs = c(0.025, 0.975))
+}
+```
+
+## Conclusion
 * Component 1: 
   + Rows: Normal & Happy
   + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation

@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>A Minimal Book Example</title>
-  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook.">
+  <title>Country Environment Factors correlated with Happiness</title>
+  <meta name="description" content="This data is all acquired through Google Earth Engine">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="A Minimal Book Example" />
+  <meta property="og:title" content="Country Environment Factors correlated with Happiness" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta property="og:description" content="This data is all acquired through Google Earth Engine" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Minimal Book Example" />
+  <meta name="twitter:title" content="Country Environment Factors correlated with Happiness" />
   
-  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="twitter:description" content="This data is all acquired through Google Earth Engine" />
   
 
-<meta name="author" content="Yihui Xie">
+<meta name="author" content="Ritesh Malaiya">
 
 
-<meta name="date" content="2018-11-20">
+<meta name="date" content="2018-11-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="literature.html">
+<link rel="next" href="dataset.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,71 +49,6 @@
 
 
 
-<style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -128,21 +63,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">Exploratory Data Analysis</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
-<li class="chapter" data-level="2" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>2</b> Literature</a></li>
-<li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods</a></li>
-<li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a><ul>
-<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>4.1</b> Example one</a></li>
-<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>4.2</b> Example two</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#context"><i class="fa fa-check"></i><b>1.1</b> Context</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#content"><i class="fa fa-check"></i><b>1.2</b> Content</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#inspiration"><i class="fa fa-check"></i><b>1.3</b> Inspiration</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#research-question-scope-of-this-book"><i class="fa fa-check"></i><b>1.4</b> Research Question (scope of this book)</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="chapter" data-level="6" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>6</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>2</b> Dataset</a><ul>
+<li class="chapter" data-level="2.1" data-path="dataset.html"><a href="dataset.html#structure-of-data"><i class="fa fa-check"></i><b>2.1</b> Structure of Data</a></li>
+<li class="chapter" data-level="2.2" data-path="dataset.html"><a href="dataset.html#datatable"><i class="fa fa-check"></i><b>2.2</b> Datatable</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="PCA.html"><a href="PCA.html"><i class="fa fa-check"></i><b>3</b> Principal Component Analysis</a><ul>
+<li class="chapter" data-level="3.1" data-path="PCA.html"><a href="PCA.html#description"><i class="fa fa-check"></i><b>3.1</b> Description</a></li>
+<li class="chapter" data-level="3.2" data-path="PCA.html"><a href="PCA.html#correlation-plot"><i class="fa fa-check"></i><b>3.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="3.3" data-path="PCA.html"><a href="PCA.html#scree-plot"><i class="fa fa-check"></i><b>3.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="3.4" data-path="PCA.html"><a href="PCA.html#factor-scores"><i class="fa fa-check"></i><b>3.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="3.5" data-path="PCA.html"><a href="PCA.html#loadings"><i class="fa fa-check"></i><b>3.5</b> Loadings</a></li>
+<li class="chapter" data-level="3.6" data-path="PCA.html"><a href="PCA.html#most-contributing-variables"><i class="fa fa-check"></i><b>3.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="3.7" data-path="PCA.html"><a href="PCA.html#permutation-test"><i class="fa fa-check"></i><b>3.7</b> Permutation Test</a></li>
+<li class="chapter" data-level="3.8" data-path="PCA.html"><a href="PCA.html#parallet-test"><i class="fa fa-check"></i><b>3.8</b> Parallet Test</a></li>
+<li class="chapter" data-level="3.9" data-path="PCA.html"><a href="PCA.html#bootstrap-test"><i class="fa fa-check"></i><b>3.9</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="3.10" data-path="PCA.html"><a href="PCA.html#conclusion"><i class="fa fa-check"></i><b>3.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html"><i class="fa fa-check"></i><b>4</b> Multiple Component Analysis</a><ul>
+<li class="chapter" data-level="4.1" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#description-1"><i class="fa fa-check"></i><b>4.1</b> Description</a></li>
+<li class="chapter" data-level="4.2" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#density-plot"><i class="fa fa-check"></i><b>4.2</b> Density Plot</a></li>
+<li class="chapter" data-level="4.3" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#binning"><i class="fa fa-check"></i><b>4.3</b> Binning</a></li>
+<li class="chapter" data-level="4.4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#spearman-correlation"><i class="fa fa-check"></i><b>4.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="4.5" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#correlation-plot-1"><i class="fa fa-check"></i><b>4.5</b> Correlation Plot</a></li>
+<li class="chapter" data-level="4.6" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#heatmap"><i class="fa fa-check"></i><b>4.6</b> Heatmap</a></li>
+<li class="chapter" data-level="4.7" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#scree-plot-1"><i class="fa fa-check"></i><b>4.7</b> Scree Plot</a></li>
+<li class="chapter" data-level="4.8" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#factor-scores-1"><i class="fa fa-check"></i><b>4.8</b> Factor Scores</a></li>
+<li class="chapter" data-level="4.9" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings-1"><i class="fa fa-check"></i><b>4.9</b> Loadings</a></li>
+<li class="chapter" data-level="4.10" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings-correlation-plot"><i class="fa fa-check"></i><b>4.10</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="4.11" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#most-contributing-variables-inference"><i class="fa fa-check"></i><b>4.11</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="4.12" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#permutation-test-1"><i class="fa fa-check"></i><b>4.12</b> Permutation Test</a></li>
+<li class="chapter" data-level="4.13" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#parallet-test-1"><i class="fa fa-check"></i><b>4.13</b> Parallet Test</a></li>
+<li class="chapter" data-level="4.14" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#bootstrap-test-1"><i class="fa fa-check"></i><b>4.14</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="4.15" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#conclusion-1"><i class="fa fa-check"></i><b>4.15</b> Conclusion</a></li>
+</ul></li>
 <li class="divider"></li>
-<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+<li><a href="https://catalog.utdallas.edu/2018/graduate/courses/acn7310" target="blank">Advanced Research Methods</a></li>
 
 </ul>
 
@@ -153,7 +117,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Country Environment Factors correlated with Happiness</a>
           </h1>
         </div>
 
@@ -162,20 +126,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">A Minimal Book Example</h1>
-<h4 class="author"><em>Yihui Xie</em></h4>
-<h4 class="date"><em>2018-11-20</em></h4>
+<h1 class="title">Country Environment Factors correlated with Happiness</h1>
+<h4 class="author"><em>Ritesh Malaiya</em></h4>
+<h4 class="date"><em>2018-11-21</em></h4>
 </div>
-<div id="prerequisites" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Prerequisites</h1>
-<p>This is a <em>sample</em> book written in <strong>Markdown</strong>. You can use anything that Pandoc’s Markdown supports, e.g., a math equation <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
-<p>The <strong>bookdown</strong> package can be installed from CRAN or Github:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;bookdown&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co"># or the development version</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co"># devtools::install_github(&quot;rstudio/bookdown&quot;)</span></a></code></pre></div>
-<p>Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading <code>#</code>.</p>
-<p>To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <a href="https://yihui.name/tinytex/" class="uri">https://yihui.name/tinytex/</a>.</p>
+<div id="intro" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="context" class="section level2">
+<h2><span class="header-section-number">1.1</span> Context</h2>
+<p>Assessing country-level social and economic statistics are often limited to socio-economic data. Not any more! This dataset will be maintained and updated with miscellaneous environmental data for countries across the globe.</p>
+</div>
+<div id="content" class="section level2">
+<h2><span class="header-section-number">1.2</span> Content</h2>
+<p>This data is all acquired through Google Earth Engine (<a href="https://earthengine.google.com/" class="uri">https://earthengine.google.com/</a>) where publicly available remote sensing datasets have been uploaded to the cloud to be manipulated by the average Joe like you and I. Most of the data is derived by calculating the mean for each country at a reduction scale of about 10km.</p>
+</div>
+<div id="inspiration" class="section level2">
+<h2><span class="header-section-number">1.3</span> Inspiration</h2>
+<p>Can you use environmental statistics to predict social and economic data?
+Are people more happy in sunny countries?
+How do economies in forested countries compare with those dominated by grassland/desert?</p>
+</div>
+<div id="research-question-scope-of-this-book" class="section level2">
+<h2><span class="header-section-number">1.4</span> Research Question (scope of this book)</h2>
+<p>How do the 137 countries differ on these variables?</p>
 
+</div>
 </div>
             </section>
 
@@ -183,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 
-<a href="literature.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="dataset.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
