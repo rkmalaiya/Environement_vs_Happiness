@@ -9,7 +9,7 @@ output:
 ---
 
 
-```{r include=FALSE, results='hide'}
+```{r plsc_init, include=FALSE, results='hide'}
 # Installing required packages
 # sudo apt-get install libcairo2-dev
 # sudo apt-get install libxml2-dev
@@ -27,37 +27,30 @@ library(PTCA4CATA)
 library(reshape2)
 
 # Source the function file:
-file4PLSCfunctions <- paste0(getwd(),'/inferences4PLSC.R')
+file4PLSCfunctions <- '../rmarkdowns/pls/inferences4PLSC.R'
 source(file4PLSCfunctions)
 #
 install.packages('TExPosition')
 library(TExPosition)
+rm(list = ls())
 
 
 ```
 
+# Partial Least Squares - Correlation
 
 ## Method: PLS-C
 
 PLS is used to find the fundamental relations between two matrices (X and Y), i.e. a latent variable approach to modeling the covariance structures in these two spaces. A PLS model will try to find the multidimensional direction in the X space that explains the maximum multidimensional variance direction in the Y space. PLS regression is particularly suited when the matrix of predictors has more variables than observations, and when there is multicollinearity among X values. PLS bears some relation to principal components regression; instead of finding hyperplanes of maximum variance between the response and independent variables, it finds a linear regression model by projecting the predicted variables and the observable variables to a new space. Because both the X and Y data are projected to new spaces, the PLS family of methods are known as bilinear factor models.
 
 
-## Dataset
 
-```{r include=FALSE, results='hide'}
+```{r plsc_data, include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
 country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
 
 country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
-```
 
-* Data: Measurements of environment conditions in Countries
-* Rows: There are 137 observations, 1 for each country.
-* Columns: Columns: Total 2 Tables – All Rain and All Temp
-
-* Structure of Data
-
-```{r data_summary}
 str(country_env_df)
 ```
 
@@ -78,10 +71,10 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 ```
 
 
-### Correlation Plot
+## Correlation Plot
 Visually analyze multicollinearity between all varaibles in Rain and Temperature tables.  
 
-```{r}
+```{r echo=FALSE}
 rain = country_env_df_for_pca[,grep('rain',colnames(country_env_df_for_pca))]
 temp = country_env_df_for_pca[,grep('temp',colnames(country_env_df_for_pca))]
 
@@ -89,11 +82,10 @@ corr_result = cor(rain, temp)
 corrplot(corr_result,order = 'hclust', addrect = 3)
 ```
 
-### Identify Latent Components
 
-#### PLS-C 
+## PLS-C 
 
-```{r pca, echo=FALSE, results='hide'}
+```{r plsc, echo=FALSE}
 
 resPLSC <- tepPLS(rain,temp,DESIGN = country_env_df$Happiness_Rank,graphs = FALSE)
 resPerm4PLSC <- perm4PLSC(rain, # First Data matrix 
@@ -110,13 +102,13 @@ Now we have Latent Variables and Saliences.
 * Latent Variables are the new Data points w.r.t. correlation between both the tables. Latent Variables exists for each table.
 * Saliences represent correlation between variables of each table. 
 
-#### Scree Plot
+## Scree Plot
 Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.
 
 P.S. The most contribution component may not always be most useful for a given research question. 
 
 
-```{r}
+```{r echo=FALSE}
 
 
 PTCA4CATA::PlotScree(ev = resPLSC$TExPosition.Data$eigs,
@@ -127,11 +119,11 @@ PTCA4CATA::PlotScree(ev = resPLSC$TExPosition.Data$eigs,
 
 ```
 
-#### Latent Variables 
+## Latent Variables 
 
 Lets visualize happiness categories for Components 1 of each table
 
-##### Component 1 for both Tables: Rain and Temperature
+### Component 1 for both Tables: Rain and Temperature
 ```{r echo=FALSE}
 
 comp1 = data.frame(lx1 = resPLSC$TExPosition.Data$lx[,1], ly1 = resPLSC$TExPosition.Data$ly[,1])
@@ -168,7 +160,7 @@ print(country_map)
 
 ```
 
-##### Component 2 for both Tables: Rain and Temperature
+### Component 2 for both Tables: Rain and Temperature
 ```{r echo=FALSE}
 
 comp1 = data.frame(lx1 = resPLSC$TExPosition.Data$lx[,2], ly1 = resPLSC$TExPosition.Data$ly[,2])
@@ -207,9 +199,9 @@ print(country_map)
 
 
 
-#### Salience for Rain
+## Salience for Rain
 
-##### Components 1
+### Components 1
 
 ```{r echo=FALSE}
 
@@ -224,7 +216,7 @@ PrettyBarPlot2(resPLSC$TExPosition.Data$fi[,1],
 
 ```
 
-##### Component 2
+### Component 2
 
 ```{r echo=FALSE}
 
@@ -240,10 +232,10 @@ PrettyBarPlot2(resPLSC$TExPosition.Data$fi[,2],
 ```
 
 
-#### Salience for Temperature
+## Salience for Temperature
 
 
-##### Component 1
+### Component 1
 ```{r echo=FALSE}
 
 PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,1],
@@ -256,7 +248,7 @@ PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,1],
 
 ```
 
-##### Component 2
+### Component 2
 ```{r echo=FALSE}
 
 PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,2],
@@ -270,10 +262,10 @@ PrettyBarPlot2(resPLSC$TExPosition.Data$fj[,2],
 ```
 
 
-#### Most Contributing Variables - PLS-C (with Inference)
+## Most Contributing Variables - PLS-C (with Inference)
 
 
-```{r echo=FALSE, results='hide'}
+```{r echo=FALSE }
 
 resBoot4PLSC <- Boot4PLSC(rain, # First Data matrix 
                           temp, # Second Data matrix
@@ -292,9 +284,9 @@ print(resBoot4PLSC)
 ```
 
 
-* Bootstrap Test 
+### Bootstrap Test
 
-##### Rain - Component 1
+* Rain - Component 1
 
 ```{r}
 
@@ -312,7 +304,7 @@ PrettyBarPlot2(BR[,1],
 ```
 
 
-##### Rain - Component 2
+* Rain - Component 2
 
 ```{r}
 
@@ -331,7 +323,7 @@ PrettyBarPlot2(BR[,2],
 ```
 
 
-##### Temperature - Component 1
+* Temperature - Component 1
 
 ```{r}
 
@@ -352,7 +344,7 @@ PrettyBarPlot2(BR[,1],
 
 
 
-##### Temperature - Component 2
+* Temperature - Component 2
 
 ```{r}
 
@@ -370,7 +362,7 @@ PrettyBarPlot2(BR[,2],
 
 ```
 
-### Conclusion
+## Conclusion
 
 Here Component 2 seems to best seperate Happiness levels. Let's compare Component 2 for both tables.
 

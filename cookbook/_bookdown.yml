@@ -1,7 +1,7 @@
-book_filename: "Country's Environment conditions corelated with Happiness"
+book_filename: "Country Environment conditions corelated with Happiness"
 delete_merged_file: true
 language:
   ui:
     chapter_name: "Chapter "
     
-rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", "../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd"]
+rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", "../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd", "../rmarkdowns/pls/Group1_Ritesh_Malaiya_PLSC_Inference.Rmd"]
