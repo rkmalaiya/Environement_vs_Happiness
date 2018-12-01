@@ -1,5 +1,5 @@
 --- 
-title: "Country Environment Factors correlated with Happiness"
+title: "Country Environmental Factors correlated with Happiness"
 author: "Ritesh Malaiya"
 date: "`r Sys.Date()`"
 output: word_document
@@ -12,6 +12,8 @@ bibliography:
 site: bookdown::bookdown_site
 biblio-style: apalike
 ---
+
+# (PART) Country-Level Environmental Measurements Dataset {-}
 
 # Introduction {#intro}
 
@@ -34,6 +36,9 @@ How do the 137 countries differ on these variables?
 
 
 ```{r include=FALSE}
+knitr::opts_chunk$set(fig.width=11, fig.height=7,
+                      echo=FALSE, warning=FALSE, message=FALSE) #this fig setting makes busy graphs looks good even in A4
+
 # automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'

@@ -37,9 +37,13 @@ rm(list = ls())
 
 # Multiple Factor Analyis
 
-## Method: MFA
+## Description
 
-<To be filled>
+Multiple factor analysis is an extension of PCA tailored to handle multiple datatables that measure sets of variables collected on the same observations. MFA proceeds in two steps
+1. It computes a PCA of each data table and ‘normalizes’ each data table by dividing all its elements by the ﬁrst singular value obtained from its PCA. 
+2. All the normalized data tables are aggregated into a grand data table that is analyzed via a (non-normalized) PCA that gives a set of factor scores for the observations and loadings for the variables. 
+
+In addition, MFA provides for each data table a set of partial factor scores for the observations that reﬂects the speciﬁc ‘view-point’ of this data table. Interestingly, the common factor scores could be obtained by replacing the original normalized data tables by the normalized factor scores obtained from the PCA of each of these tables. 
 
 ```{r include=FALSE, results='hide'}
 country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
@@ -137,6 +141,82 @@ print(country_map)
 
 ```
 
+* With Tolerance Interval
+
+```{r echo=FALSE}
+
+
+
+GraphTI.Hull <- MakeToleranceIntervals(comp1,
+                                                  design = country_env_df$Happiness_Rank,
+                                                  # line below is needed
+                                                  names.of.factors =  c("Dim1","Dim2"), # needed 
+                                                  col = c('springgreen4', 'royalblue1', 'burlywood3'),
+                                                  line.size = .50, 
+                                                  line.type = 3,
+                                                  alpha.ellipse = .2,
+                                                  alpha.line    = .4,
+                                                  p.level       = .75)
+
+print(country_map + GraphTI.Hull)
+
+```
+
+* With Partial Factor Scores
+
+```{r echo=FALSE}
+
+loadings_2 = cor(country_env_df_for_mfa, resMFA$mexPosition.Data$Table$fi)
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+col4J = vector('list', nrow(loadings_2))
+col4J[grep('rain',rownames(loadings_2))] = col_palate[1]
+col4J[grep('temp',rownames(loadings_2))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = col_palate[3] #rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
+
+partial_comp1 = resMFA$mexPosition.Data$Table$partial.fi
+
+group_partial = rep(1,times=nrow(partial_comp1))
+group_partial[grep("Type.Other", rownames(partial_comp1))] = paste0('Other', '_' ,country_env_df$Happiness_Rank)
+group_partial[grep("Type.Rain", rownames(partial_comp1))] = paste0('Rain', '_' ,country_env_df$Happiness_Rank)
+group_partial[grep("Type.Temp", rownames(partial_comp1))] = paste0('Temp', '_' ,country_env_df$Happiness_Rank)
+
+group_partial_mean = aggregate(partial_comp1, list(group_partial),mean)
+
+rownames(group_partial_mean) = group_partial_mean[,1]
+group_partial_mean = group_partial_mean[,2:ncol(group_partial_mean)]
+
+col4points = rep(1, times=nrow(group_partial_mean))
+col4labels = rep(1, times=nrow(group_partial_mean))
+
+col4points[grep('H',rownames(group_partial_mean))] = 'royalblue1'
+col4points[grep('VH',rownames(group_partial_mean))] = 'springgreen4'
+col4points[grep('U',rownames(group_partial_mean))] = 'burlywood3'
+
+col4labels[grep('Other',rownames(group_partial_mean))] = col_palate[3]
+col4labels[grep('Rain',rownames(group_partial_mean))] = col_palate[1]
+col4labels[grep('Temp',rownames(group_partial_mean))] = 'red'
+
+
+country_factor_map <- PTCA4CATA::createFactorMap(comp1, title='', 
+                                                 col.points = lx_col, 
+                                                 #col.labels = country_env_df$Happiness_Rank,
+                                                constraints = list("minx"=-0.05,"miny"=-0.075,"maxx"=0.05,"maxy"=0.05),
+                                                 display.labels = FALSE)
+
+
+country_factor_group_partial_map <- PTCA4CATA::createFactorMap(group_partial_mean, title='', 
+                                                 col.points = col4points,
+                                                 col.labels = col4labels,
+                                                 cex = 7,alpha.points = 0.4, alpha.labels = 0.6,
+                                                 pch = 18,
+                                                 display.labels = TRUE)
+
+print(country_factor_map$zeMap_background + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + country_factor_group_partial_map$zeMap_dots + country_factor_group_partial_map$zeMap_text)
+
+```
+
 ## Loadings
 
 ```{r echo=FALSE}
@@ -168,16 +248,6 @@ PrettyBarPlot2(resMFA$mexPosition.Data$Table$Q[,2],
 ## Correlation Circle
 
 ```{r echo=FALSE}
-
-loadings_2 = cor(country_env_df_for_mfa, resMFA$mexPosition.Data$Table$fi)
-
-col_palate = brewer.pal(n = 12, name='Set3')
-
-col4J = vector('list', nrow(loadings_2))
-col4J[grep('rain',rownames(loadings_2))] = col_palate[1]
-col4J[grep('temp',rownames(loadings_2))] = 'red' #col_palate[2]
-col4J[sapply(col4J, 'is.null')] = col_palate[2] #rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
-
 
 loadings_map <- PTCA4CATA::createFactorMap(loadings_2, 
                           col.points = col4J, 

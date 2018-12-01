@@ -1,0 +1,18 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+# Conclusion for all Methods
+
+Methods *PCA*, *MCA*, *PLS-C* and *BADA* doesn't seem to clearly separate different levels of happiness. However, *DiCA*, is clearly separating happiness levels and it shows that more amount of rain is correlated with decreasing happiness level and people seems to be more happy in countries with moderate temperature. 
+
+| Methods | Unhappy                                   | Normal                       | Happy                                     | Reliability                                                                                                    |
+|---------|-------------------------------------------|------------------------------|-------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| PCA     | Temp                                      | Rain                         | Rain                                      | Components have significant contribution but convex hull has overlapping areas and Component 2 & 7 contradicts |
+| MCA     | Lower Temp and More Rain                  | Higher temp vs less rain     | Higher temp vs less rain                  | Components have significant contribution but convex hull has overlapping areas                                 |
+| BADA    | Temp                                      | Rain                         | Rain                                      | Components have significant contribution but convex hull has overlapping areas                                 |
+| DiCA    | Higher summers, higher winters, less rain | mean of rain and temperature | lower summers, less winters, higher rains | Convex hulls are separeted but second component only has temp variables as significant                         |
+| PLS-C   | Rain                                      | Temp                         | Temp                                      | Second component has more rain variables as significant than temp variables                                    |
+| MFA     |                                           |                              |                                           | Convex hull has overlapping areas                                                                              |

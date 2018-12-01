@@ -174,11 +174,11 @@ Since, it's not very straightforward to decide which components may be best suit
 P.S. here -1 represents -ve quadrant of the component and +1 represent +ve quadrant. 0 represents that component was not decisive enough to clearly seperate happiness levels.
 
 ```{r echo=FALSE}
-happy <- c(-1,-1,1,0,0,0,1,0,0,0)
-happier <- c(1,0,0,0,0,0,-1,0,-1,0)
-happiest <- c(0,1,-1, 0,0,0,0,0,1,0)
+Unhappy <- c(-1,-1,1,0,0,0,1,0,0,0)
+Normal <- c(1,0,0,0,0,0,-1,0,-1,0)
+VeryHappy <- c(0,1,-1, 0,0,0,0,0,1,0)
 
-component_vs_happylevels <- data.frame(happy, happier, happiest)
+component_vs_happylevels <- data.frame(Unhappy, Normal, VeryHappy)
 rownames(component_vs_happylevels) <- c('Component 1', 'Component 2', 'Component 3', 
                                         'Component 4', 'Component 5', 'Component 6', 
                                         'Component 7', 'Component 8', 'Component 9',
@@ -298,6 +298,45 @@ print(country_map)
 
 
 ## Loadings
+
+```{r echo=FALSE}
+
+loop <- matrix(data = c(1,2, 7,9), nrow = 2, ncol = 2, byrow = TRUE)
+
+col_palate = brewer.pal(n = 12, name='Set3')
+
+country_env_pca$Plotting.Data$fj.col[,1] = col_palate[3] #rep(col_palate[3], times = length(country_env_pca$Plotting.Data$fj.col))
+country_env_pca$Plotting.Data$fj.col[grep('rain',rownames(country_env_pca$ExPosition.Data$fj))] = col_palate[1]
+country_env_pca$Plotting.Data$fj.col[grep('temp',rownames(country_env_pca$ExPosition.Data$fj))] = 'red' 
+
+
+for (i in 1:2){
+  axis1 = loop[i,1]
+  axis2 = loop[i,2]
+
+  country_factor_map <- PTCA4CATA::createFactorMap(country_env_pca$ExPosition.Data$fj, title='', 
+                                                 col.points = country_env_pca$Plotting.Data$fj.col,
+                                                 col.labels = country_env_pca$Plotting.Data$fj.col,
+                                                 axis1 = axis1,
+                                                 axis2 = axis2,
+                                                 display.labels = TRUE)
+
+
+country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_env_pca$ExPosition.Data$eigs, tau = country_env_pca$ExPosition.Data$t) 
+
+
+
+country_map = country_factor_map$zeMap + country_label4Map 
+
+print(country_map)
+
+
+}
+
+```
+
+
+## Correlation Circle
 
 ```{r echo=FALSE}
 for (i in 1:2){

@@ -1,0 +1,9 @@
+---
+title: "part_singletable"
+author: "Ritesh Malaiya"
+date: "11/26/2018"
+output: html_document
+---
+
+# (PART) Single Table for Country Environment Dataset {-} 
+

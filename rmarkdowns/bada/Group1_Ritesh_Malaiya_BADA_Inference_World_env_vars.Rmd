@@ -33,9 +33,10 @@ rm(list = ls())
 
 # Barycentric Discriminant Analysis
 
-## Method: BADA
 
-<Will update after class>
+## Description
+
+Barycentric discriminant analysis(BADA) is a robust version of discriminant analysis that is used to assign, top re-deﬁned groups(also called categories), observations described by  multiple variables. By contrast with traditional discriminant analysis, BADA can be used even when the number of observations is smaller than the number of variables. This makes BADA particularly suited for the analysis of Big Data.
 
 
 ```{r include=FALSE, results='hide'}
@@ -58,22 +59,21 @@ rownames(country_env_df_for_pca) <- paste0(country_env_df[,'Country'], '(' ,coun
 
 
 ## Heatmap
-Visually analyze multicollinearity in the system.  
 
 ```{r include=FALSE}
 corr_result = cor(country_env_df_for_corr)
 corrplot(corr_result,order = 'hclust', addrect = 7)
 ```
 
-```{r}
+```{r echo=FALSE}
 
 happiness_dummies = as.data.frame(dummy(country_env_df$Happiness_Rank))
-colnames(happiness_dummies) <- c('Happiest', 'Happier', 'Happy' )
+colnames(happiness_dummies) <- c('VeryHappy', 'Normal', 'Unhappy' )
 
 #heatmap(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca))
 ```
 
-```{r}
+```{r echo=FALSE}
 heatmap.2(t(happiness_dummies) %*% as.matrix(country_env_df_for_pca), col = rev(heat.colors(16)), dendrogram = 'none', trace = 'none', margins = c(8, 16)) #tracecol=NA)
 ```
 
@@ -107,7 +107,7 @@ PTCA4CATA::PlotScree(ev = country_env_pca$TExPosition.Data$eigs,
 
 
 list_color <- c('#305ABF' = 'burlywood3', '#84BF30' = 'royalblue1', '#BF30AD' = 'springgreen4')
-happy_levels <- c('Happy', 'Happier', 'Happiest')
+happy_levels <- c('Unhappy', 'Normal', 'VeryHappy')
 
 country_env_pca$Plotting.Data$fii.col[,1] <- recode (country_env_pca$Plotting.Data$fii.col, !!!list_color)
 

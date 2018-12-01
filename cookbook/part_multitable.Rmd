@@ -1,0 +1,8 @@
+---
+title: "part_multitable"
+author: "Ritesh Malaiya"
+date: "11/26/2018"
+output: html_document
+---
+
+# (PART) Two / Multi Table Analysis for Country Environment Dataset {-} 

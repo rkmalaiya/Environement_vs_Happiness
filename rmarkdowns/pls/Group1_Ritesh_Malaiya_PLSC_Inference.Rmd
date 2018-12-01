@@ -39,7 +39,7 @@ rm(list = ls())
 
 # Partial Least Squares - Correlation
 
-## Method: PLS-C
+## Description
 
 PLS is used to find the fundamental relations between two matrices (X and Y), i.e. a latent variable approach to modeling the covariance structures in these two spaces. A PLS model will try to find the multidimensional direction in the X space that explains the maximum multidimensional variance direction in the Y space. PLS regression is particularly suited when the matrix of predictors has more variables than observations, and when there is multicollinearity among X values. PLS bears some relation to principal components regression; instead of finding hyperplanes of maximum variance between the response and independent variables, it finds a linear regression model by projecting the predicted variables and the observable variables to a new space. Because both the X and Y data are projected to new spaces, the PLS family of methods are known as bilinear factor models.
 
@@ -55,11 +55,6 @@ str(country_env_df)
 ```
 
 
-* Research Question
-
-Which variables in Rain and Temperature contribute most towards happiness
-
-## Analysis 
 
 ```{r echo=FALSE}
 
@@ -288,7 +283,7 @@ print(resBoot4PLSC)
 
 * Rain - Component 1
 
-```{r}
+```{r echo=FALSE}
 
 BR = resBoot4PLSC$bootRatios.i
 
@@ -306,7 +301,7 @@ PrettyBarPlot2(BR[,1],
 
 * Rain - Component 2
 
-```{r}
+```{r echo=FALSE}
 
 BR = resBoot4PLSC$bootRatios.i
 
@@ -325,7 +320,7 @@ PrettyBarPlot2(BR[,2],
 
 * Temperature - Component 1
 
-```{r}
+```{r echo=FALSE}
 
 BR = resBoot4PLSC$bootRatios.j
 
@@ -346,7 +341,7 @@ PrettyBarPlot2(BR[,1],
 
 * Temperature - Component 2
 
-```{r}
+```{r echo=FALSE}
 
 BR = resBoot4PLSC$bootRatios.j
 

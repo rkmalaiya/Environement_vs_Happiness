@@ -1,0 +1,40 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+# Dataset {#dataset}
+
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+```
+
+```{r echo=FALSE, results='hide'}
+country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
+country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
+
+country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
+```
+
+* Data: Measurements of environment conditions in Countries
+* Rows: There are 137 observations, 1 for each country.
+* Columns: Total 29 variables
+ + Qualitative: Country (nominal), Happiness (Ordinal).
+ + Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud & Multiple variables for Temp & Rain
+
+## Structure of Data
+
+```{r data_summary_book, echo=FALSE, tidy=FALSE}
+
+  str(country_env_df)
+
+```
+
+## Datatable
+```{r nice-tab-data, echo=FALSE}
+knitr::kable(
+  head(country_env_df[,1:8]), caption = 'Environment variables for 137 countries'
+)
+```
+
+

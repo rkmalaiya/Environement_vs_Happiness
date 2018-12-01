@@ -1,0 +1,33 @@
+---
+title: "test"
+author: "Ritesh Malaiya"
+date: "11/21/2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
+
+```{r}
+
+library(dplyr)
+# extract a subset of the mtcars data
+df <- mtcars %>%
+    mutate(make_model = row.names(mtcars)) %>%
+    filter(cyl == 4) %>%    
+    select(make_model, mpg, wt) %>%
+    mutate(wt = wt*1000) %>%
+    arrange(make_model) 
+
+library(knitr)
+#kable(df)
+
+country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
+kable(head(country_env_df[,1:15]))
+```
+
