@@ -113,7 +113,7 @@ comp1 = resMFA$mexPosition.Data$Table$fi
 
 list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
 
-lx_col <- recode (country_env_df$Happiness_Rank, `U` = 'burlywood3', `H` = 'royalblue1', `VH` = 'springgreen4')
+lx_col <- dplyr::recode (country_env_df$Happiness_Rank, `U` = 'burlywood3', `H` = 'royalblue1', `VH` = 'springgreen4')
 
 country_env_mean_df = aggregate(comp1,by = list(country_env_df$Happiness_Rank), mean)
 rownames(country_env_mean_df) <- c('VeryHappy', 'Happy', 'Unhappy')
@@ -264,6 +264,7 @@ loadings_map <- PTCA4CATA::createFactorMap(loadings_2,
   print(corr_map)
 
 ```
+
 
 ## Conclusion
 

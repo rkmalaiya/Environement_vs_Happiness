@@ -36,7 +36,7 @@ How do the 137 countries differ on these variables?
 
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(fig.width=11, fig.height=7,
+knitr::opts_chunk$set(fig.width=12, fig.height=8,
                       echo=FALSE, warning=FALSE, message=FALSE) #this fig setting makes busy graphs looks good even in A4
 
 # automatically create a bib database for R packages

@@ -297,7 +297,7 @@ print(country_map)
 ```
 
 
-## Loadings
+## Loadings2
 
 ```{r echo=FALSE}
 
@@ -330,13 +330,14 @@ country_map = country_factor_map$zeMap + country_label4Map
 
 print(country_map)
 
+print("<br \\><br \\>")
 
 }
 
 ```
 
 
-## Correlation Circle
+## Correlation Circle2
 
 ```{r echo=FALSE}
 for (i in 1:2){
@@ -367,6 +368,7 @@ for (i in 1:2){
               PTCA4CATA::addArrows(loadings_2, color = col4J) 
   
   print(corr_map)
+  print("<br \\><br \\>")
 }
 ```
 

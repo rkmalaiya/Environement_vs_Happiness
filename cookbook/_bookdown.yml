@@ -1,14 +1,18 @@
-book_filename: "Country Environment conditions corelated with Happiness"
+book_filename: "Multi-variate analysis on Environmental variables"
 delete_merged_file: true
 language:
   ui:
     chapter_name: "Chapter "
     
-rmd_files: ["index.Rmd", "dataset.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", 
+rmd_files: ["index.Rmd", "dataset.Rmd", "part_singletable.Rmd", "../rmarkdowns/pca/Group1_Ritesh_Malaiya_PCA_Inference_World_env_vars.Rmd", 
 "../rmarkdowns/mca/Group1_Ritesh_Malaiya_MCA_Inference_World_env_vars.Rmd", 
-"../rmarkdowns/pls/Group1_Ritesh_Malaiya_PLSC_Inference.Rmd",
+"part_multitable.Rmd",
 "../rmarkdowns/bada/Group1_Ritesh_Malaiya_BADA_Inference_World_env_vars.Rmd",
 "../rmarkdowns/dica/Group1_Ritesh_Malaiya_DiCA_Inference_World_env_vars.Rmd",
+"../rmarkdowns/pls/Group1_Ritesh_Malaiya_PLSC_Inference.Rmd",
 "../rmarkdowns/mfa/Group1_Ritesh_Malaiya_MFA_Inference.Rmd",
+"../rmarkdowns/distatis/Group1_Ritesh_Malaiya_DiSTATIS_Country_env.Rmd",
+"conclusion.Rmd",
+"part_otherdatasets.Rmd",
 "../rmarkdowns/ca/Group_1_Ritesh_Malaiya_[CA_Inference]_Weekly_Earnings.Rmd",
 "../rmarkdowns/distatis/Group1_Ritesh_Malaiya_DiSTATIS.Rmd"]

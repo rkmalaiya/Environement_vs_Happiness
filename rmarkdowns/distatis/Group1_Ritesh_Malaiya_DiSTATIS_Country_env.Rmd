@@ -1,12 +1,13 @@
 ---
 title: "Ritesh_Malaiya_Group_1_DiSTATIS"
 output:
-  word_document: default
   html_document: default
+  github_document: default
+  word_document: default
 ---
 
 
-```{r echo=FALSE}
+```{r cars, echo=FALSE}
 
 rm(list = ls())
 
@@ -14,6 +15,8 @@ devtools::install_github('HerveAbdi/PTCA4CATA')
 suppressMessages(library(PTCA4CATA))
 # PTCA4CATA should first to avoid conflict with TInPosition
 suppressMessages(library(ExPosition))
+#suppressMessages(library(InPosition))
+#suppressMessages(library(TInPosition))
 suppressMessages(library(ggplot2))
 suppressMessages(library(dplyr))
 suppressMessages(library(officer))
@@ -22,8 +25,13 @@ suppressMessages(library(rvg))
 suppressMessages(library(useful))
 suppressMessages(library(DistatisR))
 library(RColorBrewer)
-library(MExPosition)
 
+
+# Source the function file:
+#
+# install.packages('TExPosition')
+# install.packages('MExPosition')
+library(MExPosition)
 rm(list = ls())
 ```
 
@@ -33,19 +41,51 @@ rm(list = ls())
 
 DISTATIS is a new method that can be used to compare algorithms when their outputs consist of distance matrices computed on the same set of objects. The method ﬁrst evaluates the similarity between algorithms using a coefﬁcient called the RV coefﬁcient. From this analysis, a compromise matrix is computed which represents the best aggregate of the original matrices. In order to evaluate the differences between algorithms, the original distance matrices are then projected onto the compromise. The goal of DISTATIS is to analyze a set of distance matrices. In order to compare distance matrices, DISTATIS combines them into a common structure called a compromise and then projects the original distance matrices onto this compromise. 
 
-## Dataset - Pianists for Composers
+```{r include=FALSE, results='hide'}
+country_env_df = read.csv('../dataset/World_countries_env_vars.csv')
+country_env_df_for_corr = country_env_df[, !names(country_env_df) %in% c('Country')]
+
+country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 39,118, 159), right=TRUE, labels = c('VH' , 'H', 'U'),ordered_result = TRUE)
+
+str(country_env_df)
+```
+
+
 ```{r echo=FALSE}
-Raw_Data <- read.csv('../dataset/natural36_constrained_forR.csv', row.names = 1)
+
+country_env_df_for_mfa = country_env_df[, !names(country_env_df) %in% c('Country', 'Happiness_Rank')]
+
+rownames(country_env_df_for_corr) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+rownames(country_env_df_for_mfa) <- paste0(country_env_df[,'Country'], '(' ,country_env_df[,'Happiness_Rank'], ')')
+
+column.design = rep('Others', length.out = ncol(country_env_df_for_mfa) )
+
+column.design[ grep('rain',colnames(country_env_df_for_mfa)) ] = 'Rain'
+column.design[ grep('temp',colnames(country_env_df_for_mfa)) ] = 'Temp'
+column.design = t(as.matrix(column.design))
+colnames(column.design) = colnames(country_env_df_for_mfa)
+rownames(column.design) = 'Type'
+```
+
+```{r echo=FALSE}
+#Raw_Data <- read.csv('../dataset/natural36_constrained_forR.csv', row.names = 1)
 
 
 
-Sorting_Data <- Raw_Data[-37,]
-Design_Data <- Raw_Data[37,]
+Sorting_Data <- country_env_df_for_mfa #Raw_Data[-37,]
+Design_Data <- column.design #Raw_Data[37,]
 
-Design_cat <- cut(t(Design_Data[1,]), breaks = c(0,1,4,15), include.lowest=TRUE, right = TRUE, labels = c('Non-Musician', 'Moderate', 'Musician'))
+Design_cat <- column.design #country_env_df$Happiness_Rank 
+#cut(t(Design_Data[1,]), breaks = c(0,1,4,15), include.lowest=TRUE, right = TRUE, labels = c('Non-Musician', 'Moderate', 'Musician'))
 
 ```
 
+```{r nice-tab-distatis, tidy=FALSE, echo=FALSE}
+#knitr::kable(
+#  head(country_env_df_for_mfa[,1:10]), caption = '4 Pianist for each of 3 Composers',
+#  booktabs = TRUE
+#)
+```
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 DistanceCube <- DistatisR::DistanceFromSort(Sorting_Data)
@@ -72,16 +112,22 @@ G <- testDistatis$res4Cmat$G
 # Create a color scheme for the judges
 col4B <- 'turquoise3'
 col4G <- 'thistle3'
-col <- brewer.pal(n = 3, name='Set1')
 
+col_palate = brewer.pal(n = 12, name='Set3')
 
-col4Musicians <- dplyr::recode(Design_cat, `Non-Musician` = col[1], `Moderate` = col[2], `Musician` = col[3])
+col4J = vector('list', nrow(G))
+col4J[grep('rain',rownames(G))] = col_palate[1]
+col4J[grep('temp',rownames(G))] = 'red' #col_palate[2]
+col4J[sapply(col4J, 'is.null')] = col_palate[3] #rep(col_palate[4], length.out = sum(sapply(col4J, 'is.null')))
+
+#col <- brewer.pal(n = 3, name='Set1')
+#col4Musicians <- dplyr::recode(Design_cat, `Non-Musician` = col[1], `Moderate` = col[2], `Musician` = col[3])
 
 baseMap.j <- PTCA4CATA::createFactorMap(G,
                                         title = 'The Rv map',
-                                        col.points   = col4Musicians,
+                                        col.points   = unlist(col4J), #col4Musicians,
                                         alpha.points =  .3,
-                                        col.labels = col4Musicians)
+                                        col.labels = unlist(col4J))
 # A graph for the J-set
 aggMap.j <- baseMap.j$zeMap_background + # background layer
            baseMap.j$zeMap_dots + baseMap.j$zeMap_text # dots & labels
@@ -99,7 +145,7 @@ print(aggMap.j)
 GraphTJ.Hull.100 <- MakeToleranceIntervals(G,
                                   as.factor(Design_cat),
                                   names.of.factors = c("Dim1","Dim2"),
-                                  col = unique(col4Musicians),
+                                  col = unique(col4J),
                                           line.size = .5,
                                           line.type = 3,
                                           alpha.ellipse = .1,
@@ -112,13 +158,13 @@ GraphTJ.Hull.100 <- MakeToleranceIntervals(G,
 aggMap.j.withHull <- baseMap.j$zeMap_background + # background layer
                            baseMap.j$zeMap_dots + GraphTJ.Hull.100
 
-JudgesMeans.tmp <- aggregate(G, list(Design_cat), mean) # compute the means
+JudgesMeans.tmp <- aggregate(G, list(as.factor(Design_cat)), mean) # compute the means
 JudgesMeans <- JudgesMeans.tmp[,2:ncol(JudgesMeans.tmp )] # drop var 1
 
 rownames(JudgesMeans) <- JudgesMeans.tmp[,1] # use var 1 to name the groups
 
 
-col4Means <- unique(col4Musicians)
+col4Means <- unique(col4J)
 
 MapGroup    <- PTCA4CATA::createFactorMap(JudgesMeans,
                                   axis1 = 1, axis2 = 2,
@@ -168,10 +214,9 @@ Scree.S <-  PlotScree(ev = ev4S,
 Fi <- testDistatis$res4Splus$F
 col <- brewer.pal(n = 3, name='Set2')
 
-col4Composer <- vector('list',length = nrow(Fi))
-col4Composer[grep('Moza', rownames(Fi))] = col[1]
-col4Composer[grep('Beet', rownames(Fi))] = col[2]
-col4Composer[grep('Bach', rownames(Fi))] = col[3]
+list_color <- c('U' = 'burlywood3', 'H' = 'royalblue1', 'VH' = 'springgreen4')
+
+lx_col <- dplyr::recode (country_env_df$Happiness_Rank, `U` = 'burlywood3', `H` = 'royalblue1', `VH` = 'springgreen4')
 
 
 #col4Composer <- prettyGraphsColorSelection(nrow(Fi))
@@ -182,8 +227,8 @@ col4Composer[grep('Bach', rownames(Fi))] = col[3]
 # Create the base map
 constraints4Fi <- lapply(minmaxHelper(Fi),'*',1.2)
 baseMap.i <- PTCA4CATA::createFactorMap(Fi,
-                                        col.points = col4Composer,
-                                        col.labels = col4Composer,
+                                        col.points = lx_col,
+                                        col.labels = lx_col,
                         constraints = constraints4Fi,
                                         alpha.points =  .4)
 #---------------------------------------------------------------------
@@ -209,7 +254,7 @@ GraphElli <- MakeCIEllipses(BootF[,1:2,],
                       alpha.ellipse = .3,
                       line.size = .5,
                       line.type = 3,
-                      col = unlist(col4Composer),
+                      col = lx_col,
                       p.level = .95 )
 #---------------------------------------------------------------------
 # create the I-map with Observations and their confidence intervals
@@ -222,23 +267,51 @@ print(aggMap.i.withCI)
 
 ```
 
+## Cluster Analysis (Hartigan's Rule)
+```{r echo=FALSE}
+# Optimal number of clustera
+#  install.packages('useful')
+best.beers <- useful::FitKMeans(Fi, max.clusters = 5,
+                                seed = 314)
+print(best.beers) # when Hartigan parameter > 10 => add a cluster
+
+```
+
+```{r echo=FALSE}
+
+plot.harti <- useful::PlotHartigan(best.beers)
+print(plot.harti)
+
+```
+
 
 ## Cluster Analysis (K-Means)
 
+### Two centers
 ```{r echo=FALSE}
 
 
 
-composer.kMeans <- kmeans(x = Fi , centers = 3)
+
+composer.kMeans <- kmeans(x = Fi , centers = 2)
 col4Clusters  <- createColorVectorsByDesign(
               makeNominalData(
               as.data.frame(composer.kMeans$cluster)  ))
+
+
+#col4Clus_unique <- unique(col4Clusters$oc)
+
+#col <- brewer.pal(n = nrow(col4Clus_unique), name='Set1')
+
+#col4Clusters$oc[ grep(col4Clus_unique[1],col4Clusters)] = col[1]
+#col4Clusters$oc[ grep(col4Clus_unique[2],col4Clusters)] = col[2]
+#col4Clusters$oc[ grep(col4Clus_unique[3],col4Clusters)] = col[3]
 
 baseMap.i.km <- PTCA4CATA::createFactorMap(Fi,
                                         col.points = col4Clusters$oc,
                                         col.labels = col4Clusters$oc,
                                         constraints = constraints4Fi,
-                                        alpha.points =  .4)
+                                        alpha.points =  .3, alpha.labels = 0.4)
 
 #---------------------------------------------------------------------
 # Now to get a map by cluster:
@@ -251,6 +324,7 @@ aggMap.i.km <- baseMap.i.km$zeMap_background +
 
 col4C <- col4Clusters$gc[sort(rownames(col4Clusters$gc),
                                      index.return = TRUE)$ix]
+#col4C <- col4Clus_unique
 # create the map for the means
 map4Clusters    <- PTCA4CATA::createFactorMap(composer.kMeans$centers,
                                           axis1 = 1, axis2 = 2,
@@ -278,7 +352,95 @@ print(aggMap.i.withCenters)
 
 ```
 
+
+### Four centers
+```{r echo=FALSE}
+
+
+
+
+composer.kMeans <- kmeans(x = Fi , centers = 4)
+col4Clusters  <- createColorVectorsByDesign(
+              makeNominalData(
+              as.data.frame(composer.kMeans$cluster)  ))
+
+
+#col4Clus_unique <- unique(col4Clusters$oc)
+
+#col <- brewer.pal(n = nrow(col4Clus_unique), name='Set1')
+
+#col4Clusters$oc[ grep(col4Clus_unique[1],col4Clusters)] = col[1]
+#col4Clusters$oc[ grep(col4Clus_unique[2],col4Clusters)] = col[2]
+#col4Clusters$oc[ grep(col4Clus_unique[3],col4Clusters)] = col[3]
+
+baseMap.i.km <- PTCA4CATA::createFactorMap(Fi,
+                                        col.points = col4Clusters$oc,
+                                        col.labels = col4Clusters$oc,
+                                        constraints = constraints4Fi,
+                                        alpha.points =  .3,alpha.labels = 0.4)
+
+#---------------------------------------------------------------------
+# Now to get a map by cluster:
+col4Clusters  <- createColorVectorsByDesign(
+              makeNominalData(
+              as.data.frame(composer.kMeans$cluster)  ))
+
+aggMap.i.km <- baseMap.i.km$zeMap_background +
+  baseMap.i.km$zeMap_dots + baseMap.i.km$zeMap_text
+
+col4C <- col4Clusters$gc[sort(rownames(col4Clusters$gc),
+                                     index.return = TRUE)$ix]
+#col4C <- col4Clus_unique
+# create the map for the means
+map4Clusters    <- PTCA4CATA::createFactorMap(composer.kMeans$centers,
+                                          axis1 = 1, axis2 = 2,
+                                          constraints = constraints4Fi,
+                                          title = NULL,
+                                          col.points = col4C,
+                                          display.points = TRUE,
+                                          pch = 19, cex = 5,
+                                          display.labels = TRUE,
+                                          col.labels = col4C,
+                                          text.cex = 8,
+                                          font.face = "bold",
+                                          font.family = "sans",
+                                          col.axes = "darkorchid",
+                                          alpha.axes = 0.2,
+                                          width.axes = 1.1,
+                                          col.background =
+                          adjustcolor("lavender", alpha.f = 0.2),
+                                          force = 1, segment.size = 0)
+# The map with observations and group means
+aggMap.i.withCenters <- aggMap.i.km  +
+               map4Clusters$zeMap_dots + map4Clusters$zeMap_text
+#
+print(aggMap.i.withCenters)
+
+```
+
+
+
 ## Cluster Analysis (hclust)
+
+### Two Clusters
+```{r echo=FALSE}
+
+beer.hc <- hclust(d = dist(Fi),
+                  method = 'ward.D2' )
+
+plot.tree <- plot(beer.hc,  main = "Beers. Ward's method")
+#print(plot.tree)
+
+#---------------------------------------------------------------------
+# Use three clusters too
+hc.3.cl <- rect.hclust(beer.hc, k = 2,
+               border = c('darkorchid',
+                          'darkolivegreen4','darkgoldenrod3')
+                          )
+#print(hc.3.cl)
+```
+
+### Fours Clusters
 
 ```{r echo=FALSE}
 
@@ -290,26 +452,10 @@ plot.tree <- plot(beer.hc,  main = "Beers. Ward's method")
 
 #---------------------------------------------------------------------
 # Use three clusters too
-hc.3.cl <- rect.hclust(beer.hc, k = 3,
+hc.3.cl <- rect.hclust(beer.hc, k = 4,
                border = c('darkorchid',
                           'darkolivegreen4','darkgoldenrod3')
                           )
 #print(hc.3.cl)
 ```
 
-## Cluster Analysis (Hartigan's Rule)
-```{r echo=FALSE}
-# Optimal number of clustera
-#  install.packages('useful')
-best.beers <- useful::FitKMeans(Fi, max.clusters = 5,
-                                seed = 314)
-print(best.beers) # when Hartigan parameter > 10 => add a cluster
-
-```
-
-```{r echo=FALSE}
-
-plot.harti <- useful::PlotHartigan(best.beers)
-print(plot.harti)
-
-```
