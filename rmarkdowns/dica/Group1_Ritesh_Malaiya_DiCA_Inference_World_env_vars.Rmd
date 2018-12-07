@@ -267,7 +267,6 @@ GraphElli <- PTCA4CATA::MakeCIEllipses(BootCube.Gr$BootCube[,c(axis1, axis2),],
 
 print(country_map + GraphElli)
 
-
 ```
 
 
@@ -373,6 +372,7 @@ print(country_factor_map$zeMap + country_label4Map)
 ```
 
 ## Loadings (correlation plot)
+
 ```{r echo=FALSE}
 
 country_env_df_for_dica_int <- dummy.data.frame(country_env_df_for_dica)  #data.frame(lapply(country_env_df_for_dica, as.integer)) # get dummy
@@ -430,6 +430,7 @@ for (i in c(1, 2)) {
                               #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
   )
   print(ba001.BR1)
+
 }
 
 ```
@@ -470,6 +471,7 @@ for (i in c(1, 2)) {
                     ylab = "", 
                     counts = FALSE, 
                     cutoffs = c(0.025,0.975))
+
 }
 
 ```

@@ -153,6 +153,7 @@ country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean
 
 print(country_map)
 
+
 ```
 
 ### Component 2 for both Tables: Rain and Temperature
@@ -189,6 +190,7 @@ country_label4Map <- PTCA4CATA::createxyLabels.gen(1,2,lambda = resPLSC$TExPosit
 country_map = country_factor_map$zeMap + country_label4Map + country_factor_mean_map$zeMap_dots + country_factor_mean_map$zeMap_text + ggtitle('Component 2')
 
 print(country_map)
+
 
 ```
 

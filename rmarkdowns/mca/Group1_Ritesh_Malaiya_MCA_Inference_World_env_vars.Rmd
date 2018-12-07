@@ -248,6 +248,8 @@ country_env_mca_mean <- country_env_mca_mean[-1]
 ```
 
 **With Confidence Interval**
+
+
 ```{r echo=FALSE}
 BootCube.Gr <- PTCA4CATA::Boot4Mean(country_env_mca$ExPosition.Data$fi, 
                                     design = country_env_df$Happiness_Rank,
@@ -341,7 +343,6 @@ country_map = country_map + GraphTI.Hull
 
 print(country_map)
 
-
 }
 
 ```
@@ -403,13 +404,13 @@ country_map = country_factor_map$zeMap + country_label4Map
 
 print(country_map)
 
-print('\n\n\n')
-
 }
 
 ```
 
 ## Loadings (correlation plot)
+
+
 ```{r echo=FALSE}
 
 country_env_df_for_mca_int <- dummy.data.frame(country_env_df_for_mca)  #data.frame(lapply(country_env_df_for_mca, as.integer)) # get dummy

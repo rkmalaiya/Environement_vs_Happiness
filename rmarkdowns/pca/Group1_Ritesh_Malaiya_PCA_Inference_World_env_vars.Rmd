@@ -165,6 +165,7 @@ country_label4Map <- PTCA4CATA::createxyLabels.gen(axis1,axis2,lambda = country_
 
 country_map = country_factor_map$zeMap + country_label4Map + country_factor_map_mean$zeMap_dots + country_factor_map_mean$zeMap_text
 print(country_map)
+
 }
 
 ```
@@ -239,7 +240,6 @@ country_map = country_map + GraphElli
 
 print(country_map)
 
-
 }
 
 ```
@@ -291,13 +291,12 @@ country_map = country_map + GraphTI.Hull
 
 print(country_map)
 
-
 }
 
 ```
 
 
-## Loadings2
+## Loadings
 
 ```{r echo=FALSE}
 
@@ -330,14 +329,14 @@ country_map = country_factor_map$zeMap + country_label4Map
 
 print(country_map)
 
-print("<br \\><br \\>")
+
 
 }
 
 ```
 
 
-## Correlation Circle2
+## Correlation Circle
 
 ```{r echo=FALSE}
 for (i in 1:2){
@@ -368,7 +367,7 @@ for (i in 1:2){
               PTCA4CATA::addArrows(loadings_2, color = col4J) 
   
   print(corr_map)
-  print("<br \\><br \\>")
+  
 }
 ```
 
@@ -393,6 +392,7 @@ for (i in c(1, 2, 7, 9)) {
                               #ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))
   )
   print(ba001.BR1)
+  
 }
 ```
 

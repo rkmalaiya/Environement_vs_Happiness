@@ -1,7 +1,8 @@
 ---
 output:
-  word_document: default
+  pdf_document: default
   html_document: default
+  word_document: default
 ---
 # Dataset {#dataset}
 
@@ -24,16 +25,18 @@ country_env_df$Happiness_Rank = cut(country_env_df$Happiness_Rank,breaks = c(0, 
 
 ## Structure of Data
 
-```{r data_summary_book, echo=FALSE, tidy=FALSE}
+```{r data_summary_book, echo=FALSE}
 
   str(country_env_df)
 
 ```
 
+
 ## Datatable
+
 ```{r nice-tab-data, echo=FALSE}
 knitr::kable(
-  head(country_env_df[,1:8]), caption = 'Environment variables for 137 countries'
+  head(country_env_df[,1:6]), caption = 'Environment variables for 137 countries'
 )
 ```
 
