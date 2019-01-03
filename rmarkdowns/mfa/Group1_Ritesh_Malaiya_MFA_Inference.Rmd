@@ -268,12 +268,8 @@ loadings_map <- PTCA4CATA::createFactorMap(loadings_2,
 
 ## Conclusion
 
-Here Component 2 seems to best seperate Happiness levels. Let's compare Component 2 for both tables.
+| **Methods** | **Unhappy**               | **Normal**             | **Very Happy**                | **Reliability**  |
+|------------------|-------------------------|-----------------------|---------------------------|------------|
+| **MFA**     |  Partial factors dominated by Temp, then rain and other variables   | Neither of partial factors seems to have sufficient effect       |  Partial factors dominated by Temp and other variables, lesser effect of rain         | Convex hull has overlapping areas                                                                              |
 
-* Table 1 & 2 Component 2
-  + Latent Variables: Very Happy vs Unhappy (for Rain and Temperature both)
-  + Salience:
-    * Rain: It seems dryness and wetness at a montly scale have more effect than coldness or yearly patterns.
-    * Temperature: All temperature variations at a monthly and yearly scale seems to impact happiness.
-  
 

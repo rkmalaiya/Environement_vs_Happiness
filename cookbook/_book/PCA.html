@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Country Environmental Factors correlated with Happiness</title>
+  <meta name="description" content="This data is all acquired through Google Earth Engine">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Country Environmental Factors correlated with Happiness" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Country Environmental Factors correlated with Happiness" />
+  
+  <meta name="twitter:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+<meta name="author" content="Ritesh Malaiya">
+
+
+<meta name="date" content="2018-12-02">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="dataset.html">
+<link rel="next" href="multiple-component-analysis.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Exploratory Data Analysis</a></li>
+
+<li class="divider"></li>
+<li class="part"><span><b>I Country-Level Environmental Measurements Dataset</b></span></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#context"><i class="fa fa-check"></i><b>1.1</b> Context</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#content"><i class="fa fa-check"></i><b>1.2</b> Content</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#inspiration"><i class="fa fa-check"></i><b>1.3</b> Inspiration</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#research-question-scope-of-this-book"><i class="fa fa-check"></i><b>1.4</b> Research Question (scope of this book)</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>2</b> Dataset</a><ul>
+<li class="chapter" data-level="2.1" data-path="dataset.html"><a href="dataset.html#structure-of-data"><i class="fa fa-check"></i><b>2.1</b> Structure of Data</a></li>
+<li class="chapter" data-level="2.2" data-path="dataset.html"><a href="dataset.html#datatable"><i class="fa fa-check"></i><b>2.2</b> Datatable</a></li>
+</ul></li>
+<li class="part"><span><b>II Single Table for Country Environment Dataset</b></span></li>
+<li class="chapter" data-level="3" data-path="PCA.html"><a href="PCA.html"><i class="fa fa-check"></i><b>3</b> Principal Component Analysis</a><ul>
+<li class="chapter" data-level="3.1" data-path="PCA.html"><a href="PCA.html#description"><i class="fa fa-check"></i><b>3.1</b> Description</a></li>
+<li class="chapter" data-level="3.2" data-path="PCA.html"><a href="PCA.html#correlation-plot"><i class="fa fa-check"></i><b>3.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="3.3" data-path="PCA.html"><a href="PCA.html#scree-plot"><i class="fa fa-check"></i><b>3.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="3.4" data-path="PCA.html"><a href="PCA.html#factor-scores"><i class="fa fa-check"></i><b>3.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="3.5" data-path="PCA.html"><a href="PCA.html#loadings2"><i class="fa fa-check"></i><b>3.5</b> Loadings2</a></li>
+<li class="chapter" data-level="3.6" data-path="PCA.html"><a href="PCA.html#correlation-circle2"><i class="fa fa-check"></i><b>3.6</b> Correlation Circle2</a></li>
+<li class="chapter" data-level="3.7" data-path="PCA.html"><a href="PCA.html#most-contributing-variables"><i class="fa fa-check"></i><b>3.7</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="3.8" data-path="PCA.html"><a href="PCA.html#permutation-test"><i class="fa fa-check"></i><b>3.8</b> Permutation Test</a></li>
+<li class="chapter" data-level="3.9" data-path="PCA.html"><a href="PCA.html#parallet-test"><i class="fa fa-check"></i><b>3.9</b> Parallet Test</a></li>
+<li class="chapter" data-level="3.10" data-path="PCA.html"><a href="PCA.html#bootstrap-test"><i class="fa fa-check"></i><b>3.10</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="3.11" data-path="PCA.html"><a href="PCA.html#conclusion"><i class="fa fa-check"></i><b>3.11</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html"><i class="fa fa-check"></i><b>4</b> Multiple Component Analysis</a><ul>
+<li class="chapter" data-level="4.1" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#description-1"><i class="fa fa-check"></i><b>4.1</b> Description</a></li>
+<li class="chapter" data-level="4.2" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#density-plot"><i class="fa fa-check"></i><b>4.2</b> Density Plot</a></li>
+<li class="chapter" data-level="4.3" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#binning"><i class="fa fa-check"></i><b>4.3</b> Binning</a></li>
+<li class="chapter" data-level="4.4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#spearman-correlation"><i class="fa fa-check"></i><b>4.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="4.5" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#heatmap"><i class="fa fa-check"></i><b>4.5</b> Heatmap</a></li>
+<li class="chapter" data-level="4.6" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#scree-plot-1"><i class="fa fa-check"></i><b>4.6</b> Scree Plot</a></li>
+<li class="chapter" data-level="4.7" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#factor-scores-1"><i class="fa fa-check"></i><b>4.7</b> Factor Scores</a></li>
+<li class="chapter" data-level="4.8" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings"><i class="fa fa-check"></i><b>4.8</b> Loadings</a></li>
+<li class="chapter" data-level="4.9" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings-correlation-plot"><i class="fa fa-check"></i><b>4.9</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="4.10" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#most-contributing-variables-inference"><i class="fa fa-check"></i><b>4.10</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="4.11" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#permutation-test-1"><i class="fa fa-check"></i><b>4.11</b> Permutation Test</a></li>
+<li class="chapter" data-level="4.12" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#parallet-test-1"><i class="fa fa-check"></i><b>4.12</b> Parallet Test</a></li>
+<li class="chapter" data-level="4.13" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#bootstrap-test-1"><i class="fa fa-check"></i><b>4.13</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="4.14" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#conclusion-1"><i class="fa fa-check"></i><b>4.14</b> Conclusion</a></li>
+</ul></li>
+<li class="part"><span><b>III Two / Multi Table Analysis for Country Environment Dataset</b></span></li>
+<li class="chapter" data-level="5" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html"><i class="fa fa-check"></i><b>5</b> Barycentric Discriminant Analysis</a><ul>
+<li class="chapter" data-level="5.1" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#description-2"><i class="fa fa-check"></i><b>5.1</b> Description</a></li>
+<li class="chapter" data-level="5.2" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#heatmap-1"><i class="fa fa-check"></i><b>5.2</b> Heatmap</a></li>
+<li class="chapter" data-level="5.3" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#scree-plot-2"><i class="fa fa-check"></i><b>5.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="5.4" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#factor-scores-2"><i class="fa fa-check"></i><b>5.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="5.5" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#loadings-1"><i class="fa fa-check"></i><b>5.5</b> Loadings</a></li>
+<li class="chapter" data-level="5.6" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#most-contributing-variables-1"><i class="fa fa-check"></i><b>5.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="5.7" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#permutation-test-2"><i class="fa fa-check"></i><b>5.7</b> Permutation Test</a></li>
+<li class="chapter" data-level="5.8" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#parallet-test-2"><i class="fa fa-check"></i><b>5.8</b> Parallet Test</a></li>
+<li class="chapter" data-level="5.9" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#bootstrap-test-2"><i class="fa fa-check"></i><b>5.9</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="5.10" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#conclusion-2"><i class="fa fa-check"></i><b>5.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html"><i class="fa fa-check"></i><b>6</b> Discriminant Correspondence Analysis</a><ul>
+<li class="chapter" data-level="6.1" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#description-3"><i class="fa fa-check"></i><b>6.1</b> Description</a></li>
+<li class="chapter" data-level="6.2" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#density-plot-1"><i class="fa fa-check"></i><b>6.2</b> Density plot</a></li>
+<li class="chapter" data-level="6.3" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#binning-1"><i class="fa fa-check"></i><b>6.3</b> Binning</a></li>
+<li class="chapter" data-level="6.4" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#spearman-correlation-1"><i class="fa fa-check"></i><b>6.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="6.5" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#heatmap-2"><i class="fa fa-check"></i><b>6.5</b> Heatmap</a></li>
+<li class="chapter" data-level="6.6" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#scree-plot-3"><i class="fa fa-check"></i><b>6.6</b> Scree Plot</a></li>
+<li class="chapter" data-level="6.7" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#factor-scores-3"><i class="fa fa-check"></i><b>6.7</b> Factor Scores</a></li>
+<li class="chapter" data-level="6.8" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#loadings-2"><i class="fa fa-check"></i><b>6.8</b> Loadings</a></li>
+<li class="chapter" data-level="6.9" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#loadings-correlation-plot-1"><i class="fa fa-check"></i><b>6.9</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="6.10" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#most-contributing-variables-inference-1"><i class="fa fa-check"></i><b>6.10</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="6.11" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#permutation-test-3"><i class="fa fa-check"></i><b>6.11</b> Permutation Test</a></li>
+<li class="chapter" data-level="6.12" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#parallet-test-3"><i class="fa fa-check"></i><b>6.12</b> Parallet Test</a></li>
+<li class="chapter" data-level="6.13" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#bootstrap-test-3"><i class="fa fa-check"></i><b>6.13</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="6.14" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#conclusion-3"><i class="fa fa-check"></i><b>6.14</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html"><i class="fa fa-check"></i><b>7</b> Partial Least Squares - Correlation</a><ul>
+<li class="chapter" data-level="7.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#description-4"><i class="fa fa-check"></i><b>7.1</b> Description</a></li>
+<li class="chapter" data-level="7.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#correlation-plot-1"><i class="fa fa-check"></i><b>7.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="7.3" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#pls-c"><i class="fa fa-check"></i><b>7.3</b> PLS-C</a></li>
+<li class="chapter" data-level="7.4" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#scree-plot-4"><i class="fa fa-check"></i><b>7.4</b> Scree Plot</a></li>
+<li class="chapter" data-level="7.5" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#latent-variables"><i class="fa fa-check"></i><b>7.5</b> Latent Variables</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-1-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>7.5.1</b> Component 1 for both Tables: Rain and Temperature</a></li>
+<li class="chapter" data-level="7.5.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>7.5.2</b> Component 2 for both Tables: Rain and Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#salience-for-rain"><i class="fa fa-check"></i><b>7.6</b> Salience for Rain</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#components-1"><i class="fa fa-check"></i><b>7.6.1</b> Components 1</a></li>
+<li class="chapter" data-level="7.6.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2"><i class="fa fa-check"></i><b>7.6.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#salience-for-temperature"><i class="fa fa-check"></i><b>7.7</b> Salience for Temperature</a><ul>
+<li class="chapter" data-level="7.7.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-1"><i class="fa fa-check"></i><b>7.7.1</b> Component 1</a></li>
+<li class="chapter" data-level="7.7.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2-1"><i class="fa fa-check"></i><b>7.7.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#most-contributing-variables---pls-c-with-inference"><i class="fa fa-check"></i><b>7.8</b> Most Contributing Variables - PLS-C (with Inference)</a><ul>
+<li class="chapter" data-level="7.8.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#bootstrap-test-4"><i class="fa fa-check"></i><b>7.8.1</b> Bootstrap Test</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#conclusion-4"><i class="fa fa-check"></i><b>7.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html"><i class="fa fa-check"></i><b>8</b> Multiple Factor Analyis</a><ul>
+<li class="chapter" data-level="8.1" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#description-5"><i class="fa fa-check"></i><b>8.1</b> Description</a></li>
+<li class="chapter" data-level="8.2" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#mfa"><i class="fa fa-check"></i><b>8.2</b> MFA</a></li>
+<li class="chapter" data-level="8.3" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#scree-plot-5"><i class="fa fa-check"></i><b>8.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="8.4" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#factor-scores-4"><i class="fa fa-check"></i><b>8.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="8.5" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#loadings-3"><i class="fa fa-check"></i><b>8.5</b> Loadings</a></li>
+<li class="chapter" data-level="8.6" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#correlation-circle"><i class="fa fa-check"></i><b>8.6</b> Correlation Circle</a></li>
+<li class="chapter" data-level="8.7" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#contribution-plot"><i class="fa fa-check"></i><b>8.7</b> Contribution Plot</a></li>
+<li class="chapter" data-level="8.8" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#conclusion-5"><i class="fa fa-check"></i><b>8.8</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="distatis.html"><a href="distatis.html"><i class="fa fa-check"></i><b>9</b> DiSTATIS</a><ul>
+<li class="chapter" data-level="9.1" data-path="distatis.html"><a href="distatis.html#description-6"><i class="fa fa-check"></i><b>9.1</b> Description</a></li>
+<li class="chapter" data-level="9.2" data-path="distatis.html"><a href="distatis.html#scree-plot---rv-mat"><i class="fa fa-check"></i><b>9.2</b> SCREE Plot - RV-MAT</a></li>
+<li class="chapter" data-level="9.3" data-path="distatis.html"><a href="distatis.html#plotting-assessor-matrix"><i class="fa fa-check"></i><b>9.3</b> Plotting Assessor Matrix</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="distatis.html"><a href="distatis.html#convexhull"><i class="fa fa-check"></i><b>9.3.1</b> ConvexHull</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="distatis.html"><a href="distatis.html#scree-plot---sv-mat"><i class="fa fa-check"></i><b>9.4</b> SCREE Plot - SV-MAT</a></li>
+<li class="chapter" data-level="9.5" data-path="distatis.html"><a href="distatis.html#i-set"><i class="fa fa-check"></i><b>9.5</b> I Set</a></li>
+<li class="chapter" data-level="9.6" data-path="distatis.html"><a href="distatis.html#cluster-analysis-k-means"><i class="fa fa-check"></i><b>9.6</b> Cluster Analysis (K-Means)</a></li>
+<li class="chapter" data-level="9.7" data-path="distatis.html"><a href="distatis.html#cluster-analysis-hclust"><i class="fa fa-check"></i><b>9.7</b> Cluster Analysis (hclust)</a></li>
+<li class="chapter" data-level="9.8" data-path="distatis.html"><a href="distatis.html#cluster-analysis-hartigans-rule"><i class="fa fa-check"></i><b>9.8</b> Cluster Analysis (Hartigan’s Rule)</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="conclusion-for-all-methods.html"><a href="conclusion-for-all-methods.html"><i class="fa fa-check"></i><b>10</b> Conclusion for all Methods</a></li>
+<li class="part"><span><b>IV Other Datasets</b></span></li>
+<li class="chapter" data-level="11" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html"><i class="fa fa-check"></i><b>11</b> Correspondence Analysis</a><ul>
+<li class="chapter" data-level="11.1" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#description-7"><i class="fa fa-check"></i><b>11.1</b> Description</a></li>
+<li class="chapter" data-level="11.2" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#dataset---weekly-earnings-by-race"><i class="fa fa-check"></i><b>11.2</b> Dataset - Weekly earnings by Race</a></li>
+<li class="chapter" data-level="11.3" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#heatmap-3"><i class="fa fa-check"></i><b>11.3</b> Heatmap</a></li>
+<li class="chapter" data-level="11.4" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#scree-plot-6"><i class="fa fa-check"></i><b>11.4</b> Scree Plot</a></li>
+<li class="chapter" data-level="11.5" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#factor-scores-5"><i class="fa fa-check"></i><b>11.5</b> Factor Scores</a><ul>
+<li class="chapter" data-level="11.5.1" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#symmetric-plot"><i class="fa fa-check"></i><b>11.5.1</b> Symmetric Plot</a></li>
+<li class="chapter" data-level="11.5.2" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#asymmetric-plot"><i class="fa fa-check"></i><b>11.5.2</b> Asymmetric Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#most-contributing-variables-2"><i class="fa fa-check"></i><b>11.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="11.7" data-path="correspondence-analysis.html"><a href="correspondence-analysis.html#inference-ca"><i class="fa fa-check"></i><b>11.7</b> Inference CA</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="distatis-1.html"><a href="distatis-1.html"><i class="fa fa-check"></i><b>12</b> DiSTATIS</a><ul>
+<li class="chapter" data-level="12.1" data-path="distatis-1.html"><a href="distatis-1.html#description-8"><i class="fa fa-check"></i><b>12.1</b> Description</a></li>
+<li class="chapter" data-level="12.2" data-path="distatis-1.html"><a href="distatis-1.html#dataset---pianists-for-composers"><i class="fa fa-check"></i><b>12.2</b> Dataset - Pianists for Composers</a></li>
+<li class="chapter" data-level="12.3" data-path="distatis-1.html"><a href="distatis-1.html#scree-plot---rv-mat-1"><i class="fa fa-check"></i><b>12.3</b> SCREE Plot - RV-MAT</a></li>
+<li class="chapter" data-level="12.4" data-path="distatis-1.html"><a href="distatis-1.html#plotting-assessor-matrix-1"><i class="fa fa-check"></i><b>12.4</b> Plotting Assessor Matrix</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="distatis-1.html"><a href="distatis-1.html#convexhull-1"><i class="fa fa-check"></i><b>12.4.1</b> ConvexHull</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="distatis-1.html"><a href="distatis-1.html#scree-plot---sv-mat-1"><i class="fa fa-check"></i><b>12.5</b> SCREE Plot - SV-MAT</a></li>
+<li class="chapter" data-level="12.6" data-path="distatis-1.html"><a href="distatis-1.html#i-set-1"><i class="fa fa-check"></i><b>12.6</b> I Set</a></li>
+<li class="chapter" data-level="12.7" data-path="distatis-1.html"><a href="distatis-1.html#cluster-analysis-k-means-1"><i class="fa fa-check"></i><b>12.7</b> Cluster Analysis (K-Means)</a></li>
+<li class="chapter" data-level="12.8" data-path="distatis-1.html"><a href="distatis-1.html#cluster-analysis-hclust-1"><i class="fa fa-check"></i><b>12.8</b> Cluster Analysis (hclust)</a></li>
+<li class="chapter" data-level="12.9" data-path="distatis-1.html"><a href="distatis-1.html#cluster-analysis-hartigans-rule-1"><i class="fa fa-check"></i><b>12.9</b> Cluster Analysis (Hartigan’s Rule)</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://catalog.utdallas.edu/2018/graduate/courses/acn7310" target="blank">Advanced Research Methods</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Country Environmental Factors correlated with Happiness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="PCA" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Principal Component Analysis</h1>
+<div id="description" class="section level2">
+<h2><span class="header-section-number">3.1</span> Description</h2>
+<p>Principal component analysis (PCA), part of descriptive analytics, is used to analyze one table of quantitative data, specifically useful for <em>high dimensional data</em> and comparitively lesser data rows. PCA mixes the input variables to give new variables, called principal components. The first principal component is the line of best fit. It is the line that maximizes the inertia (similar to variance) of the cloud of data points. Subsequent components are defined as orthogonal to previous components, and maximize the remaining inertia.</p>
+<p>PCA gives one map for the rows (called factor scores), and one map for the columns (called loadings). These 2 maps are related, because they both are described by the same components. However, these 2 maps project different kinds of information onto the components, and so they are <em>interpreted differently</em>. Factor scores are the coordinates of the row observations and Loadings describe the column variables. Both can be interpreted through their distance from origin. However, Factor scores are also interpreted by the distances between them and Loadings interpreted by the angle between them.</p>
+<p>The distance from the origin is important in both maps, because squared distance from the mean is inertia (variance, information; see sum of squares as in ANOVA/regression). Because of the Pythagorean Theorem, the total information contributed by a data point (its squared distance to the origin) is also equal to the sum of its squared factor scores.</p>
+<p>With both Factor and Loadings maps combined we can interpret which grouping criteria of rows of data is most impacted by which columns. This can interpreted visually by observing which a factors and loadings on a particular component and the distance on this component.</p>
+<p>PCA also helps in <em>dimensionality reduction</em>. Using SVD, we get eigen values arranged in descending order in the diagonal matrix. We can simply ignore the lower eigen values to reduce dimensions. We can also take help of SCREE plot to visually analyze importance of eigen values.</p>
+<p>There are multiple variables representing rain and Temp. Hence, for analysis purposes, lets choose annual mean for Rain and Temp.</p>
+</div>
+<div id="correlation-plot" class="section level2">
+<h2><span class="header-section-number">3.2</span> Correlation Plot</h2>
+<p>Visually analyze multicollinearity in the system.</p>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
+<p>Now we have Factor scores and Loadings.
+* Factor Scores are the new Data points w.r.t. new Components achieved with help of SVD.
+* Loadings represent correlation between variables w.r.t the choosen Components. Can be interpreted in 3 ways
++ As slices of inertia of the contribution data table w.r.t. the choosen Components
++ As correlation between columns (features) of Original Data and Factor scores of each Components (latent features).
++ As coefficients of optimal linear combination i.e. Right Sigular Vectors (Q matrix of SVD)</p>
+</div>
+<div id="scree-plot" class="section level2">
+<h2><span class="header-section-number">3.3</span> Scree Plot</h2>
+<p>Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.</p>
+<p>P.S. The most contribution component may not always be most useful for a given research question.</p>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-7-1.png" width="1152" /></p>
+</div>
+<div id="factor-scores" class="section level2">
+<h2><span class="header-section-number">3.4</span> Factor Scores</h2>
+<p>Lets visualize happiness categories for components 1-10, to make a decision (visually) on the most important components.</p>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-9-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-9-2.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-9-3.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-9-4.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-9-5.png" width="1152" /></p>
+<p>Since, it’s not very straightforward to decide which components may be best suited for the research question at hand, let’s represent, in a tabular format, which component helps to differentiate between which design variable values (Unhappy, Normal, Very Happy)</p>
+<p>P.S. here -1 represents -ve quadrant of the component and +1 represent +ve quadrant. 0 represents that component was not decisive enough to clearly seperate happiness levels.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 3.1: </span>Identify Components best describing happiness levels</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Unhappy</th>
+<th align="right">Normal</th>
+<th align="right">VeryHappy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Component 1</td>
+<td align="right">-1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Component 2</td>
+<td align="right">-1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Component 3</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">-1</td>
+</tr>
+<tr class="even">
+<td>Component 4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>Component 5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Component 6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>Component 7</td>
+<td align="right">1</td>
+<td align="right">-1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Component 8</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>Component 9</td>
+<td align="right">0</td>
+<td align="right">-1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Component 10</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>Looking at the table, it seems component 1, 2, 7, 9 may be able to best represent all 3 happiness levels. Although, SCREE Plot suggests that <span class="math inline">\(3^{rd}\)</span> and <span class="math inline">\(4^{th}\)</span> components might be useful, from our above analysis we know otherwise. Also, SCREE plot suggests that component <span class="math inline">\(6^{th}\)</span> and onwards might not be useful which is contradicting our findings above. Hence, let’s plot components 1 vs 2 and 7 vs 9. Similarily, we will also plot Loading plots for these componenets.</p>
+<ul>
+<li>With Confidence Interval</li>
+</ul>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-11-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-11-2.png" width="1152" /></p>
+<ul>
+<li>With Tolerance Interval</li>
+</ul>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-12-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-12-2.png" width="1152" /></p>
+</div>
+<div id="loadings2" class="section level2">
+<h2><span class="header-section-number">3.5</span> Loadings2</h2>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+<pre><code>## [1] &quot;&lt;br \\&gt;&lt;br \\&gt;&quot;</code></pre>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-13-2.png" width="1152" /></p>
+<pre><code>## [1] &quot;&lt;br \\&gt;&lt;br \\&gt;&quot;</code></pre>
+</div>
+<div id="correlation-circle2" class="section level2">
+<h2><span class="header-section-number">3.6</span> Correlation Circle2</h2>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
+<pre><code>## [1] &quot;&lt;br \\&gt;&lt;br \\&gt;&quot;</code></pre>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-14-2.png" width="1152" /></p>
+<pre><code>## [1] &quot;&lt;br \\&gt;&lt;br \\&gt;&quot;</code></pre>
+</div>
+<div id="most-contributing-variables" class="section level2">
+<h2><span class="header-section-number">3.7</span> Most Contributing Variables</h2>
+<p>Let’s plot variable contributions against each chosen components i.e. 1, 7, 9.</p>
+<ul>
+<li>With Bootstrap Ratio</li>
+</ul>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-15-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-15-2.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-15-3.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-15-4.png" width="1152" /></p>
+</div>
+<div id="permutation-test" class="section level2">
+<h2><span class="header-section-number">3.8</span> Permutation Test</h2>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-16-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-16-2.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-16-3.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-16-4.png" width="1152" /></p>
+</div>
+<div id="parallet-test" class="section level2">
+<h2><span class="header-section-number">3.9</span> Parallet Test</h2>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-17-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-17-2.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-17-3.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-17-4.png" width="1152" /></p>
+</div>
+<div id="bootstrap-test" class="section level2">
+<h2><span class="header-section-number">3.10</span> Bootstrap Test</h2>
+<p><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-18-1.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-18-2.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-18-3.png" width="1152" /><img src="Multi-variate_analysis_on_Environmental_variables_files/figure-html/unnamed-chunk-18-4.png" width="1152" /></p>
+</div>
+<div id="conclusion" class="section level2">
+<h2><span class="header-section-number">3.11</span> Conclusion</h2>
+<ul>
+<li>Component 1:
+<ul>
+<li>Rows: Normal &amp; Happy</li>
+<li>Columns: Cloudiness &amp; Rain vs Cropland, Aspect, Elevation</li>
+<li>Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.</li>
+</ul></li>
+<li>Component 7:
+<ul>
+<li>Rows: Happy &amp; Unhappy</li>
+<li>Columns: Temp and Rain vs Accessibility and Cropland</li>
+<li>Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.</li>
+</ul></li>
+<li>Component 9:
+<ul>
+<li>Rows: Happy &amp; Very Happy</li>
+<li>Columns: Temp vs Rain</li>
+<li>Interpret: Rain and Temp seems to be main reason for Happiness. <em>This contradicts with Component 7 and 1</em>.</li>
+</ul></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multiple-component-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["Multi-variate analysis on Environmental variables.pdf", "Multi-variate analysis on Environmental variables.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

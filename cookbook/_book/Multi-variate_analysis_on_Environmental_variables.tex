@@ -1,0 +1,1771 @@
+\documentclass[]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Country Environmental Factors correlated with Happiness},
+            pdfauthor={Ritesh Malaiya},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Country Environmental Factors correlated with Happiness}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Ritesh Malaiya}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2018-12-10}
+
+\usepackage{booktabs}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{part-country-level-environmental-measurements-dataset}{%
+\part{Country-Level Environmental Measurements
+Dataset}\label{part-country-level-environmental-measurements-dataset}}
+
+\hypertarget{intro}{%
+\chapter{Introduction}\label{intro}}
+
+\hypertarget{context}{%
+\section{Context}\label{context}}
+
+Assessing country-level social and economic statistics are often limited
+to socio-economic data. Not any more! This dataset will be maintained
+and updated with miscellaneous environmental data for countries across
+the globe.
+
+\hypertarget{content}{%
+\section{Content}\label{content}}
+
+This data is all acquired through Google Earth Engine
+(\url{https://earthengine.google.com/}) where publicly available remote
+sensing datasets have been uploaded to the cloud to be manipulated by
+the average Joe like you and I. Most of the data is derived by
+calculating the mean for each country at a reduction scale of about
+10km.
+
+\hypertarget{inspiration}{%
+\section{Inspiration}\label{inspiration}}
+
+Can you use environmental statistics to predict social and economic
+data? Are people more happy in sunny countries? How do economies in
+forested countries compare with those dominated by grassland/desert?
+
+\hypertarget{research-question-scope-of-this-book}{%
+\section{Research Question (scope of this
+book)}\label{research-question-scope-of-this-book}}
+
+Which of the varables correlate most with Happiness?
+
+\hypertarget{dataset}{%
+\chapter{Dataset}\label{dataset}}
+
+\begin{itemize}
+\tightlist
+\item
+  Data: Measurements of environment conditions in Countries
+\item
+  Rows: There are 137 observations, 1 for each country.
+\item
+  Columns: Total 29 variables
+\item
+  Qualitative: Country (nominal), Happiness (Ordinal).
+\item
+  Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud \&
+  Multiple variables for Temp \& Rain
+\end{itemize}
+
+\hypertarget{structure-of-data}{%
+\section{Structure of Data}\label{structure-of-data}}
+
+\begin{verbatim}
+## 'data.frame':    137 obs. of  29 variables:
+##  $ Country                : Factor w/ 137 levels "Afghanistan",..: 1 2 3 4 5 6 7 8 9 10 ...
+##  $ Happiness_Rank         : Ord.factor w/ 3 levels "VH"<"H"<"U": 3 2 2 3 1 3 1 1 2 2 ...
+##  $ accessibility_to_cities: num  317.7 73.8 1212.8 378.2 209.2 ...
+##  $ elevation              : num  1832 652 557 1061 683 ...
+##  $ aspect                 : num  201 192 185 174 145 ...
+##  $ slope                  : num  1.516 1.89 0.171 0.193 0.624 ...
+##  $ cropland_cover         : num  9.51 23.35 3.69 2.79 21.96 ...
+##  $ tree_canopy_cover      : num  0.375 12.805 0.177 19.87 8.834 ...
+##  $ isothermality          : num  35.9 33.2 40.3 64.3 49.9 ...
+##  $ rain_coldestQuart      : num  128.72 392.51 25.29 8.05 79.09 ...
+##  $ rain_driestMonth       : num  1.722 40.088 0.935 0.26 17.183 ...
+##  $ rain_driestQuart       : num  8.3 138.15 6.09 4.43 60.49 ...
+##  $ rain_mean_annual       : num  311.3 1151.1 79.5 1023.4 539.9 ...
+##  $ rain_seasonailty       : num  91.6 38.5 67.1 91.5 48.3 ...
+##  $ rain_warmestQuart      : num  12.69 138.33 9.51 318.54 183.14 ...
+##  $ rain_wettestMonth      : num  67.8 159 13.4 202.2 79.2 ...
+##  $ rain_wettestQuart      : num  175.8 435.9 33.3 524.3 211.7 ...
+##  $ temp_annual_range      : num  40.3 27.1 36.5 21.5 26.8 ...
+##  $ temp_coldestQuart      : num  -0.261 3.58 13.152 18.794 8.024 ...
+##  $ temp_diurnal_range     : num  14.72 9.11 14.87 13.85 13.46 ...
+##  $ temp_driestQuart       : num  21.1 19.6 26.9 18.9 11.1 ...
+##  $ temp_max_warmestMonth  : num  32 26.3 41.5 31 28.2 ...
+##  $ temp_mean_annual       : num  11.5 11.5 23 21.6 14.2 ...
+##  $ temp_min_coldestMonth  : num  -8.312 -0.806 5.058 9.549 1.443 ...
+##  $ temp_seasonality       : num  88.2 62.7 75.1 18.5 47.6 ...
+##  $ temp_warmestQuart      : num  22.7 19.6 32.5 23.3 20.2 ...
+##  $ temp_wettestQuart      : num  3.95 5.27 20.81 22.76 16.48 ...
+##  $ wind                   : num  3.43 2.47 4.03 2.16 4.27 ...
+##  $ cloudiness             : num  114.2 181.1 90.7 187.5 159 ...
+\end{verbatim}
+
+\hypertarget{datatable}{%
+\section{Datatable}\label{datatable}}
+
+\begin{table}
+
+\caption{\label{tab:nice-tab-data}Environment variables for 137 countries}
+\centering
+\begin{tabular}[t]{l|l|r|r|r|r}
+\hline
+Country & Happiness\_Rank & accessibility\_to\_cities & elevation & aspect & slope\\
+\hline
+Afghanistan & U & 317.71575 & 1831.7444 & 201.4298 & 1.5156001\\
+\hline
+Albania & H & 73.83086 & 651.8155 & 192.1303 & 1.8900753\\
+\hline
+Algeria & H & 1212.79982 & 556.7583 & 184.9747 & 0.1708615\\
+\hline
+Angola & U & 378.20239 & 1061.4790 & 174.2569 & 0.1926286\\
+\hline
+Argentina & VH & 209.21958 & 682.7993 & 145.0314 & 0.6238553\\
+\hline
+Armenia & U & 97.29452 & 1850.4830 & 183.5375 & 2.3188956\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{part-single-table-for-country-environment-dataset}{%
+\part{Single Table for Country Environment
+Dataset}\label{part-single-table-for-country-environment-dataset}}
+
+\hypertarget{PCA}{%
+\chapter{Principal Component Analysis}\label{PCA}}
+
+\hypertarget{description}{%
+\section{Description}\label{description}}
+
+Principal component analysis (PCA), part of descriptive analytics, is
+used to analyze one table of quantitative data, specifically useful for
+\emph{high dimensional data} and comparitively lesser data rows. PCA
+mixes the input variables to give new variables, called principal
+components. The first principal component is the line of best fit. It is
+the line that maximizes the inertia (similar to variance) of the cloud
+of data points. Subsequent components are defined as orthogonal to
+previous components, and maximize the remaining inertia.
+
+PCA gives one map for the rows (called factor scores), and one map for
+the columns (called loadings). These 2 maps are related, because they
+both are described by the same components. However, these 2 maps project
+different kinds of information onto the components, and so they are
+\emph{interpreted differently}. Factor scores are the coordinates of the
+row observations and Loadings describe the column variables. Both can be
+interpreted through their distance from origin. However, Factor scores
+are also interpreted by the distances between them and Loadings
+interpreted by the angle between them.
+
+The distance from the origin is important in both maps, because squared
+distance from the mean is inertia (variance, information; see sum of
+squares as in ANOVA/regression). Because of the Pythagorean Theorem, the
+total information contributed by a data point (its squared distance to
+the origin) is also equal to the sum of its squared factor scores.
+
+With both Factor and Loadings maps combined we can interpret which
+grouping criteria of rows of data is most impacted by which columns.
+This can interpreted visually by observing which a factors and loadings
+on a particular component and the distance on this component.
+
+PCA also helps in \emph{dimensionality reduction}. Using SVD, we get
+eigen values arranged in descending order in the diagonal matrix. We can
+simply ignore the lower eigen values to reduce dimensions. We can also
+take help of SCREE plot to visually analyze importance of eigen values.
+
+There are multiple variables representing rain and Temp. Hence, for
+analysis purposes, lets choose annual mean for Rain and Temp.
+
+\hypertarget{correlation-plot}{%
+\section{Correlation Plot}\label{correlation-plot}}
+
+Visually analyze multicollinearity in the system.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Now we have Factor scores and Loadings. * Factor Scores are the new Data
+points w.r.t. new Components achieved with help of SVD. * Loadings
+represent correlation between variables w.r.t the choosen Components.
+Can be interpreted in 3 ways + As slices of inertia of the contribution
+data table w.r.t. the choosen Components + As correlation between
+columns (features) of Original Data and Factor scores of each Components
+(latent features). + As coefficients of optimal linear combination
+i.e.~Right Sigular Vectors (Q matrix of SVD)
+
+\hypertarget{scree-plot}{%
+\section{Scree Plot}\label{scree-plot}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\hypertarget{factor-scores}{%
+\section{Factor Scores}\label{factor-scores}}
+
+Lets visualize happiness categories for components 1-10, to make a
+decision (visually) on the most important components.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-9-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-9-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-9-4.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-9-5.pdf}
+
+Since, it's not very straightforward to decide which components may be
+best suited for the research question at hand, let's represent, in a
+tabular format, which component helps to differentiate between which
+design variable values (Unhappy, Normal, Very Happy)
+
+P.S. here -1 represents -ve quadrant of the component and +1 represent
++ve quadrant. 0 represents that component was not decisive enough to
+clearly seperate happiness levels.
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-10}Identify Components best describing happiness levels}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & Unhappy & Normal & VeryHappy\\
+\midrule
+Component 1 & -1 & 1 & 0\\
+Component 2 & -1 & 0 & 1\\
+Component 3 & 1 & 0 & -1\\
+Component 4 & 0 & 0 & 0\\
+Component 5 & 0 & 0 & 0\\
+\addlinespace
+Component 6 & 0 & 0 & 0\\
+Component 7 & 1 & -1 & 0\\
+Component 8 & 0 & 0 & 0\\
+Component 9 & 0 & -1 & 1\\
+Component 10 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Looking at the table, it seems component 1, 2, 7, 9 may be able to best
+represent all 3 happiness levels. Although, SCREE Plot suggests that
+\(3^{rd}\) and \(4^{th}\) components might be useful, from our above
+analysis we know otherwise. Also, SCREE plot suggests that component
+\(6^{th}\) and onwards might not be useful which is contradicting our
+findings above. Hence, let's plot components 1 vs 2 and 7 vs 9.
+Similarily, we will also plot Loading plots for these componenets.
+
+\begin{itemize}
+\tightlist
+\item
+  With Confidence Interval
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-11-2.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  With Tolerance Interval
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-12-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-12-2.pdf}
+
+\hypertarget{loadings}{%
+\section{Loadings}\label{loadings}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-13-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-13-2.pdf}
+
+\hypertarget{correlation-circle}{%
+\section{Correlation Circle}\label{correlation-circle}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-14-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-14-2.pdf}
+
+\hypertarget{most-contributing-variables}{%
+\section{Most Contributing
+Variables}\label{most-contributing-variables}}
+
+Let's plot variable contributions against each chosen components i.e.~1,
+7, 9.
+
+\begin{itemize}
+\tightlist
+\item
+  With Bootstrap Ratio
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-15-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-15-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-15-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-15-4.pdf}
+
+\hypertarget{permutation-test}{%
+\section{Permutation Test}\label{permutation-test}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-16-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-16-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-16-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-16-4.pdf}
+
+\hypertarget{parallet-test}{%
+\section{Parallet Test}\label{parallet-test}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-17-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-17-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-17-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-17-4.pdf}
+
+\hypertarget{bootstrap-test}{%
+\section{Bootstrap Test}\label{bootstrap-test}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-18-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-18-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-18-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-18-4.pdf}
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+\begin{itemize}
+\tightlist
+\item
+  Component 1:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Rows: Normal \& Happy
+  \item
+    Columns: Cloudiness \& Rain vs Cropland, Aspect, Elevation
+  \item
+    Interpret: People in countries with more Cloudiness, Trees and Rain
+    tends to be happier.
+  \end{itemize}
+\item
+  Component 7:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Rows: Happy \& Unhappy
+  \item
+    Columns: Temp and Rain vs Accessibility and Cropland
+  \item
+    Interpret: Rain and Temp seems to be main reason for unhappiness and
+    Cropland is important for Happiness.
+  \end{itemize}
+\item
+  Component 9:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Rows: Happy \& Very Happy
+  \item
+    Columns: Temp vs Rain
+  \item
+    Interpret: Rain and Temp seems to be main reason for Happiness.
+    \emph{This contradicts with Component 7 and 1}.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{multiple-component-analysis}{%
+\chapter{Multiple Component
+Analysis}\label{multiple-component-analysis}}
+
+\hypertarget{description-1}{%
+\section{Description}\label{description-1}}
+
+Multiple correspondence analysis (MCA) is an extension of correspondence
+analysis(CA) which allows one to analyze the pattern of relationships of
+several categorical dependent variables. As such, it can also be seen as
+a generalization of principal component analysis when the variables to
+be analyzed are categorical instead of quantitative. Because MCA has
+been (re)discovered many times, equivalent methods are known under
+several different names such as optimal scaling, optimal or appropriate
+scoring, dual scaling, homogeneity analysis,scalogram analysis, and
+quantiﬁcation method.
+
+\textbf{Interpreting MCA} Multiple correspondence analysis locates all
+the categories in a Euclidean space.
+
+\begin{itemize}
+\tightlist
+\item
+  The first two dimensions of this space are plotted to examine the
+  associations among the categories.
+\item
+  The top-right quadrant of the plot shows the categories.
+\item
+  The bottom-left quadrant shows the association.
+\item
+  This interpretation is based on points found in approximately the same
+  direction from the origin and in approximately the same region of the
+  space. Distances between points do not have a straightforward
+  interpretation.
+\end{itemize}
+
+\hypertarget{density-plot}{%
+\section{Density Plot}\label{density-plot}}
+
+Let's observe the distribution of each variables to get an intuition of
+how we can bin these variables. It's important to have nearly equal
+number of observations in the each bin and to try to cut the variables
+in a way to so that each new binned distribution is nearly Gaussian. We
+can also verify that our binning is appropiate by calculating Spearman
+Correlation for each of original variable and binned variable, the
+correlation coefficient should be close to 1.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\hypertarget{binning}{%
+\section{Binning}\label{binning}}
+
+Structure of Data after binning based on above observation.
+
+\begin{verbatim}
+## 'data.frame':    137 obs. of  27 variables:
+##  $ accessibility_to_cities: Factor w/ 3 levels "1","2","3": 2 1 3 2 2 1 3 1 1 1 ...
+##  $ elevation              : Factor w/ 3 levels "1","2","3": 3 2 2 3 2 3 2 3 2 1 ...
+##  $ aspect                 : Factor w/ 3 levels "1","2","3": 3 3 3 2 1 3 3 2 1 2 ...
+##  $ slope                  : Factor w/ 3 levels "1","2","3": 3 3 1 1 1 3 1 2 2 1 ...
+##  $ cropland_cover         : Factor w/ 3 levels "1","2","3": 1 2 1 1 2 2 1 2 2 3 ...
+##  $ tree_canopy_cover      : Factor w/ 3 levels "1","2","3": 1 2 1 2 1 1 1 3 1 2 ...
+##  $ isothermality          : Factor w/ 3 levels "1","2","3": 1 1 2 2 2 1 2 1 1 2 ...
+##  $ rain_coldestQuart      : Factor w/ 3 levels "1","2","3": 1 3 1 1 1 1 1 2 1 1 ...
+##  $ rain_driestMonth       : Factor w/ 3 levels "1","2","3": 1 3 1 1 2 2 1 3 2 1 ...
+##  $ rain_driestQuart       : Factor w/ 3 levels "1","2","3": 1 2 1 1 1 1 1 3 1 1 ...
+##  $ rain_mean_annual       : Factor w/ 3 levels "1","2","3": 1 2 1 2 2 2 1 2 1 3 ...
+##  $ rain_seasonailty       : Factor w/ 3 levels "1","2","3": 3 1 2 3 1 1 2 1 1 3 ...
+##  $ rain_warmestQuart      : Factor w/ 3 levels "1","2","3": 1 2 1 3 2 2 2 3 1 3 ...
+##  $ rain_wettestMonth      : Factor w/ 3 levels "1","2","3": 1 2 1 2 1 1 1 2 1 3 ...
+##  $ rain_wettestQuart      : Factor w/ 3 levels "1","2","3": 1 2 1 2 1 1 1 2 1 3 ...
+##  $ temp_annual_range      : Factor w/ 3 levels "1","2","3": 3 2 3 2 2 3 2 2 3 2 ...
+##  $ temp_coldestQuart      : Factor w/ 3 levels "1","2","3": 1 2 2 3 2 1 2 1 2 3 ...
+##  $ temp_diurnal_range     : Factor w/ 3 levels "1","2","3": 3 1 3 2 2 2 2 1 1 1 ...
+##  $ temp_driestQuart       : Factor w/ 3 levels "1","2","3": 3 2 3 2 2 1 2 1 2 2 ...
+##  $ temp_max_warmestMonth  : Factor w/ 3 levels "1","2","3": 2 2 3 2 2 1 3 1 2 2 ...
+##  $ temp_mean_annual       : Factor w/ 3 levels "1","2","3": 1 1 2 2 2 1 2 1 1 3 ...
+##  $ temp_min_coldestMonth  : Factor w/ 3 levels "1","2","3": 1 1 2 2 2 1 2 1 1 3 ...
+##  $ temp_seasonality       : Factor w/ 3 levels "1","2","3": 3 2 3 1 2 3 2 2 3 2 ...
+##  $ temp_warmestQuart      : Factor w/ 3 levels "1","2","3": 2 1 3 2 2 1 3 1 2 3 ...
+##  $ temp_wettestQuart      : Factor w/ 3 levels "1","2","3": 1 1 2 2 2 1 2 1 1 3 ...
+##  $ wind                   : Factor w/ 4 levels "1","2","3","4": 3 2 4 2 4 1 4 2 2 2 ...
+##  $ cloudiness             : Factor w/ 3 levels "1","2","3": 1 2 1 2 2 2 1 3 2 2 ...
+\end{verbatim}
+
+\hypertarget{spearman-correlation}{%
+\section{Spearman Correlation}\label{spearman-correlation}}
+
+Let's observe correlation between original data and binned data to make
+sure that neither the correlation ceofficient is too low or perfect.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\hypertarget{heatmap}{%
+\section{Heatmap}\label{heatmap}}
+
+\begin{itemize}
+\tightlist
+\item
+  For binned data
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-26-1.pdf}
+
+\hypertarget{scree-plot-1}{%
+\section{Scree Plot}\label{scree-plot-1}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+\hypertarget{factor-scores-1}{%
+\section{Factor Scores}\label{factor-scores-1}}
+
+Lets visualize happiness categories for components 1-10, to make a
+decision (visually) on the most important components.
+
+\textbf{With Confidence Interval}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-29-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-29-2.pdf}
+
+\textbf{With Tolerance Interval}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-30-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-30-2.pdf}
+
+\hypertarget{loadings-1}{%
+\section{Loadings}\label{loadings-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-32-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-32-2.pdf}
+
+\hypertarget{loadings-correlation-plot}{%
+\section{Loadings (correlation plot)}\label{loadings-correlation-plot}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-33-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-33-2.pdf}
+
+\hypertarget{most-contributing-variables-inference}{%
+\section{Most Contributing Variables
+(Inference)}\label{most-contributing-variables-inference}}
+
+Let's plot variable contributions against each chosen components i.e.~1,
+2, 7, 9.
+
+\textbf{With Bootstrap Ratio}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-34-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-34-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-34-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-34-4.pdf}
+
+\hypertarget{permutation-test-1}{%
+\section{Permutation Test}\label{permutation-test-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-35-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-35-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-35-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-35-4.pdf}
+
+\hypertarget{parallet-test-1}{%
+\section{Parallet Test}\label{parallet-test-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-36-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-36-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-36-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-36-4.pdf}
+
+\hypertarget{bootstrap-test-1}{%
+\section{Bootstrap Test}\label{bootstrap-test-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-37-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-37-2.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-37-3.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-37-4.pdf}
+
+\hypertarget{conclusion-1}{%
+\section{Conclusion}\label{conclusion-1}}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Methods}\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright
+\textbf{Unhappy}\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
+\textbf{Normal}\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
+\textbf{Very Happy}\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+\textbf{Reliability}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{MCA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+warm summers, cold winters, high rain\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+N/A\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Warm winter, cold summer, low rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Components have significant contribution but convex hull has overlapping
+areas\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{part-two-multi-table-analysis-for-country-environment-dataset}{%
+\part{Two / Multi Table Analysis for Country Environment
+Dataset}\label{part-two-multi-table-analysis-for-country-environment-dataset}}
+
+\hypertarget{barycentric-discriminant-analysis}{%
+\chapter{Barycentric Discriminant
+Analysis}\label{barycentric-discriminant-analysis}}
+
+\hypertarget{description-2}{%
+\section{Description}\label{description-2}}
+
+Barycentric discriminant analysis(BADA) is a robust version of
+discriminant analysis that is used to assign, top re-deﬁned groups(also
+called categories), observations described by multiple variables. By
+contrast with traditional discriminant analysis, BADA can be used even
+when the number of observations is smaller than the number of variables.
+This makes BADA particularly suited for the analysis of Big Data.
+
+\hypertarget{heatmap-1}{%
+\section{Heatmap}\label{heatmap-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-43-1.pdf}
+
+\hypertarget{scree-plot-2}{%
+\section{Scree Plot}\label{scree-plot-2}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-44-1.pdf}
+
+\hypertarget{factor-scores-2}{%
+\section{Factor Scores}\label{factor-scores-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-46-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  With Tolerance Interval
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-47-1.pdf}
+
+\hypertarget{loadings-2}{%
+\section{Loadings}\label{loadings-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-48-1.pdf}
+
+\hypertarget{most-contributing-variables-1}{%
+\section{Most Contributing
+Variables}\label{most-contributing-variables-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  With Bootstrap Ratio
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-49-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-49-2.pdf}
+
+\hypertarget{permutation-test-2}{%
+\section{Permutation Test}\label{permutation-test-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-50-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-50-2.pdf}
+
+\hypertarget{parallet-test-2}{%
+\section{Parallet Test}\label{parallet-test-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-51-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-51-2.pdf}
+
+\hypertarget{bootstrap-test-2}{%
+\section{Bootstrap Test}\label{bootstrap-test-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-52-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-52-2.pdf}
+
+\hypertarget{conclusion-2}{%
+\section{Conclusion}\label{conclusion-2}}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Methods}\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright
+\textbf{Unhappy}\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
+\textbf{Normal}\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
+\textbf{Very Happy}\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+\textbf{Reliability}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{BADA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Temp\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Components have significant contribution but convex hull has overlapping
+areas\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{discriminant-correspondence-analysis}{%
+\chapter{Discriminant Correspondence
+Analysis}\label{discriminant-correspondence-analysis}}
+
+\hypertarget{description-3}{%
+\section{Description}\label{description-3}}
+
+As the name indicates, discriminant correspondence analysis(DCA) is an
+extension of discriminant analysis (DA) and correspondence analysis
+(CA). Like discriminant analysis, the goal of DCA is to categorize
+observations in pre-deﬁned groups, and like correspondence analysis,it
+is used with nominal variables. The main idea behind DCA is to represent
+each group by the sum of its observations and to perform a simple CA on
+the groups by variables matrix. The original observations are then
+projected as supplementary elements and each observation is assigned to
+the closest group. The comparison between the a priori and the a
+posteriori classiﬁcations can be used to assess the quality of the
+discrimination. A similar procedure can be used to assign new
+observations to categories. The stability of the analysis can be
+evaluated using cross-validation techniques such as jack kniﬁng or
+bootstrapping.
+
+\hypertarget{density-plot-1}{%
+\section{Density plot}\label{density-plot-1}}
+
+Let's observe the distribution of each variables to get an intuition of
+how we can bin these variables. It's important to have nearly equal
+number of observations in the each bin and to try to cut the variables
+in a way to so that each new binned distribution is nearly Gaussian. We
+can also verify that our binning is appropiate by calculating Spearman
+Correlation for each of original variable and binned variable, the
+correlation coefficient should be close to 1.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-57-1.pdf}
+
+\hypertarget{binning-1}{%
+\section{Binning}\label{binning-1}}
+
+Structure of Data after binning based on above observation.
+
+\begin{verbatim}
+## 'data.frame':    137 obs. of  27 variables:
+##  $ accessibility_to_cities: int  2 1 3 2 2 1 3 1 1 1 ...
+##  $ elevation              : int  3 2 2 3 2 3 2 3 2 1 ...
+##  $ aspect                 : int  3 3 3 2 1 3 3 2 1 2 ...
+##  $ slope                  : int  3 3 1 1 1 3 1 2 2 1 ...
+##  $ cropland_cover         : int  1 2 1 1 2 2 1 2 2 3 ...
+##  $ tree_canopy_cover      : int  1 2 1 2 1 1 1 3 1 2 ...
+##  $ isothermality          : int  1 1 2 2 2 1 2 1 1 2 ...
+##  $ rain_coldestQuart      : int  1 3 1 1 1 1 1 2 1 1 ...
+##  $ rain_driestMonth       : int  1 3 1 1 2 2 1 3 2 1 ...
+##  $ rain_driestQuart       : int  1 2 1 1 1 1 1 3 1 1 ...
+##  $ rain_mean_annual       : int  1 2 1 2 2 2 1 2 1 3 ...
+##  $ rain_seasonailty       : int  3 1 2 3 1 1 2 1 1 3 ...
+##  $ rain_warmestQuart      : int  1 2 1 3 2 2 2 3 1 3 ...
+##  $ rain_wettestMonth      : int  1 2 1 2 1 1 1 2 1 3 ...
+##  $ rain_wettestQuart      : int  1 2 1 2 1 1 1 2 1 3 ...
+##  $ temp_annual_range      : int  3 2 3 2 2 3 2 2 3 2 ...
+##  $ temp_coldestQuart      : int  1 2 2 3 2 1 2 1 2 3 ...
+##  $ temp_diurnal_range     : int  3 1 3 2 2 2 2 1 1 1 ...
+##  $ temp_driestQuart       : int  3 2 3 2 2 1 2 1 2 2 ...
+##  $ temp_max_warmestMonth  : int  2 2 3 2 2 1 3 1 2 2 ...
+##  $ temp_mean_annual       : int  1 1 2 2 2 1 2 1 1 3 ...
+##  $ temp_min_coldestMonth  : int  1 1 2 2 2 1 2 1 1 3 ...
+##  $ temp_seasonality       : int  3 2 3 1 2 3 2 2 3 2 ...
+##  $ temp_warmestQuart      : int  2 1 3 2 2 1 3 1 2 3 ...
+##  $ temp_wettestQuart      : int  1 1 2 2 2 1 2 1 1 3 ...
+##  $ wind                   : int  3 2 4 2 4 1 4 2 2 2 ...
+##  $ cloudiness             : int  1 2 1 2 2 2 1 3 2 2 ...
+\end{verbatim}
+
+\hypertarget{spearman-correlation-1}{%
+\section{Spearman Correlation}\label{spearman-correlation-1}}
+
+Let's observe correlation between original data and binned data to make
+sure that neither the correlation ceofficient is too low or perfect.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-59-1.pdf}
+
+\hypertarget{heatmap-2}{%
+\section{Heatmap}\label{heatmap-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  For binned data
+\end{itemize}
+
+Visually analyze multicollinearity in the system of the original data
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-61-1.pdf}
+
+\hypertarget{scree-plot-3}{%
+\section{Scree Plot}\label{scree-plot-3}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-62-1.pdf}
+
+\hypertarget{factor-scores-3}{%
+\section{Factor Scores}\label{factor-scores-3}}
+
+\begin{itemize}
+\item
+  With Confidence Interval
+  \includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-63-1.pdf}
+\item
+  With Tolerance Interval
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-64-1.pdf}
+
+\hypertarget{loadings-3}{%
+\section{Loadings}\label{loadings-3}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-66-1.pdf}
+
+\hypertarget{loadings-correlation-plot-1}{%
+\section{Loadings (correlation
+plot)}\label{loadings-correlation-plot-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-67-1.pdf}
+
+\hypertarget{most-contributing-variables-inference-1}{%
+\section{Most Contributing Variables
+(Inference)}\label{most-contributing-variables-inference-1}}
+
+Let's plot variable contributions against each chosen components i.e.~1,
+2.
+
+\begin{itemize}
+\tightlist
+\item
+  With Bootstrap Ratio
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-68-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-68-2.pdf}
+
+\hypertarget{permutation-test-3}{%
+\section{Permutation Test}\label{permutation-test-3}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-69-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-69-2.pdf}
+
+\hypertarget{parallet-test-3}{%
+\section{Parallet Test}\label{parallet-test-3}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-70-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-70-2.pdf}
+
+\hypertarget{bootstrap-test-3}{%
+\section{Bootstrap Test}\label{bootstrap-test-3}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-71-1.pdf}
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-71-2.pdf}
+
+\hypertarget{conclusion-3}{%
+\section{Conclusion}\label{conclusion-3}}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Methods}\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright
+\textbf{Unhappy}\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
+\textbf{Normal}\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
+\textbf{Very Happy}\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+\textbf{Reliability}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{DiCA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+warm summers, cold winters, high rain\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Higher variation in temperature is correlated with lower happiness\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Warm winter, cold summer, low rain, windy\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Convex hulls are separeted but second component only has temp variables
+as significant\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{partial-least-squares---correlation}{%
+\chapter{Partial Least Squares -
+Correlation}\label{partial-least-squares---correlation}}
+
+\hypertarget{description-4}{%
+\section{Description}\label{description-4}}
+
+PLS is used to find the fundamental relations between two matrices (X
+and Y), i.e.~a latent variable approach to modeling the covariance
+structures in these two spaces. A PLS model will try to find the
+multidimensional direction in the X space that explains the maximum
+multidimensional variance direction in the Y space. PLS regression is
+particularly suited when the matrix of predictors has more variables
+than observations, and when there is multicollinearity among X values.
+PLS bears some relation to principal components regression; instead of
+finding hyperplanes of maximum variance between the response and
+independent variables, it finds a linear regression model by projecting
+the predicted variables and the observable variables to a new space.
+Because both the X and Y data are projected to new spaces, the PLS
+family of methods are known as bilinear factor models.
+
+\hypertarget{correlation-plot-1}{%
+\section{Correlation Plot}\label{correlation-plot-1}}
+
+Visually analyze multicollinearity between all varaibles in Rain and
+Temperature tables.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-73-1.pdf}
+
+\hypertarget{pls-c}{%
+\section{PLS-C}\label{pls-c}}
+
+\begin{verbatim}
+## ------------------------------------------------------------------------------
+##  Results of Permutation Test for PLSC of X'*Y = R 
+##  for Omnibus Inertia and Eigenvalues 
+## ------------------------------------------------------------------------------
+## $ fixedInertia      the Inertia of Matrix X
+## $ fixedEigenvalues  an L*1 vector of the eigenvalues of X
+## $ pOmnibus          the probablity associated to the Inertia
+## $ pEigenvalues      an L* 1 matrix of p for the eigenvalues of X
+## $ permInertia       vector of the permuted Inertia of X
+## $ permEigenvalues   matrix of the permuted eigenvalues of X
+## ------------------------------------------------------------------------------
+\end{verbatim}
+
+Now we have Latent Variables and Saliences. * Latent Variables are the
+new Data points w.r.t. correlation between both the tables. Latent
+Variables exists for each table. * Saliences represent correlation
+between variables of each table.
+
+\hypertarget{scree-plot-4}{%
+\section{Scree Plot}\label{scree-plot-4}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-74-1.pdf}
+
+\hypertarget{latent-variables}{%
+\section{Latent Variables}\label{latent-variables}}
+
+Lets visualize happiness categories for Components 1 of each table
+
+\hypertarget{component-1-for-both-tables-rain-and-temperature}{%
+\subsection{Component 1 for both Tables: Rain and
+Temperature}\label{component-1-for-both-tables-rain-and-temperature}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-75-1.pdf}
+
+\hypertarget{component-2-for-both-tables-rain-and-temperature}{%
+\subsection{Component 2 for both Tables: Rain and
+Temperature}\label{component-2-for-both-tables-rain-and-temperature}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-76-1.pdf}
+
+\hypertarget{salience-for-rain}{%
+\section{Salience for Rain}\label{salience-for-rain}}
+
+\hypertarget{components-1}{%
+\subsection{Components 1}\label{components-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-77-1.pdf}
+
+\hypertarget{component-2}{%
+\subsection{Component 2}\label{component-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-78-1.pdf}
+
+\hypertarget{salience-for-temperature}{%
+\section{Salience for Temperature}\label{salience-for-temperature}}
+
+\hypertarget{component-1}{%
+\subsection{Component 1}\label{component-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-79-1.pdf}
+
+\hypertarget{component-2-1}{%
+\subsection{Component 2}\label{component-2-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-80-1.pdf}
+
+\hypertarget{most-contributing-variables---pls-c-with-inference}{%
+\section{Most Contributing Variables - PLS-C (with
+Inference)}\label{most-contributing-variables---pls-c-with-inference}}
+
+\begin{verbatim}
+## ------------------------------------------------------------------------------
+##  Bootstraped Factor Scores (BFS) and Bootstrap Ratios  (BR) 
+##  for the I and J-sets of a PLSC (obtained from multinomial resampling of X & Y) 
+## ------------------------------------------------------------------------------
+## $ bootstrapBrick.i          an I*L*nIter Brick of BFSs  for the I-Set
+## $ bootRatios.i              an I*L matrix of BRs for the I-Set
+## $ bootRatiosSignificant.i   an I*L logical matrix for significance of the I-Set
+## $ bootstrapBrick.j          a  J*L*nIter Brick of BFSs  for the J-Set
+## $ bootRatios.j              a  J*L matrix of BRs for the J-Set
+## $ bootRatiosSignificant.j   a  J*L logical matrix for significance of the J-Set
+## ------------------------------------------------------------------------------
+\end{verbatim}
+
+\hypertarget{bootstrap-test-4}{%
+\subsection{Bootstrap Test}\label{bootstrap-test-4}}
+
+\begin{itemize}
+\tightlist
+\item
+  Rain - Component 1
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-82-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Rain - Component 2
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-83-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Temperature - Component 1
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-84-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Temperature - Component 2
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-85-1.pdf}
+
+\hypertarget{conclusion-4}{%
+\section{Conclusion}\label{conclusion-4}}
+
+Here Component 2 seems to best seperate Happiness levels. Let's compare
+Component 2 for both tables.
+
+\begin{itemize}
+\tightlist
+\item
+  Table 1 \& 2 Component 2
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Latent Variables: Very Happy vs Unhappy (for Rain and Temperature
+    both)
+  \item
+    Salience:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Rain: It seems dryness and wetness at a montly scale have more
+      effect than coldness or yearly patterns.
+    \item
+      Temperature: All temperature variations at a monthly and yearly
+      scale seems to impact happiness.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{multiple-factor-analyis}{%
+\chapter{Multiple Factor Analyis}\label{multiple-factor-analyis}}
+
+\hypertarget{description-5}{%
+\section{Description}\label{description-5}}
+
+Multiple factor analysis is an extension of PCA tailored to handle
+multiple datatables that measure sets of variables collected on the same
+observations. MFA proceeds in two steps 1. It computes a PCA of each
+data table and `normalizes' each data table by dividing all its elements
+by the ﬁrst singular value obtained from its PCA. 2. All the normalized
+data tables are aggregated into a grand data table that is analyzed via
+a (non-normalized) PCA that gives a set of factor scores for the
+observations and loadings for the variables.
+
+In addition, MFA provides for each data table a set of partial factor
+scores for the observations that reﬂects the speciﬁc `view-point' of
+this data table. Interestingly, the common factor scores could be
+obtained by replacing the original normalized data tables by the
+normalized factor scores obtained from the PCA of each of these tables.
+
+\hypertarget{mfa}{%
+\section{MFA}\label{mfa}}
+
+We have divided the data into 3 tables, separate tables for rain and
+temperature related columns and 3rd table for rest of the columns.
+
+\begin{verbatim}
+## [1] "Preprocessed the Rows of the data matrix using:  None"
+## [1] "Preprocessed the Columns of the data matrix using:  Center_1Norm"
+## [1] "Preprocessed the Tables of the data matrix using:  MFA_Normalization"
+## [1] "Preprocessing Completed"
+## [1] "Optimizing using:  None"
+## [1] "Processing Complete"
+\end{verbatim}
+
+\hypertarget{scree-plot-5}{%
+\section{Scree Plot}\label{scree-plot-5}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-89-1.pdf}
+
+\hypertarget{factor-scores-4}{%
+\section{Factor Scores}\label{factor-scores-4}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-90-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  With Tolerance Interval
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-91-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  With Partial Factor Scores
+\end{itemize}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-92-1.pdf}
+
+\hypertarget{loadings-4}{%
+\section{Loadings}\label{loadings-4}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-93-1.pdf}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-94-1.pdf}
+
+\hypertarget{correlation-circle-1}{%
+\section{Correlation Circle}\label{correlation-circle-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-95-1.pdf}
+
+\hypertarget{conclusion-5}{%
+\section{Conclusion}\label{conclusion-5}}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Methods}\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright
+\textbf{Unhappy}\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
+\textbf{Normal}\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
+\textbf{Very Happy}\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+\textbf{Reliability}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{MFA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Partial factors dominated by Temp, then rain and other variables\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Neither of partial factors seems to have sufficient effect\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Partial factors dominated by Temp and other variables, lesser effect of
+rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Convex hull has overlapping areas\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{distatis}{%
+\chapter{DiSTATIS}\label{distatis}}
+
+\hypertarget{description-6}{%
+\section{Description}\label{description-6}}
+
+DISTATIS is a new method that can be used to compare algorithms when
+their outputs consist of distance matrices computed on the same set of
+objects. The method ﬁrst evaluates the similarity between algorithms
+using a coefﬁcient called the RV coefﬁcient. From this analysis, a
+compromise matrix is computed which represents the best aggregate of the
+original matrices. In order to evaluate the differences between
+algorithms, the original distance matrices are then projected onto the
+compromise. The goal of DISTATIS is to analyze a set of distance
+matrices. In order to compare distance matrices, DISTATIS combines them
+into a common structure called a compromise and then projects the
+original distance matrices onto this compromise.
+
+\begin{verbatim}
+## [1] Bootstrap On Factor Scores. Iterations #: 
+## [2] 1000
+\end{verbatim}
+
+\hypertarget{scree-plot---rv-mat}{%
+\section{SCREE Plot - RV-MAT}\label{scree-plot---rv-mat}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-100-1.pdf}
+
+\hypertarget{plotting-assessor-matrix}{%
+\section{Plotting Assessor Matrix}\label{plotting-assessor-matrix}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-101-1.pdf}
+
+\hypertarget{convexhull}{%
+\subsection{ConvexHull}\label{convexhull}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-102-1.pdf}
+
+\hypertarget{scree-plot---sv-mat}{%
+\section{SCREE Plot - SV-MAT}\label{scree-plot---sv-mat}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-103-1.pdf}
+
+\hypertarget{i-set}{%
+\section{I Set}\label{i-set}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-104-1.pdf}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-105-1.pdf}
+
+\hypertarget{cluster-analysis-hartigans-rule}{%
+\section{Cluster Analysis (Hartigan's
+Rule)}\label{cluster-analysis-hartigans-rule}}
+
+\begin{verbatim}
+##   Clusters  Hartigan AddCluster
+## 1        2  66.20137       TRUE
+## 2        3 113.33226       TRUE
+## 3        4 298.98109       TRUE
+## 4        5   0.00000      FALSE
+\end{verbatim}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-107-1.pdf}
+
+\hypertarget{cluster-analysis-k-means}{%
+\section{Cluster Analysis (K-Means)}\label{cluster-analysis-k-means}}
+
+\hypertarget{two-centers}{%
+\subsection{Two centers}\label{two-centers}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-108-1.pdf}
+
+\hypertarget{four-centers}{%
+\subsection{Four centers}\label{four-centers}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-109-1.pdf}
+
+\hypertarget{cluster-analysis-hclust}{%
+\section{Cluster Analysis (hclust)}\label{cluster-analysis-hclust}}
+
+\hypertarget{two-clusters}{%
+\subsection{Two Clusters}\label{two-clusters}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-110-1.pdf}
+
+\hypertarget{fours-clusters}{%
+\subsection{Fours Clusters}\label{fours-clusters}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-111-1.pdf}
+
+\hypertarget{conclusion-for-all-methods}{%
+\chapter{Conclusion for all Methods}\label{conclusion-for-all-methods}}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Methods}\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright
+\textbf{Unhappy}\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
+\textbf{Normal}\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
+\textbf{Very Happy}\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+\textbf{Reliability}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{PCA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Others\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Temp \& Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+N/A\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Components have significant contribution but convex hull has overlapping
+areas and Component 2 \& 7 contradicts\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{MCA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+warm summers, cold winters, high rain\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+N/A\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Warm winter, cold summer, low rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Components have significant contribution but convex hull has overlapping
+areas\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{BADA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Temp\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Components have significant contribution but convex hull has overlapping
+areas\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{DiCA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+warm summers, cold winters, high rain\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Higher variation in temperature is correlated with lower happiness\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Warm winter, cold summer, low rain, windy\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Convex hulls are separeted but second component only has temp variables
+as significant\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{PLS-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Rain\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Temp\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Temp\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Second component has more rain variables as significant than temp
+variables\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{MFA}\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright
+Partial factors dominated by Temp, then rain and other variables\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
+Neither of partial factors seems to have sufficient effect\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
+Partial factors dominated by Temp and other variables, lesser effect of
+rain\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+Convex hull has overlapping areas\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{MCA} and \textbf{DiCA} agrees:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Warmer winter, colder summer, low rain, windy cities makes people
+    \emph{happy}
+  \item
+    Colder Winter, warmer summers, high rain, less windy makes people
+    \emph{unhappy}
+  \end{itemize}
+\end{itemize}
+
+However, even though \textbf{MCA} shows that most the variables has high
+contribution for the strongest signal in the data - \textbf{DiCA} shows
+that temp, rain and wind variables contributes significantly.
+
+\emph{Hence},
+
+\begin{itemize}
+\tightlist
+\item
+  Happiness doesn't seem to be highly correlated to environmental
+  conditions
+\item
+  Temperature, rain and wind seem to be slightly correlated with
+  happiness.
+\item
+  Cluster Analysis doesn't seem to show any patterns in the data.
+\end{itemize}
+
+\hypertarget{part-other-datasets}{%
+\part{Other Datasets}\label{part-other-datasets}}
+
+\hypertarget{correspondence-analysis}{%
+\chapter{Correspondence Analysis}\label{correspondence-analysis}}
+
+\hypertarget{description-7}{%
+\section{Description}\label{description-7}}
+
+Correspondence Analysis (CA) is a multivariate graphical technique
+designed to explore relationships among categorical variables. The
+outcome from correspondence analysis is a graphical display of the rows
+and columns of a contingency table that is designed to permit
+visualization of the salient relationships among the variable responses
+in a low-dimensional space. Such a representation reveals a more global
+picture of the relationships among row-column pairs which would
+otherwise not be detected through a pairwise analysis.
+
+\textbf{Calculate CA:}
+
+\begin{itemize}
+\tightlist
+\item
+  Step 1: Compute row and column averages
+\item
+  Step 2: Compute the expected values
+\item
+  Step 3: Compute the residuals
+\item
+  Step 4: Plotting labels with similar residuals close together
+\item
+  Step 5: Interpreting the relationship between row and column labels
+\end{itemize}
+
+\textbf{How to Interpret Correspondence Analysis Plots}
+
+Correspondence analysis does not show us which rows have the highest
+numbers, nor which columns have the highest numbers. It instead shows us
+the relativities.
+
+\begin{itemize}
+\tightlist
+\item
+  The further things are from the origin, the more discriminating they
+  are.
+\item
+  Look at the length of the line connecting the row label to the origin.
+  Longer lines indicate that the row label is highly associated with
+  some of the column labels (i.e., it has at least one high residual).
+\item
+  Look at the length of the label connecting the column label to the
+  origin. Longer lines again indicate a high association between the
+  column label and one or more row labels.
+\item
+  Look at the angle formed between these two lines. Really small angles
+  indicate association. 90 degree angles indicate no relationship.
+  Angles near 180 degrees indicate negative associations.
+\end{itemize}
+
+\hypertarget{dataset---weekly-earnings-by-race}{%
+\section{Dataset - Weekly earnings by
+Race}\label{dataset---weekly-earnings-by-race}}
+
+\begin{itemize}
+\tightlist
+\item
+  Data: Measurements of Weekly Earnings per Race
+\item
+  Rows: There are 6 observations representing Asian/White/Black,
+  Men/Woman.
+\item
+  Columns: Total 6 variables grouping people based on Decile and
+  Quartile ranges of their weekly income.
+\end{itemize}
+
+\begin{verbatim}
+##                             White.men White.women Black.men Black.Women
+## 1st decile                        412         374       361         331
+## 1st quartile                      594         506       483         423
+## 2nd quartile                      920         743       680         615
+## 3rd quartile                     1467        1140      1046         935
+## 9th decile                       2278        1726      1551        1453
+## Total people (in thousands)     48746       36698      6445        7142
+##                             Asian.Men Asian.Women Hispanic.Men
+## 1st decile                        420         385          358
+## 1st quartile                      648         551          451
+## 2nd quartile                     1129         877          631
+## 3rd quartile                     1860        1411          979
+## 9th decile                       2699        2024         1498
+## Total people (in thousands)      3684        2954        11142
+##                             Hispanic.Women
+## 1st decile                             320
+## 1st quartile                           404
+## 2nd quartile                           566
+## 3rd quartile                           830
+## 9th decile                            1266
+## Total people (in thousands)           7168
+\end{verbatim}
+
+However, here we can see that it may not be advisable to include
+Quartile and Decile intervals in the same analysis. Hence, we go ahead
+with Quartile Ranges only.
+
+\begin{table}
+
+\caption{\label{tab:nice-tab-ca}Measurements of Weekly Earnings per Race}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & 1stQ & 2ndQ & 3rdQ\\
+\midrule
+White.men & 594 & 326 & 547\\
+White.women & 506 & 237 & 397\\
+Black.men & 483 & 197 & 366\\
+Black.Women & 423 & 192 & 320\\
+Asian.Men & 648 & 481 & 731\\
+Asian.Women & 551 & 326 & 534\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item
+  Research Question
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Does total earning of different races differ.
+  \item
+    Which race get less than median salary (2nd Quartile)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{heatmap-3}{%
+\section{Heatmap}\label{heatmap-3}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-116-1.pdf}
+
+\hypertarget{scree-plot-6}{%
+\section{Scree Plot}\label{scree-plot-6}}
+
+Gives amount of information explained by corresponding component. Gives
+an intuition to decide which components best represent data in order to
+answer the research question.
+
+P.S. The most contribution component may not always be most useful for a
+given research question.
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-118-1.pdf}
+
+\hypertarget{factor-scores-5}{%
+\section{Factor Scores}\label{factor-scores-5}}
+
+\hypertarget{symmetric-plot}{%
+\subsection{Symmetric Plot}\label{symmetric-plot}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-121-1.pdf}
+
+\hypertarget{asymmetric-plot}{%
+\subsection{Asymmetric Plot}\label{asymmetric-plot}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-122-1.pdf}
+
+\hypertarget{most-contributing-variables-2}{%
+\section{Most Contributing
+Variables}\label{most-contributing-variables-2}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-124-1.pdf}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-126-1.pdf}
+
+\hypertarget{inference-ca}{%
+\section{Inference CA}\label{inference-ca}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-128-1.pdf}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-130-1.pdf}
+
+\hypertarget{distatis-1}{%
+\chapter{DiSTATIS}\label{distatis-1}}
+
+\hypertarget{description-8}{%
+\section{Description}\label{description-8}}
+
+DISTATIS is a new method that can be used to compare algorithms when
+their outputs consist of distance matrices computed on the same set of
+objects. The method ﬁrst evaluates the similarity between algorithms
+using a coefﬁcient called the RV coefﬁcient. From this analysis, a
+compromise matrix is computed which represents the best aggregate of the
+original matrices. In order to evaluate the differences between
+algorithms, the original distance matrices are then projected onto the
+compromise. The goal of DISTATIS is to analyze a set of distance
+matrices. In order to compare distance matrices, DISTATIS combines them
+into a common structure called a compromise and then projects the
+original distance matrices onto this compromise.
+
+\hypertarget{dataset---pianists-for-composers}{%
+\section{Dataset - Pianists for
+Composers}\label{dataset---pianists-for-composers}}
+
+\begin{verbatim}
+## [1] Bootstrap On Factor Scores. Iterations #: 
+## [2] 1000
+\end{verbatim}
+
+\hypertarget{scree-plot---rv-mat-1}{%
+\section{SCREE Plot - RV-MAT}\label{scree-plot---rv-mat-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-134-1.pdf}
+
+\hypertarget{plotting-assessor-matrix-1}{%
+\section{Plotting Assessor Matrix}\label{plotting-assessor-matrix-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-135-1.pdf}
+
+\hypertarget{convexhull-1}{%
+\subsection{ConvexHull}\label{convexhull-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-136-1.pdf}
+
+\hypertarget{scree-plot---sv-mat-1}{%
+\section{SCREE Plot - SV-MAT}\label{scree-plot---sv-mat-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-137-1.pdf}
+
+\hypertarget{i-set-1}{%
+\section{I Set}\label{i-set-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-138-1.pdf}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-139-1.pdf}
+
+\hypertarget{cluster-analysis-k-means-1}{%
+\section{Cluster Analysis (K-Means)}\label{cluster-analysis-k-means-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-140-1.pdf}
+
+\hypertarget{cluster-analysis-hclust-1}{%
+\section{Cluster Analysis (hclust)}\label{cluster-analysis-hclust-1}}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-141-1.pdf}
+
+\hypertarget{cluster-analysis-hartigans-rule-1}{%
+\section{Cluster Analysis (Hartigan's
+Rule)}\label{cluster-analysis-hartigans-rule-1}}
+
+\begin{verbatim}
+##   Clusters  Hartigan AddCluster
+## 1        2 25.830051       TRUE
+## 2        3 23.429672       TRUE
+## 3        4 14.998705       TRUE
+## 4        5  7.042848      FALSE
+\end{verbatim}
+
+\includegraphics{Multi-variate_analysis_on_Environmental_variables_files/figure-latex/unnamed-chunk-143-1.pdf}
+
+\bibliography{book.bib,packages.bib}
+
+
+\end{document}

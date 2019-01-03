@@ -324,20 +324,9 @@ for (i in c(1, 2)) {
 
 ## Conclusion
 
-* Component 1: 
-  + Rows: Normal & Happy
-  + Columns: Cloudiness & Rain vs Cropland, Aspect, Elevation
-  + Interpret: People in countries with more Cloudiness, Trees and Rain tends to be happier.
-
-* Component 7: 
-  + Rows: Happy & Unhappy
-  + Columns: Temp and Rain vs Accessibility and Cropland
-  + Interpret: Rain and Temp seems to be main reason for unhappiness and Cropland is important for Happiness.
-
-* Component 9: 
-  + Rows: Happy & Very Happy
-  + Columns: Temp vs Rain
-  + Interpret: Rain and Temp seems to be main reason for Happiness. *This contradicts with Component 7 and 1*.
+| **Methods** | **Unhappy**               | **Normal**             | **Very Happy**                | **Reliability**  |
+|------------------|-------------------------|-----------------------|---------------------------|------------|
+| **BADA**    | Temp                                      | Rain                         | Rain                                      | Components have significant contribution but convex hull has overlapping areas                                 |
 
 
 

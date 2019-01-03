@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Country Environmental Factors correlated with Happiness</title>
+  <meta name="description" content="This data is all acquired through Google Earth Engine">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Country Environmental Factors correlated with Happiness" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Country Environmental Factors correlated with Happiness" />
+  
+  <meta name="twitter:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+<meta name="author" content="Ritesh Malaiya">
+
+
+<meta name="date" content="2018-12-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="installing-required-packages.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Exploratory Data Analysis</a></li>
+
+<li class="divider"></li>
+<li class="part"><span><b>I Country-Level Environmental Measurements Dataset</b></span></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#context"><i class="fa fa-check"></i><b>1.1</b> Context</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#content"><i class="fa fa-check"></i><b>1.2</b> Content</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#inspiration"><i class="fa fa-check"></i><b>1.3</b> Inspiration</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#research-question-scope-of-this-book"><i class="fa fa-check"></i><b>1.4</b> Research Question (scope of this book)</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>2</b> Dataset</a><ul>
+<li class="chapter" data-level="2.1" data-path="dataset.html"><a href="dataset.html#structure-of-data"><i class="fa fa-check"></i><b>2.1</b> Structure of Data</a></li>
+<li class="chapter" data-level="2.2" data-path="dataset.html"><a href="dataset.html#datatable"><i class="fa fa-check"></i><b>2.2</b> Datatable</a></li>
+</ul></li>
+<li class="part"><span><b>II Single Table for Country Environment Dataset</b></span></li>
+<li class="chapter" data-level="3" data-path="installing-required-packages.html"><a href="installing-required-packages.html"><i class="fa fa-check"></i><b>3</b> Installing required packages</a><ul>
+<li class="chapter" data-level="3.1" data-path="installing-required-packages.html"><a href="installing-required-packages.html#description"><i class="fa fa-check"></i><b>3.1</b> Description</a></li>
+<li class="chapter" data-level="3.2" data-path="installing-required-packages.html"><a href="installing-required-packages.html#correlation-plot"><i class="fa fa-check"></i><b>3.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="3.3" data-path="installing-required-packages.html"><a href="installing-required-packages.html#scree-plot"><i class="fa fa-check"></i><b>3.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="3.4" data-path="installing-required-packages.html"><a href="installing-required-packages.html#factor-scores"><i class="fa fa-check"></i><b>3.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="3.5" data-path="installing-required-packages.html"><a href="installing-required-packages.html#loadings"><i class="fa fa-check"></i><b>3.5</b> Loadings</a></li>
+<li class="chapter" data-level="3.6" data-path="installing-required-packages.html"><a href="installing-required-packages.html#correlation-circle"><i class="fa fa-check"></i><b>3.6</b> Correlation Circle</a></li>
+<li class="chapter" data-level="3.7" data-path="installing-required-packages.html"><a href="installing-required-packages.html#most-contributing-variables"><i class="fa fa-check"></i><b>3.7</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="3.8" data-path="installing-required-packages.html"><a href="installing-required-packages.html#permutation-test"><i class="fa fa-check"></i><b>3.8</b> Permutation Test</a></li>
+<li class="chapter" data-level="3.9" data-path="installing-required-packages.html"><a href="installing-required-packages.html#parallet-test"><i class="fa fa-check"></i><b>3.9</b> Parallet Test</a></li>
+<li class="chapter" data-level="3.10" data-path="installing-required-packages.html"><a href="installing-required-packages.html#bootstrap-test"><i class="fa fa-check"></i><b>3.10</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="3.11" data-path="installing-required-packages.html"><a href="installing-required-packages.html#conclusion"><i class="fa fa-check"></i><b>3.11</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html"><i class="fa fa-check"></i><b>4</b> Installing required packages</a><ul>
+<li class="chapter" data-level="4.1" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#description-1"><i class="fa fa-check"></i><b>4.1</b> Description</a></li>
+<li class="chapter" data-level="4.2" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#density-plot"><i class="fa fa-check"></i><b>4.2</b> Density Plot</a></li>
+<li class="chapter" data-level="4.3" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#binning"><i class="fa fa-check"></i><b>4.3</b> Binning</a></li>
+<li class="chapter" data-level="4.4" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#spearman-correlation"><i class="fa fa-check"></i><b>4.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="4.5" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#heatmap"><i class="fa fa-check"></i><b>4.5</b> Heatmap</a></li>
+<li class="chapter" data-level="4.6" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#scree-plot-1"><i class="fa fa-check"></i><b>4.6</b> Scree Plot</a></li>
+<li class="chapter" data-level="4.7" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#factor-scores-1"><i class="fa fa-check"></i><b>4.7</b> Factor Scores</a></li>
+<li class="chapter" data-level="4.8" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#loadings-1"><i class="fa fa-check"></i><b>4.8</b> Loadings</a></li>
+<li class="chapter" data-level="4.9" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#loadings-correlation-plot"><i class="fa fa-check"></i><b>4.9</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="4.10" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#most-contributing-variables-inference"><i class="fa fa-check"></i><b>4.10</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="4.11" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#permutation-test-1"><i class="fa fa-check"></i><b>4.11</b> Permutation Test</a></li>
+<li class="chapter" data-level="4.12" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#parallet-test-1"><i class="fa fa-check"></i><b>4.12</b> Parallet Test</a></li>
+<li class="chapter" data-level="4.13" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#bootstrap-test-1"><i class="fa fa-check"></i><b>4.13</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="4.14" data-path="installing-required-packages-1.html"><a href="installing-required-packages-1.html#conclusion-1"><i class="fa fa-check"></i><b>4.14</b> Conclusion</a></li>
+</ul></li>
+<li class="part"><span><b>III Two / Multi Table Analysis for Country Environment Dataset</b></span></li>
+<li class="chapter" data-level="5" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html"><i class="fa fa-check"></i><b>5</b> Installing required packages</a><ul>
+<li class="chapter" data-level="5.1" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#description-2"><i class="fa fa-check"></i><b>5.1</b> Description</a></li>
+<li class="chapter" data-level="5.2" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#heatmap-1"><i class="fa fa-check"></i><b>5.2</b> Heatmap</a></li>
+<li class="chapter" data-level="5.3" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#scree-plot-2"><i class="fa fa-check"></i><b>5.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="5.4" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#factor-scores-2"><i class="fa fa-check"></i><b>5.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="5.5" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#loadings-2"><i class="fa fa-check"></i><b>5.5</b> Loadings</a></li>
+<li class="chapter" data-level="5.6" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#most-contributing-variables-1"><i class="fa fa-check"></i><b>5.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="5.7" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#permutation-test-2"><i class="fa fa-check"></i><b>5.7</b> Permutation Test</a></li>
+<li class="chapter" data-level="5.8" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#parallet-test-2"><i class="fa fa-check"></i><b>5.8</b> Parallet Test</a></li>
+<li class="chapter" data-level="5.9" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#bootstrap-test-2"><i class="fa fa-check"></i><b>5.9</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="5.10" data-path="installing-required-packages-2.html"><a href="installing-required-packages-2.html#conclusion-2"><i class="fa fa-check"></i><b>5.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html"><i class="fa fa-check"></i><b>6</b> Installing required packages</a><ul>
+<li class="chapter" data-level="6.1" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#description-3"><i class="fa fa-check"></i><b>6.1</b> Description</a></li>
+<li class="chapter" data-level="6.2" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#density-plot-1"><i class="fa fa-check"></i><b>6.2</b> Density plot</a></li>
+<li class="chapter" data-level="6.3" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#binning-1"><i class="fa fa-check"></i><b>6.3</b> Binning</a></li>
+<li class="chapter" data-level="6.4" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#spearman-correlation-1"><i class="fa fa-check"></i><b>6.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="6.5" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#heatmap-2"><i class="fa fa-check"></i><b>6.5</b> Heatmap</a></li>
+<li class="chapter" data-level="6.6" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#scree-plot-3"><i class="fa fa-check"></i><b>6.6</b> Scree Plot</a></li>
+<li class="chapter" data-level="6.7" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#factor-scores-3"><i class="fa fa-check"></i><b>6.7</b> Factor Scores</a></li>
+<li class="chapter" data-level="6.8" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#loadings-3"><i class="fa fa-check"></i><b>6.8</b> Loadings</a></li>
+<li class="chapter" data-level="6.9" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#loadings-correlation-plot-1"><i class="fa fa-check"></i><b>6.9</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="6.10" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#most-contributing-variables-inference-1"><i class="fa fa-check"></i><b>6.10</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="6.11" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#permutation-test-3"><i class="fa fa-check"></i><b>6.11</b> Permutation Test</a></li>
+<li class="chapter" data-level="6.12" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#parallet-test-3"><i class="fa fa-check"></i><b>6.12</b> Parallet Test</a></li>
+<li class="chapter" data-level="6.13" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#bootstrap-test-3"><i class="fa fa-check"></i><b>6.13</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="6.14" data-path="installing-required-packages-3.html"><a href="installing-required-packages-3.html#conclusion-3"><i class="fa fa-check"></i><b>6.14</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html"><i class="fa fa-check"></i><b>7</b> Installing required packages</a><ul>
+<li class="chapter" data-level="7.1" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#description-4"><i class="fa fa-check"></i><b>7.1</b> Description</a></li>
+<li class="chapter" data-level="7.2" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#correlation-plot-1"><i class="fa fa-check"></i><b>7.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="7.3" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#pls-c"><i class="fa fa-check"></i><b>7.3</b> PLS-C</a></li>
+<li class="chapter" data-level="7.4" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#scree-plot-4"><i class="fa fa-check"></i><b>7.4</b> Scree Plot</a></li>
+<li class="chapter" data-level="7.5" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#latent-variables"><i class="fa fa-check"></i><b>7.5</b> Latent Variables</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#component-1-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>7.5.1</b> Component 1 for both Tables: Rain and Temperature</a></li>
+<li class="chapter" data-level="7.5.2" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#component-2-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>7.5.2</b> Component 2 for both Tables: Rain and Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#salience-for-rain"><i class="fa fa-check"></i><b>7.6</b> Salience for Rain</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#components-1"><i class="fa fa-check"></i><b>7.6.1</b> Components 1</a></li>
+<li class="chapter" data-level="7.6.2" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#component-2"><i class="fa fa-check"></i><b>7.6.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#salience-for-temperature"><i class="fa fa-check"></i><b>7.7</b> Salience for Temperature</a><ul>
+<li class="chapter" data-level="7.7.1" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#component-1"><i class="fa fa-check"></i><b>7.7.1</b> Component 1</a></li>
+<li class="chapter" data-level="7.7.2" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#component-2-1"><i class="fa fa-check"></i><b>7.7.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#most-contributing-variables---pls-c-with-inference"><i class="fa fa-check"></i><b>7.8</b> Most Contributing Variables - PLS-C (with Inference)</a><ul>
+<li class="chapter" data-level="7.8.1" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#bootstrap-test-4"><i class="fa fa-check"></i><b>7.8.1</b> Bootstrap Test</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="installing-required-packages-4.html"><a href="installing-required-packages-4.html#conclusion-4"><i class="fa fa-check"></i><b>7.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html"><i class="fa fa-check"></i><b>8</b> Installing required packages</a><ul>
+<li class="chapter" data-level="8.1" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#description-5"><i class="fa fa-check"></i><b>8.1</b> Description</a></li>
+<li class="chapter" data-level="8.2" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#mfa"><i class="fa fa-check"></i><b>8.2</b> MFA</a></li>
+<li class="chapter" data-level="8.3" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#scree-plot-5"><i class="fa fa-check"></i><b>8.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="8.4" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#factor-scores-4"><i class="fa fa-check"></i><b>8.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="8.5" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#loadings-4"><i class="fa fa-check"></i><b>8.5</b> Loadings</a></li>
+<li class="chapter" data-level="8.6" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#correlation-circle-1"><i class="fa fa-check"></i><b>8.6</b> Correlation Circle</a></li>
+<li class="chapter" data-level="8.7" data-path="installing-required-packages-5.html"><a href="installing-required-packages-5.html#conclusion-5"><i class="fa fa-check"></i><b>8.7</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><i class="fa fa-check"></i><b>9</b> PTCA4CATA should first to avoid conflict with TInPosition</a><ul>
+<li class="chapter" data-level="9.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#description-6"><i class="fa fa-check"></i><b>9.1</b> Description</a></li>
+<li class="chapter" data-level="9.2" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#scree-plot---rv-mat"><i class="fa fa-check"></i><b>9.2</b> SCREE Plot - RV-MAT</a></li>
+<li class="chapter" data-level="9.3" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#plotting-assessor-matrix"><i class="fa fa-check"></i><b>9.3</b> Plotting Assessor Matrix</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#convexhull"><i class="fa fa-check"></i><b>9.3.1</b> ConvexHull</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#scree-plot---sv-mat"><i class="fa fa-check"></i><b>9.4</b> SCREE Plot - SV-MAT</a></li>
+<li class="chapter" data-level="9.5" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#i-set"><i class="fa fa-check"></i><b>9.5</b> I Set</a></li>
+<li class="chapter" data-level="9.6" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#cluster-analysis-hartigans-rule"><i class="fa fa-check"></i><b>9.6</b> Cluster Analysis (Hartigan’s Rule)</a></li>
+<li class="chapter" data-level="9.7" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#cluster-analysis-k-means"><i class="fa fa-check"></i><b>9.7</b> Cluster Analysis (K-Means)</a><ul>
+<li class="chapter" data-level="9.7.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#two-centers"><i class="fa fa-check"></i><b>9.7.1</b> Two centers</a></li>
+<li class="chapter" data-level="9.7.2" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#four-centers"><i class="fa fa-check"></i><b>9.7.2</b> Four centers</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#cluster-analysis-hclust"><i class="fa fa-check"></i><b>9.8</b> Cluster Analysis (hclust)</a><ul>
+<li class="chapter" data-level="9.8.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#two-clusters"><i class="fa fa-check"></i><b>9.8.1</b> Two Clusters</a></li>
+<li class="chapter" data-level="9.8.2" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition.html#fours-clusters"><i class="fa fa-check"></i><b>9.8.2</b> Fours Clusters</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="conclusion-for-all-methods.html"><a href="conclusion-for-all-methods.html"><i class="fa fa-check"></i><b>10</b> Conclusion for all Methods</a></li>
+<li class="part"><span><b>IV Other Datasets</b></span></li>
+<li class="chapter" data-level="11" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html"><i class="fa fa-check"></i><b>11</b> use the last version of PTCA</a><ul>
+<li class="chapter" data-level="11.1" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#description-7"><i class="fa fa-check"></i><b>11.1</b> Description</a></li>
+<li class="chapter" data-level="11.2" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#dataset---weekly-earnings-by-race"><i class="fa fa-check"></i><b>11.2</b> Dataset - Weekly earnings by Race</a></li>
+<li class="chapter" data-level="11.3" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#heatmap-3"><i class="fa fa-check"></i><b>11.3</b> Heatmap</a></li>
+<li class="chapter" data-level="11.4" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#scree-plot-6"><i class="fa fa-check"></i><b>11.4</b> Scree Plot</a></li>
+<li class="chapter" data-level="11.5" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#factor-scores-5"><i class="fa fa-check"></i><b>11.5</b> Factor Scores</a><ul>
+<li class="chapter" data-level="11.5.1" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#symmetric-plot"><i class="fa fa-check"></i><b>11.5.1</b> Symmetric Plot</a></li>
+<li class="chapter" data-level="11.5.2" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#asymmetric-plot"><i class="fa fa-check"></i><b>11.5.2</b> Asymmetric Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#most-contributing-variables-2"><i class="fa fa-check"></i><b>11.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="11.7" data-path="use-the-last-version-of-ptca.html"><a href="use-the-last-version-of-ptca.html#inference-ca"><i class="fa fa-check"></i><b>11.7</b> Inference CA</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><i class="fa fa-check"></i><b>12</b> PTCA4CATA should first to avoid conflict with TInPosition</a><ul>
+<li class="chapter" data-level="12.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#description-8"><i class="fa fa-check"></i><b>12.1</b> Description</a></li>
+<li class="chapter" data-level="12.2" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#dataset---pianists-for-composers"><i class="fa fa-check"></i><b>12.2</b> Dataset - Pianists for Composers</a></li>
+<li class="chapter" data-level="12.3" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#scree-plot---rv-mat-1"><i class="fa fa-check"></i><b>12.3</b> SCREE Plot - RV-MAT</a></li>
+<li class="chapter" data-level="12.4" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#plotting-assessor-matrix-1"><i class="fa fa-check"></i><b>12.4</b> Plotting Assessor Matrix</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#convexhull-1"><i class="fa fa-check"></i><b>12.4.1</b> ConvexHull</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#scree-plot---sv-mat-1"><i class="fa fa-check"></i><b>12.5</b> SCREE Plot - SV-MAT</a></li>
+<li class="chapter" data-level="12.6" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#i-set-1"><i class="fa fa-check"></i><b>12.6</b> I Set</a></li>
+<li class="chapter" data-level="12.7" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#cluster-analysis-k-means-1"><i class="fa fa-check"></i><b>12.7</b> Cluster Analysis (K-Means)</a></li>
+<li class="chapter" data-level="12.8" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#cluster-analysis-hclust-1"><i class="fa fa-check"></i><b>12.8</b> Cluster Analysis (hclust)</a></li>
+<li class="chapter" data-level="12.9" data-path="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html"><a href="ptca4cata-should-first-to-avoid-conflict-with-tinposition-1.html#cluster-analysis-hartigans-rule-1"><i class="fa fa-check"></i><b>12.9</b> Cluster Analysis (Hartigan’s Rule)</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://catalog.utdallas.edu/2018/graduate/courses/acn7310" target="blank">Advanced Research Methods</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Country Environmental Factors correlated with Happiness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dataset" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Dataset</h1>
+<ul>
+<li>Data: Measurements of environment conditions in Countries</li>
+<li>Rows: There are 137 observations, 1 for each country.</li>
+<li>Columns: Total 29 variables</li>
+<li>Qualitative: Country (nominal), Happiness (Ordinal).</li>
+<li>Quantitative: Aspect, Slope Crop Land, Tree Canopy Wind Cloud &amp; Multiple variables for Temp &amp; Rain</li>
+</ul>
+<div id="structure-of-data" class="section level2">
+<h2><span class="header-section-number">2.1</span> Structure of Data</h2>
+<pre><code>## &#39;data.frame&#39;:    137 obs. of  29 variables:
+##  $ Country                : Factor w/ 137 levels &quot;Afghanistan&quot;,..: 1 2 3 4 5 6 7 8 9 10 ...
+##  $ Happiness_Rank         : Ord.factor w/ 3 levels &quot;VH&quot;&lt;&quot;H&quot;&lt;&quot;U&quot;: 3 2 2 3 1 3 1 1 2 2 ...
+##  $ accessibility_to_cities: num  317.7 73.8 1212.8 378.2 209.2 ...
+##  $ elevation              : num  1832 652 557 1061 683 ...
+##  $ aspect                 : num  201 192 185 174 145 ...
+##  $ slope                  : num  1.516 1.89 0.171 0.193 0.624 ...
+##  $ cropland_cover         : num  9.51 23.35 3.69 2.79 21.96 ...
+##  $ tree_canopy_cover      : num  0.375 12.805 0.177 19.87 8.834 ...
+##  $ isothermality          : num  35.9 33.2 40.3 64.3 49.9 ...
+##  $ rain_coldestQuart      : num  128.72 392.51 25.29 8.05 79.09 ...
+##  $ rain_driestMonth       : num  1.722 40.088 0.935 0.26 17.183 ...
+##  $ rain_driestQuart       : num  8.3 138.15 6.09 4.43 60.49 ...
+##  $ rain_mean_annual       : num  311.3 1151.1 79.5 1023.4 539.9 ...
+##  $ rain_seasonailty       : num  91.6 38.5 67.1 91.5 48.3 ...
+##  $ rain_warmestQuart      : num  12.69 138.33 9.51 318.54 183.14 ...
+##  $ rain_wettestMonth      : num  67.8 159 13.4 202.2 79.2 ...
+##  $ rain_wettestQuart      : num  175.8 435.9 33.3 524.3 211.7 ...
+##  $ temp_annual_range      : num  40.3 27.1 36.5 21.5 26.8 ...
+##  $ temp_coldestQuart      : num  -0.261 3.58 13.152 18.794 8.024 ...
+##  $ temp_diurnal_range     : num  14.72 9.11 14.87 13.85 13.46 ...
+##  $ temp_driestQuart       : num  21.1 19.6 26.9 18.9 11.1 ...
+##  $ temp_max_warmestMonth  : num  32 26.3 41.5 31 28.2 ...
+##  $ temp_mean_annual       : num  11.5 11.5 23 21.6 14.2 ...
+##  $ temp_min_coldestMonth  : num  -8.312 -0.806 5.058 9.549 1.443 ...
+##  $ temp_seasonality       : num  88.2 62.7 75.1 18.5 47.6 ...
+##  $ temp_warmestQuart      : num  22.7 19.6 32.5 23.3 20.2 ...
+##  $ temp_wettestQuart      : num  3.95 5.27 20.81 22.76 16.48 ...
+##  $ wind                   : num  3.43 2.47 4.03 2.16 4.27 ...
+##  $ cloudiness             : num  114.2 181.1 90.7 187.5 159 ...</code></pre>
+</div>
+<div id="datatable" class="section level2">
+<h2><span class="header-section-number">2.2</span> Datatable</h2>
+<table>
+<caption><span id="tab:nice-tab-data">Table 2.1: </span>Environment variables for 137 countries</caption>
+<thead>
+<tr class="header">
+<th align="left">Country</th>
+<th align="left">Happiness_Rank</th>
+<th align="right">accessibility_to_cities</th>
+<th align="right">elevation</th>
+<th align="right">aspect</th>
+<th align="right">slope</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Afghanistan</td>
+<td align="left">U</td>
+<td align="right">317.71575</td>
+<td align="right">1831.7444</td>
+<td align="right">201.4298</td>
+<td align="right">1.5156001</td>
+</tr>
+<tr class="even">
+<td align="left">Albania</td>
+<td align="left">H</td>
+<td align="right">73.83086</td>
+<td align="right">651.8155</td>
+<td align="right">192.1303</td>
+<td align="right">1.8900753</td>
+</tr>
+<tr class="odd">
+<td align="left">Algeria</td>
+<td align="left">H</td>
+<td align="right">1212.79982</td>
+<td align="right">556.7583</td>
+<td align="right">184.9747</td>
+<td align="right">0.1708615</td>
+</tr>
+<tr class="even">
+<td align="left">Angola</td>
+<td align="left">U</td>
+<td align="right">378.20239</td>
+<td align="right">1061.4790</td>
+<td align="right">174.2569</td>
+<td align="right">0.1926286</td>
+</tr>
+<tr class="odd">
+<td align="left">Argentina</td>
+<td align="left">VH</td>
+<td align="right">209.21958</td>
+<td align="right">682.7993</td>
+<td align="right">145.0314</td>
+<td align="right">0.6238553</td>
+</tr>
+<tr class="even">
+<td align="left">Armenia</td>
+<td align="left">U</td>
+<td align="right">97.29452</td>
+<td align="right">1850.4830</td>
+<td align="right">183.5375</td>
+<td align="right">2.3188956</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+
+
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="installing-required-packages.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["Multi-variate analysis on Environmental variables.pdf", "Multi-variate analysis on Environmental variables.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

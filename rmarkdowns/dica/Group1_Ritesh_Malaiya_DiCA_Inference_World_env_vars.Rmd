@@ -501,5 +501,8 @@ for (i in c(1, 2)) {
 
 
 ## Conclusion
-Among PCA, MCA, BADA and DiCA, DiCA is able to best seperate the data based on levels of happiness. It seems increase in temperature is correlated with increase in happiness and increase in rain decreases happiness.
+| **Methods** | **Unhappy**               | **Normal**             | **Very Happy**                | **Reliability**  |
+|------------------|-------------------------|-----------------------|---------------------------|------------|
+| **DiCA**    | warm summers, cold winters, high rain | Higher variation in temperature is correlated with lower happiness | Warm winter, cold summer, low rain, windy | Convex hulls are separeted but second component only has temp variables as significant                         |
+
 
