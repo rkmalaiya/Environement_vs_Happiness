@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Country Environment Factors correlated with Happiness</title>
+  <meta name="description" content="This data is all acquired through Google Earth Engine">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Country Environment Factors correlated with Happiness" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Country Environment Factors correlated with Happiness" />
+  
+  <meta name="twitter:description" content="This data is all acquired through Google Earth Engine" />
+  
+
+<meta name="author" content="Ritesh Malaiya">
+
+
+<meta name="date" content="2018-11-21">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="multiple-factor-analyis.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Exploratory Data Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#context"><i class="fa fa-check"></i><b>1.1</b> Context</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#content"><i class="fa fa-check"></i><b>1.2</b> Content</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#inspiration"><i class="fa fa-check"></i><b>1.3</b> Inspiration</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#research-question-scope-of-this-book"><i class="fa fa-check"></i><b>1.4</b> Research Question (scope of this book)</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>2</b> Dataset</a><ul>
+<li class="chapter" data-level="2.1" data-path="dataset.html"><a href="dataset.html#structure-of-data"><i class="fa fa-check"></i><b>2.1</b> Structure of Data</a></li>
+<li class="chapter" data-level="2.2" data-path="dataset.html"><a href="dataset.html#datatable"><i class="fa fa-check"></i><b>2.2</b> Datatable</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="PCA.html"><a href="PCA.html"><i class="fa fa-check"></i><b>3</b> Principal Component Analysis</a><ul>
+<li class="chapter" data-level="3.1" data-path="PCA.html"><a href="PCA.html#description"><i class="fa fa-check"></i><b>3.1</b> Description</a></li>
+<li class="chapter" data-level="3.2" data-path="PCA.html"><a href="PCA.html#correlation-plot"><i class="fa fa-check"></i><b>3.2</b> Correlation Plot</a></li>
+<li class="chapter" data-level="3.3" data-path="PCA.html"><a href="PCA.html#scree-plot"><i class="fa fa-check"></i><b>3.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="3.4" data-path="PCA.html"><a href="PCA.html#factor-scores"><i class="fa fa-check"></i><b>3.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="3.5" data-path="PCA.html"><a href="PCA.html#loadings"><i class="fa fa-check"></i><b>3.5</b> Loadings</a></li>
+<li class="chapter" data-level="3.6" data-path="PCA.html"><a href="PCA.html#most-contributing-variables"><i class="fa fa-check"></i><b>3.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="3.7" data-path="PCA.html"><a href="PCA.html#permutation-test"><i class="fa fa-check"></i><b>3.7</b> Permutation Test</a></li>
+<li class="chapter" data-level="3.8" data-path="PCA.html"><a href="PCA.html#parallet-test"><i class="fa fa-check"></i><b>3.8</b> Parallet Test</a></li>
+<li class="chapter" data-level="3.9" data-path="PCA.html"><a href="PCA.html#bootstrap-test"><i class="fa fa-check"></i><b>3.9</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="3.10" data-path="PCA.html"><a href="PCA.html#conclusion"><i class="fa fa-check"></i><b>3.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html"><i class="fa fa-check"></i><b>4</b> Multiple Component Analysis</a><ul>
+<li class="chapter" data-level="4.1" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#description-1"><i class="fa fa-check"></i><b>4.1</b> Description</a></li>
+<li class="chapter" data-level="4.2" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#density-plot"><i class="fa fa-check"></i><b>4.2</b> Density Plot</a></li>
+<li class="chapter" data-level="4.3" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#binning"><i class="fa fa-check"></i><b>4.3</b> Binning</a></li>
+<li class="chapter" data-level="4.4" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#spearman-correlation"><i class="fa fa-check"></i><b>4.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="4.5" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#correlation-plot-1"><i class="fa fa-check"></i><b>4.5</b> Correlation Plot</a></li>
+<li class="chapter" data-level="4.6" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#heatmap"><i class="fa fa-check"></i><b>4.6</b> Heatmap</a></li>
+<li class="chapter" data-level="4.7" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#scree-plot-1"><i class="fa fa-check"></i><b>4.7</b> Scree Plot</a></li>
+<li class="chapter" data-level="4.8" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#factor-scores-1"><i class="fa fa-check"></i><b>4.8</b> Factor Scores</a></li>
+<li class="chapter" data-level="4.9" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings-1"><i class="fa fa-check"></i><b>4.9</b> Loadings</a></li>
+<li class="chapter" data-level="4.10" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#loadings-correlation-plot"><i class="fa fa-check"></i><b>4.10</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="4.11" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#most-contributing-variables-inference"><i class="fa fa-check"></i><b>4.11</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="4.12" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#permutation-test-1"><i class="fa fa-check"></i><b>4.12</b> Permutation Test</a></li>
+<li class="chapter" data-level="4.13" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#parallet-test-1"><i class="fa fa-check"></i><b>4.13</b> Parallet Test</a></li>
+<li class="chapter" data-level="4.14" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#bootstrap-test-1"><i class="fa fa-check"></i><b>4.14</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="4.15" data-path="multiple-component-analysis.html"><a href="multiple-component-analysis.html#conclusion-1"><i class="fa fa-check"></i><b>4.15</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html"><i class="fa fa-check"></i><b>5</b> Partial Least Squares - Correlation</a><ul>
+<li class="chapter" data-level="5.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#method-pls-c"><i class="fa fa-check"></i><b>5.1</b> Method: PLS-C</a></li>
+<li class="chapter" data-level="5.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#analysis"><i class="fa fa-check"></i><b>5.2</b> Analysis</a></li>
+<li class="chapter" data-level="5.3" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#correlation-plot-2"><i class="fa fa-check"></i><b>5.3</b> Correlation Plot</a></li>
+<li class="chapter" data-level="5.4" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#pls-c"><i class="fa fa-check"></i><b>5.4</b> PLS-C</a></li>
+<li class="chapter" data-level="5.5" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#scree-plot-2"><i class="fa fa-check"></i><b>5.5</b> Scree Plot</a></li>
+<li class="chapter" data-level="5.6" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#latent-variables"><i class="fa fa-check"></i><b>5.6</b> Latent Variables</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-1-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>5.6.1</b> Component 1 for both Tables: Rain and Temperature</a></li>
+<li class="chapter" data-level="5.6.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2-for-both-tables-rain-and-temperature"><i class="fa fa-check"></i><b>5.6.2</b> Component 2 for both Tables: Rain and Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#salience-for-rain"><i class="fa fa-check"></i><b>5.7</b> Salience for Rain</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#components-1"><i class="fa fa-check"></i><b>5.7.1</b> Components 1</a></li>
+<li class="chapter" data-level="5.7.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2"><i class="fa fa-check"></i><b>5.7.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#salience-for-temperature"><i class="fa fa-check"></i><b>5.8</b> Salience for Temperature</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-1"><i class="fa fa-check"></i><b>5.8.1</b> Component 1</a></li>
+<li class="chapter" data-level="5.8.2" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#component-2-1"><i class="fa fa-check"></i><b>5.8.2</b> Component 2</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#most-contributing-variables---pls-c-with-inference"><i class="fa fa-check"></i><b>5.9</b> Most Contributing Variables - PLS-C (with Inference)</a><ul>
+<li class="chapter" data-level="5.9.1" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#bootstrap-test-2"><i class="fa fa-check"></i><b>5.9.1</b> Bootstrap Test</a></li>
+</ul></li>
+<li class="chapter" data-level="5.10" data-path="partial-least-squares-correlation.html"><a href="partial-least-squares-correlation.html#conclusion-2"><i class="fa fa-check"></i><b>5.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html"><i class="fa fa-check"></i><b>6</b> Barycentric Discriminant Analysis</a><ul>
+<li class="chapter" data-level="6.1" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#method-bada"><i class="fa fa-check"></i><b>6.1</b> Method: BADA</a></li>
+<li class="chapter" data-level="6.2" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#heatmap-1"><i class="fa fa-check"></i><b>6.2</b> Heatmap</a></li>
+<li class="chapter" data-level="6.3" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#scree-plot-3"><i class="fa fa-check"></i><b>6.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="6.4" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#factor-scores-2"><i class="fa fa-check"></i><b>6.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="6.5" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#loadings-2"><i class="fa fa-check"></i><b>6.5</b> Loadings</a></li>
+<li class="chapter" data-level="6.6" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#most-contributing-variables-1"><i class="fa fa-check"></i><b>6.6</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="6.7" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#permutation-test-2"><i class="fa fa-check"></i><b>6.7</b> Permutation Test</a></li>
+<li class="chapter" data-level="6.8" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#parallet-test-2"><i class="fa fa-check"></i><b>6.8</b> Parallet Test</a></li>
+<li class="chapter" data-level="6.9" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#bootstrap-test-3"><i class="fa fa-check"></i><b>6.9</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="6.10" data-path="barycentric-discriminant-analysis.html"><a href="barycentric-discriminant-analysis.html#conclusion-3"><i class="fa fa-check"></i><b>6.10</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html"><i class="fa fa-check"></i><b>7</b> Discriminant Correspondence Analysis</a><ul>
+<li class="chapter" data-level="7.1" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#method-dica"><i class="fa fa-check"></i><b>7.1</b> Method: DiCA</a></li>
+<li class="chapter" data-level="7.2" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#density-plot-1"><i class="fa fa-check"></i><b>7.2</b> Density plot</a></li>
+<li class="chapter" data-level="7.3" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#binning-1"><i class="fa fa-check"></i><b>7.3</b> Binning</a></li>
+<li class="chapter" data-level="7.4" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#spearman-correlation-1"><i class="fa fa-check"></i><b>7.4</b> Spearman Correlation</a></li>
+<li class="chapter" data-level="7.5" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#heatmap-2"><i class="fa fa-check"></i><b>7.5</b> Heatmap</a></li>
+<li class="chapter" data-level="7.6" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#scree-plot-4"><i class="fa fa-check"></i><b>7.6</b> Scree Plot</a></li>
+<li class="chapter" data-level="7.7" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#factor-scores-3"><i class="fa fa-check"></i><b>7.7</b> Factor Scores</a></li>
+<li class="chapter" data-level="7.8" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#loadings-3"><i class="fa fa-check"></i><b>7.8</b> Loadings</a></li>
+<li class="chapter" data-level="7.9" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#loadings-correlation-plot-1"><i class="fa fa-check"></i><b>7.9</b> Loadings (correlation plot)</a></li>
+<li class="chapter" data-level="7.10" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#most-contributing-variables-inference-1"><i class="fa fa-check"></i><b>7.10</b> Most Contributing Variables (Inference)</a></li>
+<li class="chapter" data-level="7.11" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#permutation-test-3"><i class="fa fa-check"></i><b>7.11</b> Permutation Test</a></li>
+<li class="chapter" data-level="7.12" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#parallet-test-3"><i class="fa fa-check"></i><b>7.12</b> Parallet Test</a></li>
+<li class="chapter" data-level="7.13" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#bootstrap-test-4"><i class="fa fa-check"></i><b>7.13</b> Bootstrap Test</a></li>
+<li class="chapter" data-level="7.14" data-path="discriminant-correspondence-analysis.html"><a href="discriminant-correspondence-analysis.html#conclusion-4"><i class="fa fa-check"></i><b>7.14</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html"><i class="fa fa-check"></i><b>8</b> Multiple Factor Analyis</a><ul>
+<li class="chapter" data-level="8.1" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#method-mfa"><i class="fa fa-check"></i><b>8.1</b> Method: MFA</a></li>
+<li class="chapter" data-level="8.2" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#mfa"><i class="fa fa-check"></i><b>8.2</b> MFA</a></li>
+<li class="chapter" data-level="8.3" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#scree-plot-5"><i class="fa fa-check"></i><b>8.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="8.4" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#factor-scores-4"><i class="fa fa-check"></i><b>8.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="8.5" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#loadings-4"><i class="fa fa-check"></i><b>8.5</b> Loadings</a></li>
+<li class="chapter" data-level="8.6" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#correlation-circle"><i class="fa fa-check"></i><b>8.6</b> Correlation Circle</a></li>
+<li class="chapter" data-level="8.7" data-path="multiple-factor-analyis.html"><a href="multiple-factor-analyis.html#conclusion-5"><i class="fa fa-check"></i><b>8.7</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="other-methods.html"><a href="other-methods.html"><i class="fa fa-check"></i><b>9</b> Other Methods</a><ul>
+<li class="chapter" data-level="9.1" data-path="other-methods.html"><a href="other-methods.html#method-ca"><i class="fa fa-check"></i><b>9.1</b> Method: CA</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="other-methods.html"><a href="other-methods.html#dataset-1"><i class="fa fa-check"></i><b>9.1.1</b> Dataset</a></li>
+<li class="chapter" data-level="9.1.2" data-path="other-methods.html"><a href="other-methods.html#heatmap-3"><i class="fa fa-check"></i><b>9.1.2</b> Heatmap</a></li>
+<li class="chapter" data-level="9.1.3" data-path="other-methods.html"><a href="other-methods.html#scree-plot-6"><i class="fa fa-check"></i><b>9.1.3</b> Scree Plot</a></li>
+<li class="chapter" data-level="9.1.4" data-path="other-methods.html"><a href="other-methods.html#factor-scores-5"><i class="fa fa-check"></i><b>9.1.4</b> Factor Scores</a></li>
+<li class="chapter" data-level="9.1.5" data-path="other-methods.html"><a href="other-methods.html#most-contributing-variables-2"><i class="fa fa-check"></i><b>9.1.5</b> Most Contributing Variables</a></li>
+<li class="chapter" data-level="9.1.6" data-path="other-methods.html"><a href="other-methods.html#inference-ca"><i class="fa fa-check"></i><b>9.1.6</b> Inference CA</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="other-methods.html"><a href="other-methods.html#distatis"><i class="fa fa-check"></i><b>9.2</b> DiSTATIS</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="other-methods.html"><a href="other-methods.html#dataset-2"><i class="fa fa-check"></i><b>9.2.1</b> Dataset</a></li>
+<li class="chapter" data-level="9.2.2" data-path="other-methods.html"><a href="other-methods.html#scree-plot-7"><i class="fa fa-check"></i><b>9.2.2</b> SCREE Plot</a></li>
+<li class="chapter" data-level="9.2.3" data-path="other-methods.html"><a href="other-methods.html#plotting-assessor-matrix"><i class="fa fa-check"></i><b>9.2.3</b> Plotting Assessor Matrix</a></li>
+<li class="chapter" data-level="9.2.4" data-path="other-methods.html"><a href="other-methods.html#convexhull"><i class="fa fa-check"></i><b>9.2.4</b> ConvexHull</a></li>
+<li class="chapter" data-level="9.2.5" data-path="other-methods.html"><a href="other-methods.html#i-set"><i class="fa fa-check"></i><b>9.2.5</b> I Set</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://catalog.utdallas.edu/2018/graduate/courses/acn7310" target="blank">Advanced Research Methods</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Country Environment Factors correlated with Happiness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="other-methods" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Other Methods</h1>
+<div id="method-ca" class="section level2">
+<h2><span class="header-section-number">9.1</span> Method: CA</h2>
+<p>Correspondence Analysis (CA) is a multivariate graphical technique designed to explore relationships among categorical variables. The outcome from correspondence analysis is a graphical display of the rows and columns of a contingency table that is designed to permit visualization of the salient relationships among the variable responses in a low-dimensional space. Such a representation reveals a more global picture of the relationships among row-column pairs which would otherwise not be detected through a pairwise analysis.</p>
+<p><strong>Calculate CA:</strong></p>
+<ul>
+<li>Step 1: Compute row and column averages</li>
+<li>Step 2: Compute the expected values</li>
+<li>Step 3: Compute the residuals</li>
+<li>Step 4: Plotting labels with similar residuals close together</li>
+<li>Step 5: Interpreting the relationship between row and column labels</li>
+</ul>
+<p><strong>How to Interpret Correspondence Analysis Plots</strong></p>
+<p>Correspondence analysis does not show us which rows have the highest numbers, nor which columns have the highest numbers. It instead shows us the relativities.</p>
+<ul>
+<li>The further things are from the origin, the more discriminating they are.</li>
+<li>Look at the length of the line connecting the row label to the origin. Longer lines indicate that the row label is highly associated with some of the column labels (i.e., it has at least one high residual).</li>
+<li>Look at the length of the label connecting the column label to the origin. Longer lines again indicate a high association between the column label and one or more row labels.</li>
+<li>Look at the angle formed between these two lines. Really small angles indicate association. 90 degree angles indicate no relationship. Angles near 180 degrees indicate negative associations.</li>
+</ul>
+<div id="dataset-1" class="section level3">
+<h3><span class="header-section-number">9.1.1</span> Dataset</h3>
+<ul>
+<li>Data: Measurements of Weekly Earnings per Race</li>
+<li>Rows: There are 6 observations representing Asian/White/Black, Men/Woman.</li>
+<li>Columns: Total 6 variables grouping people based on Decile and Quartile ranges of their weekly income.</li>
+</ul>
+<pre><code>##                             White.men White.women Black.men Black.Women
+## 1st decile                        412         374       361         331
+## 1st quartile                      594         506       483         423
+## 2nd quartile                      920         743       680         615
+## 3rd quartile                     1467        1140      1046         935
+## 9th decile                       2278        1726      1551        1453
+## Total people (in thousands)     48746       36698      6445        7142
+##                             Asian.Men Asian.Women Hispanic.Men
+## 1st decile                        420         385          358
+## 1st quartile                      648         551          451
+## 2nd quartile                     1129         877          631
+## 3rd quartile                     1860        1411          979
+## 9th decile                       2699        2024         1498
+## Total people (in thousands)      3684        2954        11142
+##                             Hispanic.Women
+## 1st decile                             320
+## 1st quartile                           404
+## 2nd quartile                           566
+## 3rd quartile                           830
+## 9th decile                            1266
+## Total people (in thousands)           7168</code></pre>
+<p>However, here we can see that it may not be advisable to include Quartile and Decile intervals in the same analysis. Hence, we go ahead with Quartile Ranges only.</p>
+<table>
+<caption><span id="tab:nice-tab-ca">Table 9.1: </span>4 Pianist for each of 3 Composers</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1stQ</th>
+<th align="right">2ndQ</th>
+<th align="right">3rdQ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>White.men</td>
+<td align="right">594</td>
+<td align="right">326</td>
+<td align="right">547</td>
+</tr>
+<tr class="even">
+<td>White.women</td>
+<td align="right">506</td>
+<td align="right">237</td>
+<td align="right">397</td>
+</tr>
+<tr class="odd">
+<td>Black.men</td>
+<td align="right">483</td>
+<td align="right">197</td>
+<td align="right">366</td>
+</tr>
+<tr class="even">
+<td>Black.Women</td>
+<td align="right">423</td>
+<td align="right">192</td>
+<td align="right">320</td>
+</tr>
+<tr class="odd">
+<td>Asian.Men</td>
+<td align="right">648</td>
+<td align="right">481</td>
+<td align="right">731</td>
+</tr>
+<tr class="even">
+<td>Asian.Women</td>
+<td align="right">551</td>
+<td align="right">326</td>
+<td align="right">534</td>
+</tr>
+<tr class="odd">
+<td>Hispanic.Men</td>
+<td align="right">451</td>
+<td align="right">180</td>
+<td align="right">348</td>
+</tr>
+<tr class="even">
+<td>Hispanic.Women</td>
+<td align="right">404</td>
+<td align="right">162</td>
+<td align="right">264</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Research Question</p>
+<ul>
+<li>Does total earning of different races differ.</li>
+<li>Which race get less than median salary (2nd Quartile)</li>
+</ul></li>
+</ul>
+</div>
+<div id="heatmap-3" class="section level3">
+<h3><span class="header-section-number">9.1.2</span> Heatmap</h3>
+<pre><code>## Warning in heatmap.2(WE_data, Colv = FALSE, Rowv = FALSE, col =
+## rev(heat.colors(16))): Discrepancy: Rowv is FALSE, while dendrogram is
+## `both&#39;. Omitting row dendogram.</code></pre>
+<pre><code>## Warning in heatmap.2(WE_data, Colv = FALSE, Rowv = FALSE, col =
+## rev(heat.colors(16))): Discrepancy: Colv is FALSE, while dendrogram is
+## `column&#39;. Omitting column dendogram.</code></pre>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-98-1.png" width="672" /></p>
+</div>
+<div id="scree-plot-6" class="section level3">
+<h3><span class="header-section-number">9.1.3</span> Scree Plot</h3>
+<p>Gives amount of information explained by corresponding component. Gives an intuition to decide which components best represent data in order to answer the research question.</p>
+<p>P.S. The most contribution component may not always be most useful for a given research question.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">PTCA4CATA<span class="op">::</span><span class="kw">PlotScree</span>(<span class="dt">ev =</span> resCA.sym<span class="op">$</span>ExPosition.Data<span class="op">$</span>eigs,</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">                      <span class="dt">p.ev =</span>  we_data_inf<span class="op">$</span>Inference.Data<span class="op">$</span>components<span class="op">$</span>p.vals,</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">                      <span class="dt">title =</span> <span class="st">&#39;SCREE Plot&#39;</span>,</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">                      <span class="dt">plotKaiser =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">)</a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-100-1.png" width="672" /></p>
+</div>
+<div id="factor-scores-5" class="section level3">
+<h3><span class="header-section-number">9.1.4</span> Factor Scores</h3>
+<div id="symmetric-plot" class="section level4">
+<h4><span class="header-section-number">9.1.4.1</span> Symmetric Plot</h4>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">map.IJ.sym &lt;-<span class="st"> </span>symMap<span class="op">$</span>baseMap <span class="op">+</span><span class="st"> </span>symMap<span class="op">$</span>I_labels <span class="op">+</span><span class="st"> </span>symMap<span class="op">$</span>I_points <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="st">  </span>symMap<span class="op">$</span>J_labels <span class="op">+</span><span class="st"> </span>symMap<span class="op">$</span>J_points <span class="op">+</span><span class="st"> </span>labels4CA</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="kw">print</span>(map.IJ.sym)</a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-103-1.png" width="672" /></p>
+</div>
+<div id="asymmetric-plot" class="section level4">
+<h4><span class="header-section-number">9.1.4.2</span> Asymmetric Plot</h4>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">map.IJ.asym &lt;-<span class="st"> </span>asymMap<span class="op">$</span>baseMap <span class="op">+</span><span class="st"> </span>asymMap<span class="op">$</span>I_labels <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">  </span>asymMap<span class="op">$</span>I_points <span class="op">+</span><span class="st"> </span>asymMap<span class="op">$</span>J_labels <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">  </span>asymMap<span class="op">$</span>J_points <span class="op">+</span><span class="st"> </span>labels4CA</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="kw">print</span>(map.IJ.asym)</a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-104-1.png" width="672" /></p>
+</div>
+</div>
+<div id="most-contributing-variables-2" class="section level3">
+<h3><span class="header-section-number">9.1.5</span> Most Contributing Variables</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">PTCA4CATA<span class="op">::</span><span class="kw">PrettyBarPlot2</span>(ctr.I[,<span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">                       <span class="dt">threshold =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">NROW</span>(ctr.I), </a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">                       <span class="dt">font.size =</span> <span class="dv">4</span>, </a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">                       <span class="dt">color4bar =</span> gplots<span class="op">::</span><span class="kw">col2hex</span>(color4I), </a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">                       <span class="dt">color4ns =</span> <span class="st">&#39;grey&#39;</span>, </a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">                       <span class="dt">main =</span> <span class="st">&#39;Observations: Contributions (Signed)&#39;</span>, </a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">                       <span class="dt">ylab =</span> <span class="st">&#39;Contributions&#39;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">1.2</span><span class="op">*</span><span class="kw">min</span>(ctr.I),</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">                        <span class="fl">1.2</span><span class="op">*</span><span class="kw">max</span>(ctr.I) ), </a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">                       <span class="dt">horizontal =</span> <span class="ot">FALSE</span> ) </a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-106-1.png" width="672" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">PTCA4CATA<span class="op">::</span><span class="kw">PrettyBarPlot2</span>(ctr.J[,<span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">                       <span class="dt">threshold =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">NROW</span>(ctr.J), </a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">                       <span class="dt">font.size =</span> <span class="dv">4</span>, </a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">                       <span class="dt">color4bar =</span> color4J, </a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">                       <span class="dt">color4ns =</span> <span class="st">&#39;grey&#39;</span>, </a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">                       <span class="dt">main =</span> <span class="st">&#39;Observations: Contributions (Signed)&#39;</span>, </a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">                       <span class="dt">ylab =</span> <span class="st">&#39;Contributions&#39;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">1.2</span><span class="op">*</span><span class="kw">min</span>(ctr.J),</a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">                        <span class="fl">1.2</span><span class="op">*</span><span class="kw">max</span>(ctr.J) ), </a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">                       <span class="dt">horizontal =</span> <span class="ot">FALSE</span> ) </a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-108-1.png" width="672" /></p>
+</div>
+<div id="inference-ca" class="section level3">
+<h3><span class="header-section-number">9.1.6</span> Inference CA</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">ba001.BR1 &lt;-<span class="st"> </span><span class="kw">PrettyBarPlot2</span>(BR[,laDim],</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">                          <span class="dt">threshold =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">                          <span class="dt">font.size =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">                          <span class="dt">color4bar =</span> gplots<span class="op">::</span><span class="kw">col2hex</span>(col4J), <span class="co"># we need hex code</span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">                          <span class="dt">main =</span> <span class="kw">paste0</span>(<span class="st">&#39;Bootstrap ratio &#39;</span>,laDim),</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">                          <span class="dt">ylab =</span> <span class="st">&#39;Bootstrap ratios&#39;</span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">                          <span class="co">#ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))</span></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="kw">print</span>(ba001.BR1)</a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-110-1.png" width="672" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">wedata.BR1 &lt;-<span class="st"> </span><span class="kw">PrettyBarPlot2</span>(BR[,laDim],</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">                          <span class="dt">threshold =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">                          <span class="dt">font.size =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">                          <span class="dt">color4bar =</span> gplots<span class="op">::</span><span class="kw">col2hex</span>(col4J), <span class="co"># we need hex code</span></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">                          <span class="dt">main =</span> <span class="kw">paste0</span>(<span class="st">&#39;Bootstrap ratio &#39;</span>,laDim),</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">                          <span class="dt">ylab =</span> <span class="st">&#39;Bootstrap ratios&#39;</span></a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">                          <span class="co">#ylim = c(1.2*min(BR[,laDim]), 1.2*max(BR[,laDim]))</span></a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9"><span class="kw">print</span>(wedata.BR1)</a></code></pre></div>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-112-1.png" width="672" /></p>
+
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;HerveAbdi/PTCA4CATA&#39;</span>)</a></code></pre></div>
+<pre><code>## Skipping install of &#39;PTCA4CATA&#39; from a github remote, the SHA1 (0a982b85) has not changed since last install.
+##   Use `force = TRUE` to force installation</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(PTCA4CATA))</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co"># PTCA4CATA should first to avoid conflict with TInPosition</span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(ExPosition))</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co">#suppressMessages(library(InPosition))</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="co">#suppressMessages(library(TInPosition))</span></a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(ggplot2))</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(dplyr))</a>
+<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(officer))</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(flextable))</a>
+<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(rvg))</a>
+<a class="sourceLine" id="cb27-11" data-line-number="11"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(useful))</a>
+<a class="sourceLine" id="cb27-12" data-line-number="12"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(DistatisR))</a>
+<a class="sourceLine" id="cb27-13" data-line-number="13"><span class="kw">library</span>(RColorBrewer)</a>
+<a class="sourceLine" id="cb27-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb27-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb27-16" data-line-number="16"><span class="co"># Source the function file:</span></a>
+<a class="sourceLine" id="cb27-17" data-line-number="17"><span class="co">#</span></a>
+<a class="sourceLine" id="cb27-18" data-line-number="18"><span class="co"># install.packages(&#39;TExPosition&#39;)</span></a>
+<a class="sourceLine" id="cb27-19" data-line-number="19"><span class="co"># install.packages(&#39;MExPosition&#39;)</span></a>
+<a class="sourceLine" id="cb27-20" data-line-number="20"><span class="kw">library</span>(MExPosition)</a>
+<a class="sourceLine" id="cb27-21" data-line-number="21"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</a></code></pre></div>
+</div>
+</div>
+<div id="distatis" class="section level2">
+<h2><span class="header-section-number">9.2</span> DiSTATIS</h2>
+<div id="dataset-2" class="section level3">
+<h3><span class="header-section-number">9.2.1</span> Dataset</h3>
+<table>
+<caption><span id="tab:nice-tab-distatis">Table 9.2: </span>4 Pianist for each of 3 Composers</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">bc001</th>
+<th align="right">bc002</th>
+<th align="right">bc003</th>
+<th align="right">bc004</th>
+<th align="right">bc005</th>
+<th align="right">bc006</th>
+<th align="right">bc007</th>
+<th align="right">bc008</th>
+<th align="right">bc009</th>
+<th align="right">bc010</th>
+<th align="right">bc011</th>
+<th align="right">bc012</th>
+<th align="right">bc013</th>
+<th align="right">bc014</th>
+<th align="right">bc015</th>
+<th align="right">bc016</th>
+<th align="right">bc017</th>
+<th align="right">bc018</th>
+<th align="right">bc019</th>
+<th align="right">bc020</th>
+<th align="right">bc021</th>
+<th align="right">bc022</th>
+<th align="right">bc023</th>
+<th align="right">bc024</th>
+<th align="right">bc025</th>
+<th align="right">bc026</th>
+<th align="right">bc027</th>
+<th align="right">bc028</th>
+<th align="right">bc029</th>
+<th align="right">bc030</th>
+<th align="right">bc031</th>
+<th align="right">bc032</th>
+<th align="right">bc033</th>
+<th align="right">bc034</th>
+<th align="right">bc035</th>
+<th align="right">bc036</th>
+<th align="right">bc037</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bach.Arrau.1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Bach.Arrau.2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Bach.Arrau.3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Bach.Baren.4</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Bach.Baren.5</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td>Bach.Baren.6</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>Bach.Pires.7</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Bach.Pires.8</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td>Bach.Pires.9</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Bach.Richt.10</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td>Bach.Richt.11</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Bach.Richt.12</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>Beet.Arrau.13</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Beet.Arrau.14</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Beet.Arrau.15</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Beet.Baren.16</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>Beet.Baren.17</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Beet.Baren.18</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>Beet.Pires.19</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Beet.Pires.20</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>```</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] Bootstrap On Factor Scores. Iterations #: 
+## [2] 1000</code></pre>
+</div>
+<div id="scree-plot-7" class="section level3">
+<h3><span class="header-section-number">9.2.2</span> SCREE Plot</h3>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-115-1.png" width="672" /></p>
+</div>
+<div id="plotting-assessor-matrix" class="section level3">
+<h3><span class="header-section-number">9.2.3</span> Plotting Assessor Matrix</h3>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-116-1.png" width="672" /></p>
+</div>
+<div id="convexhull" class="section level3">
+<h3><span class="header-section-number">9.2.4</span> ConvexHull</h3>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-117-1.png" width="672" /></p>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-118-1.png" width="672" /></p>
+</div>
+<div id="i-set" class="section level3">
+<h3><span class="header-section-number">9.2.5</span> I Set</h3>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-119-1.png" width="672" /></p>
+<pre><code>## Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="Country_Environment_conditions_corelated_with_Happiness_files/figure-html/unnamed-chunk-120-1.png" width="672" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="multiple-factor-analyis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["Country Environment conditions corelated with Happiness.pdf", "Country Environment conditions corelated with Happiness.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
