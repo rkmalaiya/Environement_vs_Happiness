@@ -4,7 +4,7 @@
 ## Data set: Environmental Readings per Country
 
 ### ***Ritesh Malaiya***
-*For the full version of cookbook, please visit [link](https://rkmalaiya.github.io/Environement_vs_Happiness/)*
+*For the full version of cookbook, please visit [link](https://rkmalaiya.github.io/Multi-Variate-Analysis/)*
 # Overview
 
 # Dataset
